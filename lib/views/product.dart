@@ -22,6 +22,7 @@ class _ProductState extends State<Product> {
       
   Future<void> _lihatData() async {
     list.clear();
+    if (!mounted) return;
     setState(() {
       loading = true;
     });
@@ -43,6 +44,7 @@ class _ProductState extends State<Product> {
         );
         list.add(ab);
       });
+      if (!mounted) return;
       setState(() {
         loading = false;
       });
@@ -96,6 +98,7 @@ class _ProductState extends State<Product> {
     int value = data['value'];
     String pesan = data['message'];
     if (value == 1) {
+      if (!mounted) return;
       setState(() {
         Navigator.pop(context);
         _lihatData();

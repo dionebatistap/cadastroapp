@@ -197,7 +197,7 @@ class _LoginState extends State<Login> {
   }
 }
 
-//CLASSE QUE RETORNA PARA CADASTRO DE USUARIOS
+//CLASSE QUE REGISTRA USUARIOS
 
 class Register extends StatefulWidget {
   @override

@@ -22,8 +22,10 @@ class TambahProduk extends StatefulWidget {
 class _TambahProdukState extends State<TambahProduk> {
   String namaProduk, qty, harga, idUsers;
   final _key = new GlobalKey<FormState>();
-  File _imageFile;
 
+  var validaCampos = true;
+
+  File _imageFile;
   final picker = ImagePicker();
 
   getPref() async {
@@ -33,35 +35,75 @@ class _TambahProdukState extends State<TambahProduk> {
     });
   }
 
-  //TODO: CERTIFICAR QUE NUNCA VAI SER VAZIO A IMAGEM
-
-  Future getimageCamera() async {
+  Future getImageCamera() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
-    final File file = File(pickedFile.path);
-    setState(() {
-      _imageFile = file;
-    });
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+        Navigator.pop(context);
+      });
+    } else {
+      return;
+    }
   }
 
-  Future getimageGaleria() async {
+  Future getImageGallery() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-    final File file = File(pickedFile.path);
-    setState(() {
-      _imageFile = file;
-    });
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+        Navigator.pop(context);
+      });
+    } else {
+      return;
+    }
   }
 
   check() {
     final form = _key.currentState;
-    if (form.validate()) {
+    if (form.validate() && _imageFile != null) {
       form.save();
-      submit();
+      submitWithImage();
+    }
+    if (form.validate() && _imageFile == null) {
+      form.save();
+      submitNoImage();
+    } else {
+      setState(() {
+        validaCampos = true;
+      });
     }
   }
 
-  submit() async {
+  submitNoImage() async {
+    print(harga.replaceAll(",", ""));
+    final response = await http.post(BaseUrl.tambahProduk2, body: {
+      "namaProduk": namaProduk,
+      "qty": qty,
+      "harga": harga.replaceAll(",", ""),
+      "expDate": "$tgl",
+      "idUsers": idUsers,
+    });
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String pesan = data['message'];
+    if (value == 1) {
+      print(pesan);
+      setState(() {
+        widget.reload();
+        Navigator.pop(context);
+      });
+    } else {
+      print(pesan);
+      print(print);
+    }
+  }
+
+  submitWithImage() async {
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
@@ -99,8 +141,7 @@ class _TambahProdukState extends State<TambahProduk> {
         context: context,
         initialDate: tgl,
         firstDate: DateTime(1992),
-        lastDate: DateTime(2099)
-        );
+        lastDate: DateTime(2099));
     if (picked != null && picked != tgl) {
       setState(() {
         tgl = picked;
@@ -116,6 +157,32 @@ class _TambahProdukState extends State<TambahProduk> {
     getPref();
   }
 
+  void displayBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  this.getImageCamera();
+                },
+                child: const Text('Câmera'),
+              ),
+              FlatButton(
+                onPressed: () {
+                  this.getImageGallery();
+                },
+                child: const Text('Galeria'),
+              ),
+            ],
+          ));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     var placeholder = Container(
@@ -126,6 +193,7 @@ class _TambahProdukState extends State<TambahProduk> {
     return Scaffold(
       appBar: AppBar(),
       body: Form(
+        //autovalidate: validaCampos,
         key: _key,
         child: ListView(
           padding: EdgeInsets.all(16.0),
@@ -135,8 +203,7 @@ class _TambahProdukState extends State<TambahProduk> {
               height: 150.0,
               child: InkWell(
                 onTap: () {
-                  getimageGaleria();
-                  // getimageCamera();
+                  displayBottomSheet(context);
                 },
                 child: _imageFile == null
                     ? placeholder
@@ -147,14 +214,35 @@ class _TambahProdukState extends State<TambahProduk> {
               ),
             ),
             TextFormField(
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Please insert nama produk";
+                } else {
+                  return null;
+                }
+              },
               onSaved: (e) => namaProduk = e,
               decoration: InputDecoration(labelText: 'Nama Produk'),
             ),
             TextFormField(
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Please insert username";
+                } else {
+                  return null;
+                }
+              },
               onSaved: (e) => qty = e,
               decoration: InputDecoration(labelText: 'Qty'),
             ),
             TextFormField(
+              validator: (e) {
+                if (e.isEmpty) {
+                  return "Please insert username";
+                } else {
+                  return null;
+                }
+              },
               inputFormatters: [
                 WhitelistingTextInputFormatter.digitsOnly,
                 CurrencyFormat()

@@ -26,22 +26,30 @@ class _EditProdukState extends State<EditProduk> {
   File _imageFile;
   final picker = ImagePicker();
 
-  Future getimageCamera() async {
+  Future getImageCamera() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
-    final File file = File(pickedFile.path);
-    setState(() {
-      _imageFile = file;
-    });
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+      });
+    } else {
+      return;
+    }
   }
 
-  Future getimageGaleria() async {
+  Future getImageGallery() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-    final File file = File(pickedFile.path);
-    setState(() {
-      _imageFile = file;
-    });
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+      });
+    } else {
+      return;
+    }
   }
 
   TextEditingController txtNama, txtQty, txtHarga;
@@ -72,9 +80,12 @@ class _EditProdukState extends State<EditProduk> {
     if (form.validate() && _imageFile != null) {
       form.save();
       submitWithImage();
-    } else {
+    }
+    if (form.validate() && _imageFile == null) {
       form.save();
       submitNoImage();
+    } else {
+      return "Erro!";
     }
   }
 
@@ -174,7 +185,7 @@ class _EditProdukState extends State<EditProduk> {
               height: 150.0,
               child: InkWell(
                 onTap: () {
-                  getimageGaleria();
+                  getImageGallery();
                   // getimageCamera();
                 },
                 child: _imageFile == null
