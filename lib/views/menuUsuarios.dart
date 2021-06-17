@@ -39,6 +39,8 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
           api['nomePessoa'],
           api['quantidade'],
           api['preco'],
+          api['estadocivil'],
+          api['grupo'],
           api['createdDate'],
           api['idUsuario'],
           api['nome'],

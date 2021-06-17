@@ -36,6 +36,8 @@ class _PessoaState extends State<Pessoa> {
           api['nomePessoa'],
           api['quantidade'],
           api['preco'],
+          api['estadoCivil'],
+          api['grupo'],
           api['createdDate'],
           api['idUsuario'],
           api['nome'],

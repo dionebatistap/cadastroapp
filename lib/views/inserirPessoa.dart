@@ -20,13 +20,16 @@ class InserirPessoa extends StatefulWidget {
 }
 
 class _InserirPessoaState extends State<InserirPessoa> {
-  String nomePessoa, quantidade, preco, idUsuario;
+  String nomePessoa, quantidade, preco, estadoCivil, grupo, idUsuario;
   final _key = new GlobalKey<FormState>();
 
+  String clestadoCivil, clgrupo;
   var validarCampos = true;
 
   File _imageFile;
   final picker = ImagePicker();
+
+
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -113,6 +116,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
       request.fields['nomePessoa'] = nomePessoa;
       request.fields['quantidade'] = quantidade;
       request.fields['preco'] = preco.replaceAll(",", '');
+      request.fields['estadoCivil'] = "$clestadoCivil";
+      request.fields['grupo'] = "$clgrupo";
       request.fields['idUsuario'] = idUsuario;
       request.fields['dataSelecionada'] = "$variavelData";
 
@@ -155,6 +160,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
     // TODO: implement initState
     super.initState();
     getPref();
+    _carregaItensDropdown();
   }
 
   void displayBottomSheet(BuildContext context) {
@@ -182,6 +188,19 @@ class _InserirPessoaState extends State<InserirPessoa> {
           ));
         });
   }
+
+//DROPDOWN LIST GRUPOS
+  List<DropdownMenuItem<String>> _listaItensDropGrupo = List();
+  _carregaItensDropdown() {
+    _listaItensDropGrupo.add(
+      DropdownMenuItem(child: Text("Obreiro"), value: "Obreiro"),
+    );
+    _listaItensDropGrupo.add(
+      DropdownMenuItem(child: Text("Membro"), value: "Membro"),
+    );
+  }
+
+  //RADIO BUTTON
 
   @override
   Widget build(BuildContext context) {
@@ -216,18 +235,19 @@ class _InserirPessoaState extends State<InserirPessoa> {
             TextFormField(
               validator: (e) {
                 if (e.isEmpty) {
-                  return "Please insert nome pessoa";
+                  return "Por favor inserir nome completo";
                 } else {
                   return null;
                 }
               },
               onSaved: (e) => nomePessoa = e,
-              decoration: InputDecoration(labelText: 'Nome Pessoa'),
+              decoration: InputDecoration(labelText: 'Nome'),
             ),
+
             TextFormField(
               validator: (e) {
                 if (e.isEmpty) {
-                  return "Please insert usuario";
+                  return "*Campo obrigatório";
                 } else {
                   return null;
                 }
@@ -250,6 +270,57 @@ class _InserirPessoaState extends State<InserirPessoa> {
               onSaved: (e) => preco = e,
               decoration: InputDecoration(labelText: 'Preco'),
             ),
+
+            //TODO: ESTADO CIVIL
+            Container(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                children: <Widget>[
+                  Text("Solteiro"),
+                  Radio(
+                    value: "Solteiro",
+                    groupValue: clestadoCivil,
+                    onChanged: (String selecionaEstadoCivil) {
+                      setState(() {
+                        clestadoCivil = selecionaEstadoCivil;
+                      });
+                    },
+                  ),
+                  Text("Casado"),
+                  Radio(
+                    value: "Casado",
+                    groupValue: clestadoCivil,
+                    onChanged: (String selecionaEstadoCivil) {
+                      setState(() {
+                        clestadoCivil = selecionaEstadoCivil;
+                      });
+                      print("resultado " + clestadoCivil.toString());
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            //TODO: GRUPO DROPDOWN
+            Container(
+              padding: EdgeInsets.all(16.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: DropdownButtonFormField(
+                      hint: Text("Grupo"),
+                      items: _listaItensDropGrupo,
+                      onChanged: (itemGrupo) {
+                        setState(() {
+                          clgrupo = itemGrupo;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
             DateDropDown(
               labelText: labelText,
               valueText: new DateFormat.yMd().format(variavelData),

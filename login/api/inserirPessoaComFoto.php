@@ -8,6 +8,8 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $nomePessoa = $_POST['nomePessoa'];
     $quantidade = $_POST['quantidade'];
     $preco = $_POST['preco'];
+    $estadoCivil = $_POST['estadoCivil'];
+    $grupo = $_POST['grupo'];
     $idUsuario = $_POST['idUsuario'];
     $dataSelecionada = $_POST['dataSelecionada'];
 
@@ -15,11 +17,11 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $imagePath = "../upload/".$image;
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$quantidade','$preco','$image','$dataSelecionada',NOW(),'$idUsuario')";
+        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$quantidade','$preco','$estadoCivil','$grupo','$image','$dataSelecionada',NOW(),'$idUsuario')";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;
-            $response['message']="Pessoa cadastrado com successo";
+            $response['message']="Pessoa cadastrada com successo";
             echo json_encode($response);
             
         }else {
