@@ -48,7 +48,6 @@ class _EditProdukState extends State<EditProduk> {
   String tgldate;
 
   setup() async {
-    
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       idUsers = preferences.getString("id");
@@ -60,20 +59,55 @@ class _EditProdukState extends State<EditProduk> {
     txtHarga = TextEditingController(text: widget.model.harga);
   }
 
+  // check() {
+  //   final form = _key.currentState;
+  //   if (form.validate()) {
+  //     form.save();
+  //     submitImage();
+  //   } else {}
+  // }
+
   check() {
     final form = _key.currentState;
-    if (form.validate()) {
+    if (form.validate() && _imageFile != null) {
       form.save();
-      submit();
-    } else {}
+      submitWithImage();
+    } else {
+      form.save();
+      submitNoImage();
+    }
   }
 
-  submit() async {
+  submitNoImage() async {
+    final response = await http.post(BaseUrl.editProdukNoPhoto, body: {
+      "namaProduk": namaProduk,
+      "qty": qty,
+      "harga": harga,
+      "idProduk": widget.model.id,
+      "expDate": "$tgldate"
+    });
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String pesan = data['message'];
+
+    if (value == 1) {
+      setState(() {
+        widget.reload();
+        Navigator.pop(context);
+        print(pesan + "Noimage");
+        print(data);
+      });
+    } else {
+      print(pesan + "Noimage");
+    }
+  }
+
+  submitWithImage() async {
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
       var length = await _imageFile.length();
-      var uri = Uri.parse(BaseUrl.editProduk);
+      var uri = Uri.parse(BaseUrl.editProdukWithPhoto);
       var request = http.MultipartRequest('POST', uri);
       request.fields['namaProduk'] = namaProduk;
       request.fields['qty'] = qty;
@@ -97,28 +131,6 @@ class _EditProdukState extends State<EditProduk> {
     } catch (e) {
       debugPrint("Erro $e");
     }
-
-    // final response = await http.post(BaseUrl.editProduk, body: {
-    //   "namaProduk": namaProduk,
-    //   "qty": qty,
-    //   "harga": harga,
-    //   "idProduk": widget.model.id,
-    //   "expDate": "$tgldate"
-    // });
-    // final data = jsonDecode(response.body);
-    // int value = data['value'];
-    // String pesan = data['message'];
-
-    // if (value == 1) {
-    //   setState(() {
-    //     widget.reload();
-    //     Navigator.pop(context);
-    //     print(pesan);
-    //     print(data);
-    //   });
-    // } else {
-    //   print(pesan);
-    // }
   }
 
   @override
@@ -130,9 +142,9 @@ class _EditProdukState extends State<EditProduk> {
 
   String pilihTanggal, labelText;
   DateTime tgl = new DateTime.now();
-  
+
   var formatTgl = new DateFormat('yyyy-MM-dd');
-  
+
   final TextStyle valueStyle = TextStyle(fontSize: 16.0);
   Future<Null> _selectedDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
