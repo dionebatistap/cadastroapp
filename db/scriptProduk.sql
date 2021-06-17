@@ -1,9 +1,9 @@
-create table produk(
+create table pessoa(
 id int AUTO_INCREMENT PRIMARY KEY,
-    namaProduk text,
-    qty int,
-    harga int,
+    nomePessoa text,
+    quantidade int,
+    preco int,
     createdDate datetime,
-    idUsers int,
-    FOREIGN KEY (idUsers) REFERENCES users(id)
+    idUsuario int,
+    FOREIGN KEY (idUsuario) REFERENCES users(id)
 );

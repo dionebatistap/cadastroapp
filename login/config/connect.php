@@ -1,7 +1,5 @@
 <?php
 
-
-
     define('HOST', 'mysql742.umbler.com');
     define('USER', 'dione');
     define('PASS','ak910627');

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/modal/api.dart';
-import 'package:cadastroapp/modal/produkModel.dart';
+import 'package:cadastroapp/modal/pessoaModel.dart';
 
-class DetailProduk extends StatefulWidget {
-  final ProdukModel model;
-  DetailProduk(this.model);
+class DetalharPessoa extends StatefulWidget {
+  final PessoaModel model;
+  DetalharPessoa(this.model);
   @override
-  _DetailProdukState createState() => _DetailProdukState();
+  _DetalharPessoaState createState() => _DetalharPessoaState();
 }
 
-class _DetailProdukState extends State<DetailProduk> {
+class _DetalharPessoaState extends State<DetalharPessoa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +41,8 @@ class _DetailProdukState extends State<DetailProduk> {
               
               child: Column(
                 children: <Widget>[
-                  Text(widget.model.namaProduk),
-                  Text(widget.model.harga),
+                  Text(widget.model.nomePessoa),
+                  Text(widget.model.preco),
                 ],
               ),
             ),

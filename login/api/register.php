@@ -5,23 +5,23 @@ require "../config/connect.php";
 if ($_SERVER['REQUEST_METHOD']=="POST"){
     # code ...
     $response = array();
-    $username = $_POST['username'];
-    $password = md5($_POST['password']);
-    $nama = $_POST['nama'];
+    $usuario = $_POST['usuario'];
+    $senha = md5($_POST['senha']);
+    $nome = $_POST['nome'];
 
-    $cek = "SELECT * FROM users WHERE username='$username'";
+    $cek = "SELECT * FROM users WHERE usuario='$usuario'";
     $result = mysqli_fetch_array(mysqli_query($con, $cek));
 
     if (isset($result)) {
         # code...
         $response['value']=2;
-        $response['message']="Username telah digunakan";
+        $response['message']="Usuario já cadastrado";
         echo json_encode($response);
 
     } else {
         # code...
 
-        $insert = "INSERT INTO users VALUE(NULL,'$username', '$password', '1', '$nama','1', NOW())";
+        $insert = "INSERT INTO users VALUE(NULL,'$usuario', '$senha', '1', '$nome','1', NOW())";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

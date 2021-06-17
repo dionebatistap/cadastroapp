@@ -24,17 +24,17 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `produk`
+-- Estrutura da tabela `pessoa`
 --
 
-CREATE TABLE `produk` (
+CREATE TABLE `pessoa` (
   `id` int(11) NOT NULL,
-  `namaProduk` text DEFAULT NULL,
-  `qty` int(11) DEFAULT NULL,
-  `harga` int(11) DEFAULT NULL,
+  `nomePessoa` text DEFAULT NULL,
+  `quantidade` int(11) DEFAULT NULL,
+  `preco` int(11) DEFAULT NULL,
   `image` text DEFAULT NULL,
   `createdDate` datetime DEFAULT NULL,
-  `idUsers` int(11) DEFAULT NULL
+  `idUsuario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -45,10 +45,10 @@ CREATE TABLE `produk` (
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `username` text DEFAULT NULL,
-  `password` text DEFAULT NULL,
+  `usuario` text DEFAULT NULL,
+  `senha` text DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
-  `nama` text DEFAULT NULL,
+  `nome` text DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `createdDate` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -58,11 +58,11 @@ CREATE TABLE `users` (
 --
 
 --
--- Índices para tabela `produk`
+-- Índices para tabela `pessoa`
 --
-ALTER TABLE `produk`
+ALTER TABLE `pessoa`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idUsers` (`idUsers`);
+  ADD KEY `idUsuario` (`idUsuario`);
 
 --
 -- Índices para tabela `users`
@@ -75,9 +75,9 @@ ALTER TABLE `users`
 --
 
 --
--- AUTO_INCREMENT de tabela `produk`
+-- AUTO_INCREMENT de tabela `pessoa`
 --
-ALTER TABLE `produk`
+ALTER TABLE `pessoa`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
@@ -91,10 +91,10 @@ ALTER TABLE `users`
 --
 
 --
--- Limitadores para a tabela `produk`
+-- Limitadores para a tabela `pessoa`
 --
-ALTER TABLE `produk`
-  ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`idUsers`) REFERENCES `users` (`id`);
+ALTER TABLE `pessoa`
+  ADD CONSTRAINT `pessoa_ibfk_1` FOREIGN KEY (`idUsuario`) REFERENCES `users` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
@@ -102,4 +102,4 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 
-ALTER TABLE `produk` ADD `ExpDate` DATE NOT NULL AFTER `image`;
+ALTER TABLE `pessoa` ADD `DataSelecionada` DATE NOT NULL AFTER `image`;

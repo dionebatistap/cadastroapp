@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cadastroapp/modal/api.dart';
 import 'package:cadastroapp/views/home.dart';
-import 'package:cadastroapp/views/menuUsers.dart';
-import 'package:cadastroapp/views/product.dart';
+import 'package:cadastroapp/views/menuUsuarios.dart';
+import 'package:cadastroapp/views/pessoa.dart';
 import 'package:cadastroapp/views/profil.dart';
-import 'package:cadastroapp/views/users.dart';
+import 'package:cadastroapp/views/usuarios.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -21,11 +21,11 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
-enum LoginStatus { notSignIn, signIn, signInUsers }
+enum LoginStatus { notSignIn, signIn, signInUsuarios }
 
 class _LoginState extends State<Login> {
   LoginStatus _loginStatus = LoginStatus.notSignIn;
-  String username, password;
+  String usuario, senha;
   final _key = new GlobalKey<FormState>();
 
   bool _secureText = true;
@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      //print("$username, $password"); *verificar retorno*
+      //print("$usuario, $senha"); *verificar retorno*
       login();
     } else {
       setState(() {
@@ -56,12 +56,12 @@ class _LoginState extends State<Login> {
 //antes daqui só passa os dados para o androi, depois para a api
   login() async {
     final response = await http.post(BaseUrl.login,
-        body: {"username": username, "password": password});
+        body: {"usuario": usuario, "senha": senha});
     final data = jsonDecode(response.body);
     int value = data['value'];
-    String pesan = data['message'];
-    String usernameAPI = data['username'];
-    String namaAPI = data['nama'];
+    String aviso = data['message'];
+    String usuarioAPI = data['usuario'];
+    String nomeAPI = data['nome'];
     String id = data['id'];
     String level = data['level'];
     if (value == 1) {
@@ -69,28 +69,28 @@ class _LoginState extends State<Login> {
       if (level == "1") {
         setState(() {
         _loginStatus = LoginStatus.signIn;
-        savePref(value, usernameAPI, namaAPI, id, level);
+        savePref(value, usuarioAPI, nomeAPI, id, level);
       });
         
       } else {
         setState(() {
-        _loginStatus = LoginStatus.signInUsers;
-        savePref(value, usernameAPI, namaAPI, id, level);
+        _loginStatus = LoginStatus.signInUsuarios;
+        savePref(value, usuarioAPI, nomeAPI, id, level);
         });
       }
-      print(pesan);
+      print(aviso);
     } else {
-      print(pesan);
+      print(aviso);
     }
   }
 
   savePref(
-      int value, String username, String nama, String id, String level) async {
+      int value, String usuario, String nome, String id, String level) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("value", value);
-      preferences.setString("nama", nama);
-      preferences.setString("username", username);
+      preferences.setString("nome", nome);
+      preferences.setString("usuario", usuario);
       preferences.setString("id", id);
       preferences.setString("level", level);
       preferences.commit();
@@ -106,7 +106,7 @@ class _LoginState extends State<Login> {
       _loginStatus = value == "1" 
       ? LoginStatus.signIn 
       : value == "2"
-      ? LoginStatus.signInUsers
+      ? LoginStatus.signInUsuarios
       : LoginStatus.notSignIn;
     });
   }
@@ -148,14 +148,14 @@ class _LoginState extends State<Login> {
                       return null;
                     }
                   },
-                  onSaved: (e) => username = e,
+                  onSaved: (e) => usuario = e,
                   decoration: InputDecoration(
-                    labelText: "Username",
+                    labelText: "Usuario",
                   ),
                 ),
                 TextFormField(
                   obscureText: _secureText,
-                  onSaved: (e) => password = e,
+                  onSaved: (e) => senha = e,
                   decoration: InputDecoration(
                     labelText: "Password",
                     suffixIcon: IconButton(
@@ -190,8 +190,8 @@ class _LoginState extends State<Login> {
         break;
       case LoginStatus.signIn:
         return MainMenu(signOut);
-      case LoginStatus.signInUsers:
-        return MenuUsers(signOut);
+      case LoginStatus.signInUsuarios:
+        return MenuUsuarios(signOut);
         break;
     }
   }
@@ -205,7 +205,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  String username, password, nama;
+  String usuario, senha, nome;
   final _key = new GlobalKey<FormState>();
 
   bool _secureText = true;
@@ -231,14 +231,14 @@ class _RegisterState extends State<Register> {
 
   save() async {
     final response = await http.post(BaseUrl.register,
-        body: {"nama": nama, "username": username, "password": password});
+        body: {"nome": nome, "usuario": usuario, "senha": senha});
     final data = jsonDecode(response.body);
     int value = data['value'];
-    String pesan = data['message'];
+    String aviso = data['message'];
     if (value == 1) {
       setState(() {
         Navigator.pop(context);
-        print(pesan);
+        print(aviso);
       });
     } else {
       print(data);
@@ -263,7 +263,7 @@ class _RegisterState extends State<Register> {
                   return null;
                 }
               },
-              onSaved: (e) => nama = e,
+              onSaved: (e) => nome = e,
               decoration: InputDecoration(
                 labelText: "Nome Completo",
               ),
@@ -271,14 +271,14 @@ class _RegisterState extends State<Register> {
             TextFormField(
               validator: (e) {
                 if (e.isEmpty) {
-                  return "Please insert username";
+                  return "Please insert usuario";
                 } else {
                   return null;
                 }
               },
-              onSaved: (e) => username = e,
+              onSaved: (e) => usuario = e,
               decoration: InputDecoration(
-                labelText: "Username",
+                labelText: "Usuario",
               ),
             ),
             TextFormField(
@@ -290,7 +290,7 @@ class _RegisterState extends State<Register> {
                   return null;
                 }
               },
-              onSaved: (e) => password = e,
+              onSaved: (e) => senha = e,
               decoration: InputDecoration(
                 labelText: "Password",
                 suffixIcon: IconButton(
@@ -329,14 +329,14 @@ class _MainMenuState extends State<MainMenu> {
     });
   }
 
-  String username = "", nama = "";
+  String usuario = "", nome = "";
   TabController tabController;
 
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      username = preferences.getString("username");
-      nama = preferences.getString("nama");
+      usuario = preferences.getString("usuario");
+      nome = preferences.getString("nome");
     });
   }
 
@@ -365,8 +365,8 @@ class _MainMenuState extends State<MainMenu> {
         body: TabBarView(
           children: <Widget>[
             Home(),
-            Product(),
-            Users(),
+            Pessoa(),
+            Usuarios(),
             Profile(),
           ],
         ),
@@ -383,11 +383,11 @@ class _MainMenuState extends State<MainMenu> {
             ),
             Tab(
               icon: Icon(Icons.apps),
-              text: "Product",
+              text: "Pessoa",
             ),
             Tab(
               icon: Icon(Icons.group),
-              text: "Users",
+              text: "Usuarios",
             ),
             Tab(
               icon: Icon(Icons.account_circle),

@@ -2,45 +2,45 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/modal/api.dart';
-import 'package:cadastroapp/modal/produkModel.dart';
-import 'package:cadastroapp/views/editProduk.dart';
-import 'package:cadastroapp/views/tambahProduk.dart';
+import 'package:cadastroapp/modal/pessoaModel.dart';
+import 'package:cadastroapp/views/editarPessoa.dart';
+import 'package:cadastroapp/views/inserirPessoa.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
-class Product extends StatefulWidget {
+class Pessoa extends StatefulWidget {
   @override
-  _ProductState createState() => _ProductState();
+  _PessoaState createState() => _PessoaState();
 }
 
-class _ProductState extends State<Product> {
+class _PessoaState extends State<Pessoa> {
   final money = NumberFormat("#,##0","en_US");
   var loading = false;
-  final list = new List<ProdukModel>();
+  final list = new List<PessoaModel>();
   final GlobalKey<RefreshIndicatorState> _refresh =
       GlobalKey<RefreshIndicatorState>();
       
-  Future<void> _lihatData() async {
+  Future<void> _listarData() async {
     list.clear();
     if (!mounted) return;
     setState(() {
       loading = true;
     });
-    final response = await http.get(BaseUrl.lihatProduk);
+    final response = await http.get(BaseUrl.listarPessoa);
     if (response.contentLength == 2) {
     } else {
       final data = jsonDecode(response.body);
       data.forEach((api) {
-        final ab = new ProdukModel(
+        final ab = new PessoaModel(
           api['id'],
-          api['namaProduk'],
-          api['qty'],
-          api['harga'],
+          api['nomePessoa'],
+          api['quantidade'],
+          api['preco'],
           api['createdDate'],
-          api['idUsers'],
-          api['nama'],
+          api['idUsuario'],
+          api['nome'],
           api['image'],
-          api['ExpDate'],
+          api['DataSelecionada'],
         );
         list.add(ab);
       });
@@ -93,19 +93,19 @@ class _ProductState extends State<Product> {
 
   _delete(String id) async {
     final response =
-        await http.post(BaseUrl.deleteProduk, body: {"idProduk": id});
+        await http.post(BaseUrl.deletarPessoa, body: {"idPessoa": id});
     final data = jsonDecode(response.body);
     int value = data['value'];
-    String pesan = data['message'];
+    String aviso = data['message'];
     if (value == 1) {
       if (!mounted) return;
       setState(() {
         Navigator.pop(context);
-        _lihatData();
-        print(pesan);
+        _listarData();
+        print(aviso);
       });
     } else {
-      print(pesan);
+      print(aviso);
     }
   }
 
@@ -113,7 +113,7 @@ class _ProductState extends State<Product> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _lihatData();
+    _listarData();
   }
 
   @override
@@ -122,11 +122,11 @@ class _ProductState extends State<Product> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => TambahProduk(_lihatData)));
+                builder: (context) => InserirPessoa(_listarData)));
           },
         ),
         body: RefreshIndicator(
-          onRefresh: _lihatData,
+          onRefresh: _listarData,
           key: _refresh,
           child: loading
               ? Center(child: CircularProgressIndicator())
@@ -156,14 +156,14 @@ class _ProductState extends State<Product> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  x.namaProduk,
+                                  x.nomePessoa,
                                   style: TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(x.qty),
-                                Text(money.format(int.parse(x.harga))),
-                                Text(x.nama),
+                                Text(x.quantidade),
+                                Text(money.format(int.parse(x.preco))),
+                                Text(x.nome),
                                 Text(x.createdDate),
                               ],
                             ),
@@ -172,7 +172,7 @@ class _ProductState extends State<Product> {
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      EditProduk(x, _lihatData)));
+                                      EditarPessoa(x, _listarData)));
                             },
                             icon: Icon(Icons.edit),
                           ),

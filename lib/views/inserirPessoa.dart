@@ -12,18 +12,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 
-class TambahProduk extends StatefulWidget {
+class InserirPessoa extends StatefulWidget {
   final VoidCallback reload;
-  TambahProduk(this.reload);
+  InserirPessoa(this.reload);
   @override
-  _TambahProdukState createState() => _TambahProdukState();
+  _InserirPessoaState createState() => _InserirPessoaState();
 }
 
-class _TambahProdukState extends State<TambahProduk> {
-  String namaProduk, qty, harga, idUsers;
+class _InserirPessoaState extends State<InserirPessoa> {
+  String nomePessoa, quantidade, preco, idUsuario;
   final _key = new GlobalKey<FormState>();
 
-  var validaCampos = true;
+  var validarCampos = true;
 
   File _imageFile;
   final picker = ImagePicker();
@@ -31,11 +31,11 @@ class _TambahProdukState extends State<TambahProduk> {
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      idUsers = preferences.getString("id");
+      idUsuario = preferences.getString("id");
     });
   }
 
-  Future getImageCamera() async {
+  Future obterImagemCamera() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
     if (pickedFile != null) {
@@ -49,7 +49,7 @@ class _TambahProdukState extends State<TambahProduk> {
     }
   }
 
-  Future getImageGallery() async {
+  Future obterImagemGaleria() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
     if (pickedFile != null) {
@@ -67,54 +67,54 @@ class _TambahProdukState extends State<TambahProduk> {
     final form = _key.currentState;
     if (form.validate() && _imageFile != null) {
       form.save();
-      submitWithImage();
+      submterComFoto();
     }
     if (form.validate() && _imageFile == null) {
       form.save();
-      submitNoImage();
+      submterSemFoto();
     } else {
       setState(() {
-        validaCampos = true;
+        validarCampos = true;
       });
     }
   }
 
-  submitNoImage() async {
-    print(harga.replaceAll(",", ""));
-    final response = await http.post(BaseUrl.tambahProduk2, body: {
-      "namaProduk": namaProduk,
-      "qty": qty,
-      "harga": harga.replaceAll(",", ""),
-      "expDate": "$tgl",
-      "idUsers": idUsers,
+  submterSemFoto() async {
+    print(preco.replaceAll(",", ""));
+    final response = await http.post(BaseUrl.inserirPessoaSemFoto, body: {
+      "nomePessoa": nomePessoa,
+      "quantidade": quantidade,
+      "preco": preco.replaceAll(",", ""),
+      "dataSelecionada": "$variavelData",
+      "idUsuario": idUsuario,
     });
     final data = jsonDecode(response.body);
     int value = data['value'];
-    String pesan = data['message'];
+    String aviso = data['message'];
     if (value == 1) {
-      print(pesan);
+      print(aviso);
       setState(() {
         widget.reload();
         Navigator.pop(context);
       });
     } else {
-      print(pesan);
+      print(aviso);
       print(print);
     }
   }
 
-  submitWithImage() async {
+  submterComFoto() async {
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
       var length = await _imageFile.length();
-      var uri = Uri.parse(BaseUrl.tambahProduk);
+      var uri = Uri.parse(BaseUrl.inserirPessoaComFoto);
       var request = http.MultipartRequest('POST', uri);
-      request.fields['namaProduk'] = namaProduk;
-      request.fields['qty'] = qty;
-      request.fields['harga'] = harga.replaceAll(",", '');
-      request.fields['idUsers'] = idUsers;
-      request.fields['expDate'] = "$tgl";
+      request.fields['nomePessoa'] = nomePessoa;
+      request.fields['quantidade'] = quantidade;
+      request.fields['preco'] = preco.replaceAll(",", '');
+      request.fields['idUsuario'] = idUsuario;
+      request.fields['dataSelecionada'] = "$variavelData";
 
       request.files.add(http.MultipartFile("image", stream, length,
           filename: path.basename(_imageFile.path)));
@@ -133,19 +133,19 @@ class _TambahProdukState extends State<TambahProduk> {
     }
   }
 
-  String pilihTanggal, labelText;
-  DateTime tgl = new DateTime.now();
+  String selecionaData, labelText;
+  DateTime variavelData = new DateTime.now();
   final TextStyle valueStyle = TextStyle(fontSize: 16.0);
   Future<Null> _selectedDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: tgl,
+        initialDate: variavelData,
         firstDate: DateTime(1992),
         lastDate: DateTime(2099));
-    if (picked != null && picked != tgl) {
+    if (picked != null && picked != variavelData) {
       setState(() {
-        tgl = picked;
-        pilihTanggal = new DateFormat.yMd().format(tgl);
+        variavelData = picked;
+        selecionaData = new DateFormat.yMd().format(variavelData);
       });
     } else {}
   }
@@ -168,13 +168,13 @@ class _TambahProdukState extends State<TambahProduk> {
             children: <Widget>[
               FlatButton(
                 onPressed: () {
-                  this.getImageCamera();
+                  this.obterImagemCamera();
                 },
                 child: const Text('Câmera'),
               ),
               FlatButton(
                 onPressed: () {
-                  this.getImageGallery();
+                  this.obterImagemGaleria();
                 },
                 child: const Text('Galeria'),
               ),
@@ -193,7 +193,7 @@ class _TambahProdukState extends State<TambahProduk> {
     return Scaffold(
       appBar: AppBar(),
       body: Form(
-        //autovalidate: validaCampos,
+        //autovalidate: validarCampos,
         key: _key,
         child: ListView(
           padding: EdgeInsets.all(16.0),
@@ -216,29 +216,29 @@ class _TambahProdukState extends State<TambahProduk> {
             TextFormField(
               validator: (e) {
                 if (e.isEmpty) {
-                  return "Please insert nama produk";
+                  return "Please insert nome pessoa";
                 } else {
                   return null;
                 }
               },
-              onSaved: (e) => namaProduk = e,
-              decoration: InputDecoration(labelText: 'Nama Produk'),
+              onSaved: (e) => nomePessoa = e,
+              decoration: InputDecoration(labelText: 'Nome Pessoa'),
             ),
             TextFormField(
               validator: (e) {
                 if (e.isEmpty) {
-                  return "Please insert username";
+                  return "Please insert usuario";
                 } else {
                   return null;
                 }
               },
-              onSaved: (e) => qty = e,
-              decoration: InputDecoration(labelText: 'Qty'),
+              onSaved: (e) => quantidade = e,
+              decoration: InputDecoration(labelText: 'Quantidade'),
             ),
             TextFormField(
               validator: (e) {
                 if (e.isEmpty) {
-                  return "Please insert username";
+                  return "Please insert usuario";
                 } else {
                   return null;
                 }
@@ -247,12 +247,12 @@ class _TambahProdukState extends State<TambahProduk> {
                 WhitelistingTextInputFormatter.digitsOnly,
                 CurrencyFormat()
               ],
-              onSaved: (e) => harga = e,
-              decoration: InputDecoration(labelText: 'Harga'),
+              onSaved: (e) => preco = e,
+              decoration: InputDecoration(labelText: 'Preco'),
             ),
             DateDropDown(
               labelText: labelText,
-              valueText: new DateFormat.yMd().format(tgl),
+              valueText: new DateFormat.yMd().format(variavelData),
               valueStyle: valueStyle,
               onPressed: () {
                 _selectedDate(context);

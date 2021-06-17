@@ -5,13 +5,13 @@ require "../config/connect.php";
 if ($_SERVER['REQUEST_METHOD']=="POST"){
     # code ...
     $response = array();
-    $idProduk = $_POST['idProduk'];
+    $idPessoa = $_POST['idPessoa'];
 
-        $insert = "DELETE FROM produk WHERE id='$idProduk'";
+        $insert = "DELETE FROM tbl_pessoas WHERE id='$idPessoa'";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;
-            $response['message']="Produto removido com successo";
+            $response['message']="Pessoa removido com successo";
             echo json_encode($response);
             
         }else {

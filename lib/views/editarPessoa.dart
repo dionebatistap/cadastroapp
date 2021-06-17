@@ -6,27 +6,27 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:cadastroapp/custom/datePicker.dart';
 import 'package:cadastroapp/modal/api.dart';
-import 'package:cadastroapp/modal/produkModel.dart';
+import 'package:cadastroapp/modal/pessoaModel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:shared_preferences/shared_preferences.dart';
 
-class EditProduk extends StatefulWidget {
-  final ProdukModel model;
+class EditarPessoa extends StatefulWidget {
+  final PessoaModel model;
   final VoidCallback reload;
-  EditProduk(this.model, this.reload);
+  EditarPessoa(this.model, this.reload);
   @override
-  _EditProdukState createState() => _EditProdukState();
+  _EditarPessoaState createState() => _EditarPessoaState();
 }
 
-class _EditProdukState extends State<EditProduk> {
+class _EditarPessoaState extends State<EditarPessoa> {
   final _key = new GlobalKey<FormState>();
-  String namaProduk, qty, harga, idUsers;
+  String nomePessoa, quantidade, preco, idUsuario;
 
   File _imageFile;
   final picker = ImagePicker();
 
-  Future getImageCamera() async {
+  Future obterImagemCamera() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
     if (pickedFile != null) {
@@ -39,7 +39,7 @@ class _EditProdukState extends State<EditProduk> {
     }
   }
 
-  Future getImageGallery() async {
+  Future obterImagemGaleria() async {
     final pickedFile = await picker.getImage(
         source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
     if (pickedFile != null) {
@@ -52,19 +52,19 @@ class _EditProdukState extends State<EditProduk> {
     }
   }
 
-  TextEditingController txtNama, txtQty, txtHarga;
-  String tgldate;
+  TextEditingController txtNome, txtQuantidade, txtPreco;
+  String vardata;
 
   setup() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      idUsers = preferences.getString("id");
+      idUsuario = preferences.getString("id");
     });
 
-    tgldate = widget.model.expDate;
-    txtNama = TextEditingController(text: widget.model.namaProduk);
-    txtQty = TextEditingController(text: widget.model.qty);
-    txtHarga = TextEditingController(text: widget.model.harga);
+    vardata = widget.model.dataSelecionada;
+    txtNome = TextEditingController(text: widget.model.nomePessoa);
+    txtQuantidade = TextEditingController(text: widget.model.quantidade);
+    txtPreco = TextEditingController(text: widget.model.preco);
   }
 
   // check() {
@@ -79,53 +79,53 @@ class _EditProdukState extends State<EditProduk> {
     final form = _key.currentState;
     if (form.validate() && _imageFile != null) {
       form.save();
-      submitWithImage();
+      submterComFoto();
     }
     if (form.validate() && _imageFile == null) {
       form.save();
-      submitNoImage();
+      submterSemFoto();
     } else {
       return "Erro!";
     }
   }
 
-  submitNoImage() async {
-    final response = await http.post(BaseUrl.editProdukNoPhoto, body: {
-      "namaProduk": namaProduk,
-      "qty": qty,
-      "harga": harga,
-      "idProduk": widget.model.id,
-      "expDate": "$tgldate"
+  submterSemFoto() async {
+    final response = await http.post(BaseUrl.editarPessoaSemFoto, body: {
+      "nomePessoa": nomePessoa,
+      "quantidade": quantidade,
+      "preco": preco,
+      "idPessoa": widget.model.id,
+      "dataSelecionada": "$vardata"
     });
     final data = jsonDecode(response.body);
     int value = data['value'];
-    String pesan = data['message'];
+    String aviso = data['message'];
 
     if (value == 1) {
       setState(() {
         widget.reload();
         Navigator.pop(context);
-        print(pesan + "Noimage");
+        print(aviso + "Noimage");
         print(data);
       });
     } else {
-      print(pesan + "Noimage");
+      print(aviso + "Noimage");
     }
   }
 
-  submitWithImage() async {
+  submterComFoto() async {
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
       var length = await _imageFile.length();
-      var uri = Uri.parse(BaseUrl.editProdukWithPhoto);
+      var uri = Uri.parse(BaseUrl.editarPessoaComFoto);
       var request = http.MultipartRequest('POST', uri);
-      request.fields['namaProduk'] = namaProduk;
-      request.fields['qty'] = qty;
-      request.fields['harga'] = harga;
-      request.fields['idUsers'] = idUsers;
-      request.fields['idProduk'] = widget.model.id;
-      request.fields['expDate'] = "$tgldate";
+      request.fields['nomePessoa'] = nomePessoa;
+      request.fields['quantidade'] = quantidade;
+      request.fields['preco'] = preco;
+      request.fields['idUsuario'] = idUsuario;
+      request.fields['idPessoa'] = widget.model.id;
+      request.fields['dataSelecionada'] = "$vardata";
 
       request.files.add(http.MultipartFile("image", stream, length,
           filename: path.basename(_imageFile.path)));
@@ -151,22 +151,22 @@ class _EditProdukState extends State<EditProduk> {
     setup();
   }
 
-  String pilihTanggal, labelText;
-  DateTime tgl = new DateTime.now();
+  String selecionaData, labelText;
+  DateTime variavelData = new DateTime.now();
 
-  var formatTgl = new DateFormat('yyyy-MM-dd');
+  var formatarData = new DateFormat('yyyy-MM-dd');
 
   final TextStyle valueStyle = TextStyle(fontSize: 16.0);
   Future<Null> _selectedDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: tgl,
+        initialDate: variavelData,
         firstDate: DateTime(1992),
         lastDate: DateTime(2099));
-    if (picked != null && picked != tgl) {
+    if (picked != null && picked != variavelData) {
       setState(() {
-        tgl = picked;
-        tgldate = formatTgl.format(tgl);
+        variavelData = picked;
+        vardata = formatarData.format(variavelData);
       });
     } else {}
   }
@@ -185,7 +185,7 @@ class _EditProdukState extends State<EditProduk> {
               height: 150.0,
               child: InkWell(
                 onTap: () {
-                  getImageGallery();
+                  obterImagemGaleria();
                   // getimageCamera();
                 },
                 child: _imageFile == null
@@ -197,23 +197,23 @@ class _EditProdukState extends State<EditProduk> {
               ),
             ),
             TextFormField(
-              controller: txtNama,
-              onSaved: (e) => namaProduk = e,
-              decoration: InputDecoration(labelText: 'Nama Produk'),
+              controller: txtNome,
+              onSaved: (e) => nomePessoa = e,
+              decoration: InputDecoration(labelText: 'Nome Pessoa'),
             ),
             TextFormField(
-              controller: txtQty,
-              onSaved: (e) => qty = e,
-              decoration: InputDecoration(labelText: 'Qty'),
+              controller: txtQuantidade,
+              onSaved: (e) => quantidade = e,
+              decoration: InputDecoration(labelText: 'Quantidade'),
             ),
             TextFormField(
-              controller: txtHarga,
-              onSaved: (e) => harga = e,
-              decoration: InputDecoration(labelText: 'Harga'),
+              controller: txtPreco,
+              onSaved: (e) => preco = e,
+              decoration: InputDecoration(labelText: 'Preco'),
             ),
             DateDropDown(
               labelText: labelText,
-              valueText: tgldate,
+              valueText: vardata,
               valueStyle: valueStyle,
               onPressed: () {
                 _selectedDate(context);
