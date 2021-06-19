@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:cadastroapp/custom/datePicker.dart';
-import 'package:cadastroapp/modal/api.dart';
-import 'package:cadastroapp/modal/pessoaModel.dart';
+import 'package:cadastroapp/model/api.dart';
+import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -90,7 +90,9 @@ class _EditarPessoaState extends State<EditarPessoa> {
   }
 
   submterSemFoto() async {
-    final response = await http.post(BaseUrl.editarPessoaSemFoto, body: {
+
+    var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
+    final response = await http.post(url, body: {
       "nomePessoa": nomePessoa,
       "quantidade": quantidade,
       "preco": preco,
@@ -146,7 +148,6 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setup();
   }

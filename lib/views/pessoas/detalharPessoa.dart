@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cadastroapp/modal/api.dart';
-import 'package:cadastroapp/modal/pessoaModel.dart';
+import 'package:cadastroapp/model/api.dart';
+import 'package:cadastroapp/model/pessoaModel.dart';
 
 class DetalharPessoa extends StatefulWidget {
   final PessoaModel model;

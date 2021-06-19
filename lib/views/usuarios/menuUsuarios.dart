@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:cadastroapp/modal/api.dart';
-import 'package:cadastroapp/modal/pessoaModel.dart';
+import 'package:cadastroapp/model/api.dart';
+import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:http/http.dart' as http;
-import 'package:cadastroapp/views/detalharPessoa.dart';
+import 'package:cadastroapp/views/pessoas/detalharPessoa.dart';
 
 class MenuUsuarios extends StatefulWidget {
   final VoidCallback signOut;
@@ -20,16 +20,24 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
   final money = NumberFormat("#,##0", "en_US");
 
   var loading = false;
-  final list = new List<PessoaModel>();
+
+  //final list = new List<PessoaModel>();
+
+final list = <PessoaModel>[];
+
+  // ignore: unused_field
   final GlobalKey<RefreshIndicatorState> _refresh =
       GlobalKey<RefreshIndicatorState>();
+
   Future<void> _listarData() async {
     list.clear();
     if (!mounted) return;
     setState(() {
       loading = true;
     });
-    final response = await http.get(BaseUrl.listarPessoa);
+
+    var url = Uri.parse(BaseUrl.listarPessoa);
+    final response = await http.get(url);
     if (response.contentLength == 2) {
     } else {
       final data = jsonDecode(response.body);
@@ -58,7 +66,6 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _listarData();
   }

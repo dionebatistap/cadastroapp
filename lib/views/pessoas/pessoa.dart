@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:cadastroapp/modal/api.dart';
-import 'package:cadastroapp/modal/pessoaModel.dart';
-import 'package:cadastroapp/views/editarPessoa.dart';
-import 'package:cadastroapp/views/inserirPessoa.dart';
+import 'package:cadastroapp/model/api.dart';
+import 'package:cadastroapp/model/pessoaModel.dart';
+import 'package:cadastroapp/views/pessoas/editarPessoa.dart';
+import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 
@@ -16,9 +16,12 @@ class Pessoa extends StatefulWidget {
 class _PessoaState extends State<Pessoa> {
   final money = NumberFormat("#,##0","en_US");
   var loading = false;
-  final list = new List<PessoaModel>();
-  final GlobalKey<RefreshIndicatorState> _refresh =
-      GlobalKey<RefreshIndicatorState>();
+  
+  //final list = new List<PessoaModel>();
+
+  final list = <PessoaModel>[];
+
+  final GlobalKey<RefreshIndicatorState> _refresh = GlobalKey<RefreshIndicatorState>();
       
   Future<void> _listarData() async {
     list.clear();
@@ -26,7 +29,9 @@ class _PessoaState extends State<Pessoa> {
     setState(() {
       loading = true;
     });
-    final response = await http.get(BaseUrl.listarPessoa);
+
+    var url = Uri.parse(BaseUrl.listarPessoa);
+    final response = await http.get(url);
     if (response.contentLength == 2) {
     } else {
       final data = jsonDecode(response.body);
@@ -94,8 +99,9 @@ class _PessoaState extends State<Pessoa> {
   }
 
   _delete(String id) async {
-    final response =
-        await http.post(BaseUrl.deletarPessoa, body: {"idPessoa": id});
+    
+    var url = Uri.parse(BaseUrl.deletarPessoa);
+    final response = await http.post(url, body: {"idPessoa": id});
     final data = jsonDecode(response.body);
     int value = data['value'];
     String aviso = data['message'];
@@ -113,7 +119,6 @@ class _PessoaState extends State<Pessoa> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _listarData();
   }
