@@ -3,7 +3,6 @@ class PessoaModel {
   final String id;
   final String nomePessoa;
   final String quantidade;
-  final String preco;
   final String estadoCivil;
   final String grupo;
   final String createdDate;
@@ -16,7 +15,6 @@ class PessoaModel {
   this.id,
   this.nomePessoa,
   this.quantidade,
-  this.preco,
   this.estadoCivil,
   this.grupo,
   this.createdDate,

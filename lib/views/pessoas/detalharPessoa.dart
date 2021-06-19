@@ -38,11 +38,9 @@ class _DetalharPessoaState extends State<DetalharPessoa> {
               top: 30.0,
               right: 10.0,
               left: 10.0,
-              
               child: Column(
                 children: <Widget>[
                   Text(widget.model.nomePessoa),
-                  Text(widget.model.preco),
                 ],
               ),
             ),

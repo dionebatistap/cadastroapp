@@ -2,10 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:cadastroapp/custom/currency.dart';
 import 'package:cadastroapp/custom/datePicker.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,147 +13,23 @@ import 'package:path/path.dart' as path;
 class InserirPessoa extends StatefulWidget {
   final VoidCallback reload;
   InserirPessoa(this.reload);
+
   @override
   _InserirPessoaState createState() => _InserirPessoaState();
 }
 
 class _InserirPessoaState extends State<InserirPessoa> {
-  String nomePessoa, quantidade, preco, estadoCivil, grupo, idUsuario;
-
+  String nomePessoa, quantidade, estadoCivil, grupo, idUsuario;
   final _key = new GlobalKey<FormState>();
-
   String clestadoCivil, clgrupo;
-
   var validarCampos = true;
-
   File _imageFile;
   final picker = ImagePicker();
 
-  getPref() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      idUsuario = preferences.getString("id");
-    });
-  }
-
-  Future obterImagemCamera() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
-    }
-  }
-
-  Future obterImagemGaleria() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
-    }
-  }
-
-  check() {
-    final form = _key.currentState;
-    if (form.validate() && _imageFile != null) {
-      form.save();
-      submterComFoto();
-    }
-    if (form.validate() && _imageFile == null) {
-      form.save();
-      submterSemFoto();
-    } else {
-      setState(() {
-        validarCampos = true;
-      });
-    }
-  }
-
-  submterSemFoto() async {
-    print(preco.replaceAll(",", ""));
-
-    var url = Uri.parse(BaseUrl.inserirPessoaSemFoto);
-    final response = await http.post(url, body: {
-      "nomePessoa": nomePessoa,
-      "quantidade": quantidade,
-      "preco": preco.replaceAll(",", ""),
-      "dataSelecionada": "$variavelData",
-      "idUsuario": idUsuario,
-    });
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String aviso = data['message'];
-    if (value == 1) {
-      print(aviso);
-      setState(() {
-        widget.reload();
-        Navigator.pop(context);
-      });
-    } else {
-      print(aviso);
-      print(print);
-    }
-  }
-
-  submterComFoto() async {
-    try {
-      var stream = http.ByteStream(_imageFile.openRead());
-      stream.cast();
-      var length = await _imageFile.length();
-      var uri = Uri.parse(BaseUrl.inserirPessoaComFoto);
-      var request = http.MultipartRequest('POST', uri);
-      request.fields['nomePessoa'] = nomePessoa;
-      request.fields['quantidade'] = quantidade;
-      request.fields['preco'] = preco.replaceAll(",", '');
-      request.fields['estadoCivil'] = "$clestadoCivil";
-      request.fields['grupo'] = "$clgrupo";
-      request.fields['idUsuario'] = idUsuario;
-      request.fields['dataSelecionada'] = "$variavelData";
-
-      request.files.add(http.MultipartFile("image", stream, length,
-          filename: path.basename(_imageFile.path)));
-      var response = await request.send();
-      if (response.statusCode > 2) {
-        print("Imagem carregada");
-        setState(() {
-          widget.reload();
-          Navigator.pop(context);
-        });
-      } else {
-        print("Falha ao carregar imagem");
-      }
-    } catch (e) {
-      debugPrint("Erro $e");
-    }
-  }
-
+  //VARIAVEIS DATAPICKER
   String selecionaData, labelText;
   DateTime variavelData = new DateTime.now();
   final TextStyle valueStyle = TextStyle(fontSize: 16.0);
-  Future<Null> _selectedDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: variavelData,
-        firstDate: DateTime(1992),
-        lastDate: DateTime(2099));
-    if (picked != null && picked != variavelData) {
-      setState(() {
-        variavelData = picked;
-        selecionaData = new DateFormat.yMd().format(variavelData);
-      });
-    } else {}
-  }
 
   @override
   void initState() {
@@ -165,91 +39,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
     _recuperaCep();
   }
 
-  void displayBottomSheet(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Container(
-              child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  this.obterImagemCamera();
-                },
-                child: const Text('Câmera'),
-              ),
-              TextButton(
-                onPressed: () {
-                  this.obterImagemGaleria();
-                },
-                child: const Text('Galeria'),
-              ),
-            ],
-          ));
-        });
-  }
-
-//DROPDOWN LIST GRUPOS
-  List<DropdownMenuItem<String>> _listaItensDropGrupo = [];
-  _carregaItensDropdown() {
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(child: Text("Obreiro"), value: "Obreiro"),
-    );
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(child: Text("Membro"), value: "Membro"),
-    );
-  }
-
-//METODO CEP
-
-  _recuperaCep() async {
-    // final viaCepSearchCep = ViaCepSearchCep();
-    // final infoCepJSON = await viaCepSearchCep.searchInfoByCep(cep: '13276280');
-
-    // Map<String, dynamic> retorno = json.decode(viaCepSearchCep.);
-
-    //   String logradouro = retorno['logradouro'];
-    //   String complemento = retorno['complemento'];
-    //   String bairro = retorno['bairro'];
-
-    // print(
-    //     "Resposta logradouro: $logradouro complemento: $complemento bairro: $bairro "
-    //   );
-
-    // print(infoCepJSON);
-
-//minha api
-
-//testar cepe digitar e retornar erro
-//https://github.com/rodrigobastosv/search_cep/blob/master/lib/src/via_cep/via_cep_search_cep.dart
-
-    //String cepDigitado = _controllerCep.text;
-    
-    String baseUrl = 'https://viacep.com.br/ws/';
-    String cep = '13276280';
-    String tiporetorno = '/json/';
-    final uri = Uri.parse('$baseUrl/$cep/$tiporetorno');
-    http.Response response;
-
-    response = await http.get(uri);
-
-    Map<String, dynamic> retorno = json.decode(response.body);
-    String logradouro = retorno["logradouro"];
-    String complemento = retorno["complemento"];
-    String bairro = retorno["bairro"];
-
-    setState(() {
-      // _resultado = "${logradouro}, ${complemento}, ${bairro} ";
-    });
-
-    print(
-        " $logradouro complemento: $complemento bairro: $bairro ");
-
-  }
-
-//inicioBuild
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -262,8 +51,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
             //padding: EdgeInsets.all(16.0),
             //padding: EdgeInsets.fromLTRB(14, 1, 14.0, 14.0),
             children: <Widget>[
-//CONTAINER DA FOTO
 
+//CONTAINER DA FOTO
               Container(
                 child: InkWell(
                   onTap: () {
@@ -326,31 +115,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                           ),
 
 //TODO: INSERIR SOBRENOME
-//FORMUALARIO DE TEXTO
-                          TextFormField(
-                            validator: (e) {
-                              if (e.isEmpty) {
-                                return "*sobrenome obrigatório";
-                              } else {
-                                return null;
-                              }
-                            },
-                            //onSaved: (e) => nomePessoa = e,
-                            decoration: InputDecoration(labelText: 'Sobrenome'),
-                          ),
-
-                          //TODO: INSERIR CELULAR
-                          TextFormField(
-                            validator: (e) {
-                              if (e.isEmpty) {
-                                return "*celular obrigatório";
-                              } else {
-                                return null;
-                              }
-                            },
-                            //onSaved: (e) => nomePessoa = e,
-                            decoration: InputDecoration(labelText: 'Celular'),
-                          ),
 
 //FORMUALARIO DE TEXTO
                           TextFormField(
@@ -364,20 +128,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                             onSaved: (e) => quantidade = e,
                             decoration:
                                 InputDecoration(labelText: 'Quantidade'),
-                          ),
-
-//FORMUALARIO DE TEXTO
-                          TextFormField(
-                            validator: (e) {
-                              if (e.isEmpty) {
-                                return "Please insert usuario";
-                              } else {
-                                return null;
-                              }
-                            },
-                            inputFormatters: [CurrencyFormat()],
-                            onSaved: (e) => preco = e,
-                            decoration: InputDecoration(labelText: 'Preco'),
                           ),
 
 //FORMUALARIO RADIO BUTTON
@@ -443,20 +193,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                           ),
 
 //TODO: INSERIR PR QUE BATIZOU
-                          //FORMUALARIO DE TEXTO
-                          TextFormField(
-                            validator: (e) {
-                              if (e.isEmpty) {
-                                return "Please insert usuario";
-                              } else {
-                                return null;
-                              }
-                            },
-                            inputFormatters: [CurrencyFormat()],
-                            // onSaved: (e) => preco = e,
-                            decoration:
-                                InputDecoration(labelText: 'Pr. que batizou'),
-                          ),
 
                           //FORMATAÇÃO
                         ],
@@ -488,4 +224,186 @@ class _InserirPessoaState extends State<InserirPessoa> {
       ),
     );
   }
-}
+
+/* METODOS */
+
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      idUsuario = preferences.getString("id");
+    });
+  }
+
+  Future obterImagemCamera() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+        Navigator.pop(context);
+      });
+    } else {
+      return;
+    }
+  }
+
+  Future obterImagemGaleria() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+        Navigator.pop(context);
+      });
+    } else {
+      return;
+    }
+  }
+
+  check() {
+    final form = _key.currentState;
+    if (form.validate() && _imageFile != null) {
+      form.save();
+      submterComFoto();
+    }
+    if (form.validate() && _imageFile == null) {
+      form.save();
+      submterSemFoto();
+    } else {
+      setState(() {
+        validarCampos = true;
+      });
+    }
+  }
+
+  submterSemFoto() async {
+    var url = Uri.parse(BaseUrl.inserirPessoaSemFoto);
+    final response = await http.post(url, body: {
+      "nomePessoa": nomePessoa,
+      "quantidade": quantidade,
+      "dataSelecionada": "$variavelData",
+      "idUsuario": idUsuario,
+    });
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String aviso = data['message'];
+    if (value == 1) {
+      print(aviso);
+      setState(() {
+        widget.reload();
+        Navigator.pop(context);
+      });
+    } else {
+      print(aviso);
+      print(print);
+    }
+  }
+
+  submterComFoto() async {
+    try {
+      var stream = http.ByteStream(_imageFile.openRead());
+      stream.cast();
+      var length = await _imageFile.length();
+      var uri = Uri.parse(BaseUrl.inserirPessoaComFoto);
+      var request = http.MultipartRequest('POST', uri);
+      request.fields['nomePessoa'] = nomePessoa;
+      request.fields['quantidade'] = quantidade;
+      request.fields['estadoCivil'] = "$clestadoCivil";
+      request.fields['grupo'] = "$clgrupo";
+      request.fields['idUsuario'] = idUsuario;
+      request.fields['dataSelecionada'] = "$variavelData";
+
+      request.files.add(http.MultipartFile("image", stream, length,
+          filename: path.basename(_imageFile.path)));
+      var response = await request.send();
+      if (response.statusCode > 2) {
+        print("Imagem carregada");
+        setState(() {
+          widget.reload();
+          Navigator.pop(context);
+        });
+      } else {
+        print("Falha ao carregar imagem");
+      }
+    } catch (e) {
+      debugPrint("Erro $e");
+    }
+  }
+
+  Future<Null> _selectedDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: variavelData,
+        firstDate: DateTime(1992),
+        lastDate: DateTime(2099));
+    if (picked != null && picked != variavelData) {
+      setState(() {
+        variavelData = picked;
+        selecionaData = new DateFormat.yMd().format(variavelData);
+      });
+    } else {}
+  }
+
+  _recuperaCep() async {
+//testar cepe digitar e retornar erro
+//https://github.com/rodrigobastosv/search_cep/blob/master/lib/src/via_cep/via_cep_search_cep.dart
+
+    String baseUrl = 'https://viacep.com.br/ws/';
+    String cep = '13276280';
+    String tiporetorno = '/json/';
+    final uri = Uri.parse('$baseUrl/$cep/$tiporetorno');
+    http.Response response;
+
+    response = await http.get(uri);
+
+    Map<String, dynamic> retorno = json.decode(response.body);
+    String logradouro = retorno["logradouro"];
+    String complemento = retorno["complemento"];
+    String bairro = retorno["bairro"];
+
+    setState(() {
+      // _resultado = "${logradouro}, ${complemento}, ${bairro} ";
+    });
+
+    print(" $logradouro complemento: $complemento bairro: $bairro ");
+  }
+
+  void displayBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              TextButton(
+                onPressed: () {
+                  this.obterImagemCamera();
+                },
+                child: const Text('Câmera'),
+              ),
+              TextButton(
+                onPressed: () {
+                  this.obterImagemGaleria();
+                },
+                child: const Text('Galeria'),
+              ),
+            ],
+          ));
+        });
+  }
+
+//DROPDOWN LIST GRUPOS
+  List<DropdownMenuItem<String>> _listaItensDropGrupo = [];
+  _carregaItensDropdown() {
+    _listaItensDropGrupo.add(
+      DropdownMenuItem(child: Text("Obreiro"), value: "Obreiro"),
+    );
+    _listaItensDropGrupo.add(
+      DropdownMenuItem(child: Text("Membro"), value: "Membro"),
+    );
+  }
+} //CLASS

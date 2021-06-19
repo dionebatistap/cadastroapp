@@ -6,7 +6,6 @@ import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:cadastroapp/views/pessoas/editarPessoa.dart';
 import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 
 class Pessoa extends StatefulWidget {
   @override
@@ -14,16 +13,91 @@ class Pessoa extends StatefulWidget {
 }
 
 class _PessoaState extends State<Pessoa> {
-  final money = NumberFormat("#,##0","en_US");
   var loading = false;
-  
-  //final list = new List<PessoaModel>();
-
   final list = <PessoaModel>[];
+  final GlobalKey<RefreshIndicatorState> _refresh =
+      GlobalKey<RefreshIndicatorState>();
 
-  final GlobalKey<RefreshIndicatorState> _refresh = GlobalKey<RefreshIndicatorState>();
-      
-  Future<void> _listarData() async {
+  @override
+  void initState() {
+    super.initState();
+    _listarPessoas();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => InserirPessoa(_listarPessoas)));
+          },
+        ),
+        body: RefreshIndicator(
+          onRefresh: _listarPessoas,
+          key: _refresh,
+          child: loading
+              ? Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (context, i) {
+                    final x = list[i];
+                    return Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Image.network(
+                            //'http://www.dionebatistap.com.br/login/upload/'
+                            BaseUrl.upload + x.image,
+                            width: 100.0,
+                            height: 100.0,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(
+                            width: 10.0,
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  x.nomePessoa,
+                                  style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                Text(x.quantidade),
+                                Text(x.nome),
+                                Text(x.createdDate),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditarPessoa(x, _listarPessoas)));
+                            },
+                            icon: Icon(Icons.edit),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              dialogDelete(x.id);
+                            },
+                            icon: Icon(Icons.delete),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+        ));
+  }
+
+/*METODOS*/
+
+
+  Future<void> _listarPessoas() async {
     list.clear();
     if (!mounted) return;
     setState(() {
@@ -40,7 +114,6 @@ class _PessoaState extends State<Pessoa> {
           api['id'],
           api['nomePessoa'],
           api['quantidade'],
-          api['preco'],
           api['estadoCivil'],
           api['grupo'],
           api['createdDate'],
@@ -57,6 +130,26 @@ class _PessoaState extends State<Pessoa> {
       });
     }
   }
+
+  _delete(String id) async {
+    var url = Uri.parse(BaseUrl.deletarPessoa);
+    final response = await http.post(url, body: {"idPessoa": id});
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String aviso = data['message'];
+    if (value == 1) {
+      if (!mounted) return;
+      setState(() {
+        Navigator.pop(context);
+        _listarPessoas();
+        print(aviso);
+      });
+    } else {
+      print(aviso);
+    }
+  }
+
+/*COMPONENTES*/
 
   dialogDelete(String id) {
     showDialog(
@@ -96,103 +189,5 @@ class _PessoaState extends State<Pessoa> {
             ),
           );
         });
-  }
-
-  _delete(String id) async {
-    
-    var url = Uri.parse(BaseUrl.deletarPessoa);
-    final response = await http.post(url, body: {"idPessoa": id});
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String aviso = data['message'];
-    if (value == 1) {
-      if (!mounted) return;
-      setState(() {
-        Navigator.pop(context);
-        _listarData();
-        print(aviso);
-      });
-    } else {
-      print(aviso);
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _listarData();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => InserirPessoa(_listarData)));
-          },
-        ),
-        body: RefreshIndicator(
-          onRefresh: _listarData,
-          key: _refresh,
-          child: loading
-              ? Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (context, i) {
-                    final x = list[i];
-                    return Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                           Image.network(
-                          //'http://www.dionebatistap.com.br/login/upload/'
-                           BaseUrl.upload
-                           + x.image,
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                          
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  x.nomePessoa,
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(x.quantidade),
-                                Text(money.format(int.parse(x.preco))),
-                                Text(x.nome),
-                                Text(x.createdDate),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditarPessoa(x, _listarData)));
-                            },
-                            icon: Icon(Icons.edit),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              dialogDelete(x.id);
-                            },
-                            icon: Icon(Icons.delete),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-        ));
   }
 }

@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $response = array();
     $nomePessoa = $_POST['nomePessoa'];
     $quantidade = $_POST['quantidade'];
-    $preco = $_POST['preco'];
     $idPessoa = $_POST['idPessoa'];
     $dataSelecionada = $_POST['dataSelecionada'];
     
@@ -15,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $imagePath = "../upload/".$image;
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', quantidade='$quantidade', preco='$preco', DataSelecionada='$dataSelecionada', image='$image' WHERE id='$idPessoa'";
+        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', quantidade='$quantidade', DataSelecionada='$dataSelecionada', image='$image' WHERE id='$idPessoa'";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

@@ -15,161 +15,29 @@ class EditarPessoa extends StatefulWidget {
   final PessoaModel model;
   final VoidCallback reload;
   EditarPessoa(this.model, this.reload);
+
   @override
   _EditarPessoaState createState() => _EditarPessoaState();
 }
 
 class _EditarPessoaState extends State<EditarPessoa> {
   final _key = new GlobalKey<FormState>();
-  String nomePessoa, quantidade, preco, idUsuario;
-
+  String nomePessoa, quantidade, idUsuario;
   File _imageFile;
   final picker = ImagePicker();
+  TextEditingController txtNome, txtQuantidade;
 
-  Future obterImagemCamera() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-      });
-    } else {
-      return;
-    }
-  }
-
-  Future obterImagemGaleria() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-      });
-    } else {
-      return;
-    }
-  }
-
-  TextEditingController txtNome, txtQuantidade, txtPreco;
+  //VARIAVEIS DATAPICKER
   String vardata;
-
-  setup() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      idUsuario = preferences.getString("id");
-    });
-
-    vardata = widget.model.dataSelecionada;
-    txtNome = TextEditingController(text: widget.model.nomePessoa);
-    txtQuantidade = TextEditingController(text: widget.model.quantidade);
-    txtPreco = TextEditingController(text: widget.model.preco);
-  }
-
-  // check() {
-  //   final form = _key.currentState;
-  //   if (form.validate()) {
-  //     form.save();
-  //     submitImage();
-  //   } else {}
-  // }
-
-  check() {
-    final form = _key.currentState;
-    if (form.validate() && _imageFile != null) {
-      form.save();
-      submterComFoto();
-    }
-    if (form.validate() && _imageFile == null) {
-      form.save();
-      submterSemFoto();
-    } else {
-      return "Erro!";
-    }
-  }
-
-  submterSemFoto() async {
-
-    var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
-    final response = await http.post(url, body: {
-      "nomePessoa": nomePessoa,
-      "quantidade": quantidade,
-      "preco": preco,
-      "idPessoa": widget.model.id,
-      "dataSelecionada": "$vardata"
-    });
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String aviso = data['message'];
-
-    if (value == 1) {
-      setState(() {
-        widget.reload();
-        Navigator.pop(context);
-        print(aviso + "Noimage");
-        print(data);
-      });
-    } else {
-      print(aviso + "Noimage");
-    }
-  }
-
-  submterComFoto() async {
-    try {
-      var stream = http.ByteStream(_imageFile.openRead());
-      stream.cast();
-      var length = await _imageFile.length();
-      var uri = Uri.parse(BaseUrl.editarPessoaComFoto);
-      var request = http.MultipartRequest('POST', uri);
-      request.fields['nomePessoa'] = nomePessoa;
-      request.fields['quantidade'] = quantidade;
-      request.fields['preco'] = preco;
-      request.fields['idUsuario'] = idUsuario;
-      request.fields['idPessoa'] = widget.model.id;
-      request.fields['dataSelecionada'] = "$vardata";
-
-      request.files.add(http.MultipartFile("image", stream, length,
-          filename: path.basename(_imageFile.path)));
-      var response = await request.send();
-      if (response.statusCode > 2) {
-        print("Imagem carregada");
-        setState(() {
-          widget.reload();
-          Navigator.pop(context);
-        });
-      } else {
-        print("Falha ao carregar imagem");
-      }
-    } catch (e) {
-      debugPrint("Erro $e");
-    }
-  }
+  String selecionaData, labelText;
+  DateTime variavelData = new DateTime.now();
+  var formatarData = new DateFormat('yyyy-MM-dd');
+  final TextStyle valueStyle = TextStyle(fontSize: 16.0);
 
   @override
   void initState() {
     super.initState();
     setup();
-  }
-
-  String selecionaData, labelText;
-  DateTime variavelData = new DateTime.now();
-
-  var formatarData = new DateFormat('yyyy-MM-dd');
-
-  final TextStyle valueStyle = TextStyle(fontSize: 16.0);
-  Future<Null> _selectedDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: variavelData,
-        firstDate: DateTime(1992),
-        lastDate: DateTime(2099));
-    if (picked != null && picked != variavelData) {
-      setState(() {
-        variavelData = picked;
-        vardata = formatarData.format(variavelData);
-      });
-    } else {}
   }
 
   @override
@@ -207,11 +75,6 @@ class _EditarPessoaState extends State<EditarPessoa> {
               onSaved: (e) => quantidade = e,
               decoration: InputDecoration(labelText: 'Quantidade'),
             ),
-            TextFormField(
-              controller: txtPreco,
-              onSaved: (e) => preco = e,
-              decoration: InputDecoration(labelText: 'Preco'),
-            ),
             DateDropDown(
               labelText: labelText,
               valueText: vardata,
@@ -230,5 +93,123 @@ class _EditarPessoaState extends State<EditarPessoa> {
         ),
       ),
     );
+  }
+
+/* METODOS */
+
+  Future obterImagemCamera() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+      });
+    } else {
+      return;
+    }
+  }
+
+  Future obterImagemGaleria() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+      });
+    } else {
+      return;
+    }
+  }
+
+  submterComFoto() async {
+    try {
+      var stream = http.ByteStream(_imageFile.openRead());
+      stream.cast();
+      var length = await _imageFile.length();
+      var uri = Uri.parse(BaseUrl.editarPessoaComFoto);
+      var request = http.MultipartRequest('POST', uri);
+      request.fields['nomePessoa'] = nomePessoa;
+      request.fields['quantidade'] = quantidade;
+      request.fields['idUsuario'] = idUsuario;
+      request.fields['idPessoa'] = widget.model.id;
+      request.fields['dataSelecionada'] = "$vardata";
+      request.files.add(http.MultipartFile("image", stream, length,
+          filename: path.basename(_imageFile.path)));
+      var response = await request.send();
+      if (response.statusCode > 2) {
+        print("Imagem carregada");
+        setState(() {
+          widget.reload();
+          Navigator.pop(context);
+        });
+      } else {
+        print("Falha ao carregar imagem");
+      }
+    } catch (e) {
+      debugPrint("Erro $e");
+    }
+  }
+
+  submterSemFoto() async {
+    var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
+    final response = await http.post(url, body: {
+      "nomePessoa": nomePessoa,
+      "quantidade": quantidade,
+      "idPessoa": widget.model.id,
+      "dataSelecionada": "$vardata"
+    });
+    final data = jsonDecode(response.body);
+    int value = data['value'];
+    String aviso = data['message'];
+    if (value == 1) {
+      setState(() {
+        widget.reload();
+        Navigator.pop(context);
+        print(aviso + "Noimage");
+        print(data);
+      });
+    } else {
+      print(aviso + "Noimage");
+    }
+  }
+
+  setup() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      idUsuario = preferences.getString("id");
+    });
+    vardata = widget.model.dataSelecionada;
+    txtNome = TextEditingController(text: widget.model.nomePessoa);
+    txtQuantidade = TextEditingController(text: widget.model.quantidade);
+  }
+
+  Future<Null> _selectedDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: variavelData,
+        firstDate: DateTime(1992),
+        lastDate: DateTime(2099));
+    if (picked != null && picked != variavelData) {
+      setState(() {
+        variavelData = picked;
+        vardata = formatarData.format(variavelData);
+      });
+    } else {}
+  }
+
+  check() {
+    final form = _key.currentState;
+    if (form.validate() && _imageFile != null) {
+      form.save();
+      submterComFoto();
+    }
+    if (form.validate() && _imageFile == null) {
+      form.save();
+      submterSemFoto();
+    } else {
+      return "Erro!";
+    }
   }
 }

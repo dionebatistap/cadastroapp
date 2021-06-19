@@ -13,7 +13,6 @@ require "../config/connect.php";
         $b['id'] = $a['id'];
         $b['nomePessoa'] = $a['nomePessoa'];
         $b['quantidade'] = $a['quantidade'];
-        $b['preco'] = $a['preco'];
         $b['estadoCivil'] = $a['estadoCivil'];
         $b['grupo'] = $a['grupo'];
         $b['createdDate'] = $a['createdDate'];

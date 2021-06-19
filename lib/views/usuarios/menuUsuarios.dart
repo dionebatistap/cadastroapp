@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:http/http.dart' as http;
@@ -9,60 +8,17 @@ import 'package:cadastroapp/views/pessoas/detalharPessoa.dart';
 
 class MenuUsuarios extends StatefulWidget {
   final VoidCallback signOut;
-
   MenuUsuarios(this.signOut);
-
   @override
   _MenuUsuariosState createState() => _MenuUsuariosState();
 }
 
 class _MenuUsuariosState extends State<MenuUsuarios> {
-  final money = NumberFormat("#,##0", "en_US");
-
   var loading = false;
-
-  //final list = new List<PessoaModel>();
-
-final list = <PessoaModel>[];
-
+  final list = <PessoaModel>[];
   // ignore: unused_field
   final GlobalKey<RefreshIndicatorState> _refresh =
       GlobalKey<RefreshIndicatorState>();
-
-  Future<void> _listarData() async {
-    list.clear();
-    if (!mounted) return;
-    setState(() {
-      loading = true;
-    });
-
-    var url = Uri.parse(BaseUrl.listarPessoa);
-    final response = await http.get(url);
-    if (response.contentLength == 2) {
-    } else {
-      final data = jsonDecode(response.body);
-      data.forEach((api) {
-        final ab = new PessoaModel(
-          api['id'],
-          api['nomePessoa'],
-          api['quantidade'],
-          api['preco'],
-          api['estadocivil'],
-          api['grupo'],
-          api['createdDate'],
-          api['idUsuario'],
-          api['nome'],
-          api['image'],
-          api['DataSelecionada'],
-        );
-        list.add(ab);
-      });
-      if (!mounted) return;
-      setState(() {
-        loading = false;
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -101,8 +57,7 @@ final list = <PessoaModel>[];
                 return InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context)=>DetalharPessoa(x)
-                    ));
+                        builder: (context) => DetalharPessoa(x)));
                   },
                   child: Card(
                     child: Column(
@@ -120,10 +75,6 @@ final list = <PessoaModel>[];
                           x.nomePessoa,
                           textAlign: TextAlign.center,
                         ),
-                        Text(
-                          "RS" + money.format(int.parse(x.preco)),
-                          style: TextStyle(color: Colors.orange),
-                        ),
                         SizedBox(
                           height: 10.0,
                         ),
@@ -135,5 +86,38 @@ final list = <PessoaModel>[];
         },
       )),
     );
+  }
+
+  Future<void> _listarData() async {
+    list.clear();
+    if (!mounted) return;
+    setState(() {
+      loading = true;
+    });
+    var url = Uri.parse(BaseUrl.listarPessoa);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new PessoaModel(
+          api['id'],
+          api['nomePessoa'],
+          api['quantidade'],
+          api['estadocivil'],
+          api['grupo'],
+          api['createdDate'],
+          api['idUsuario'],
+          api['nome'],
+          api['image'],
+          api['DataSelecionada'],
+        );
+        list.add(ab);
+      });
+      if (!mounted) return;
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }

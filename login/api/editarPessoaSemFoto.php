@@ -7,11 +7,10 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $response = array();
     $nomePessoa = $_POST['nomePessoa'];
     $quantidade = $_POST['quantidade'];
-    $preco = $_POST['preco'];
     $idPessoa = $_POST['idPessoa'];
     $dataSelecionada = $_POST['dataSelecionada'];
 
-        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', quantidade='$quantidade', preco='$preco', DataSelecionada='$dataSelecionada' WHERE id='$idPessoa'";
+        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', quantidade='$quantidade', DataSelecionada='$dataSelecionada' WHERE id='$idPessoa'";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;
