@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cadastroapp/model/api.dart';
 
-
 //CLASSE QUE REGISTRA USUARIOS
 
 class InserirUsuario extends StatefulWidget {
@@ -13,8 +12,11 @@ class InserirUsuario extends StatefulWidget {
 }
 
 class _InserirUsuario extends State<InserirUsuario> {
-  String usuario, senha, nome;
   final _key = new GlobalKey<FormState>();
+
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController usuarioController = TextEditingController();
+  final TextEditingController senhaController = TextEditingController();
 
   bool _secureText = true;
 
@@ -38,10 +40,12 @@ class _InserirUsuario extends State<InserirUsuario> {
   }
 
   save() async {
-
+    String nome = nomeController.text;
+    String usuario = usuarioController.text;
+    String senha = senhaController.text;
     var url = Uri.parse(BaseUrl.register);
-    final response = await http.post(url,
-        body: {"nome": nome, "usuario": usuario, "senha": senha});
+    final response = await http
+        .post(url, body: {"nome": nome, "usuario": usuario, "senha": senha});
     final data = jsonDecode(response.body);
     int value = data['value'];
     String aviso = data['message'];
@@ -74,7 +78,8 @@ class _InserirUsuario extends State<InserirUsuario> {
                   return null;
                 }
               },
-              onSaved: (e) => nome = e,
+              // onSaved: (e) => nome = e,
+              controller: nomeController,
               decoration: InputDecoration(
                 labelText: "Nome Completo",
               ),
@@ -87,7 +92,8 @@ class _InserirUsuario extends State<InserirUsuario> {
                   return null;
                 }
               },
-              onSaved: (e) => usuario = e,
+             // onSaved: (e) => usuario = e,
+             controller: usuarioController,
               decoration: InputDecoration(
                 labelText: "Usuario",
               ),
@@ -101,7 +107,8 @@ class _InserirUsuario extends State<InserirUsuario> {
                   return null;
                 }
               },
-              onSaved: (e) => senha = e,
+              //onSaved: (e) => senha = e,
+              controller: senhaController,
               decoration: InputDecoration(
                 labelText: "Password",
                 suffixIcon: IconButton(

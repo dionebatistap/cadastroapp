@@ -41,6 +41,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
 
   @override
   Widget build(BuildContext context) {
+    var tamanho = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(),
       body: Form(
@@ -51,7 +52,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
             //padding: EdgeInsets.all(16.0),
             //padding: EdgeInsets.fromLTRB(14, 1, 14.0, 14.0),
             children: <Widget>[
-
 //CONTAINER DA FOTO
               Container(
                 child: InkWell(
@@ -89,7 +89,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(8),
+                      padding: EdgeInsets.all(3),
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -101,8 +101,17 @@ class _InserirPessoaState extends State<InserirPessoa> {
                           ]),
                       child: Column(
                         children: <Widget>[
-//FORMUALARIO DE TEXTO
+//FORMUALARIO DE TEXTO NOME
                           TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              filled: true,
+                              //icon: Icon(Icons.person),
+                              hintText: 'Por favor, iserir nome completo.',
+                              labelText: 'Nome*',
+                            ),
+                            onSaved: (e) => nomePessoa = e,
                             validator: (e) {
                               if (e.isEmpty) {
                                 return "*nome obrigatório";
@@ -110,32 +119,217 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 return null;
                               }
                             },
-                            onSaved: (e) => nomePessoa = e,
-                            decoration: InputDecoration(labelText: 'Nome'),
                           ),
+                          const SizedBox(height: 5.0),
 
-//TODO: INSERIR SOBRENOME
-
-//FORMUALARIO DE TEXTO
+//FORMUALARIO DE TEXTO ENDEREÇO
                           TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              filled: true,
+                              //icon: Icon(Icons.person),
+                              hintText: 'Rua, Avenida...',
+                              labelText: 'Endereço*',
+                            ),
+                            // onSaved: (e) => nomePessoa = e,
                             validator: (e) {
                               if (e.isEmpty) {
-                                return "*Campo obrigatório";
+                                return "*nome obrigatório";
                               } else {
                                 return null;
                               }
                             },
-                            onSaved: (e) => quantidade = e,
-                            decoration:
-                                InputDecoration(labelText: 'Quantidade'),
                           ),
+                          const SizedBox(height: 5.0),
 
-//FORMUALARIO RADIO BUTTON
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: tamanho.size.height * 0.40,
+                                // height: tamanho.size.height * 0.09,
+                                child: TextFormField(
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: 'nº',
+                                    labelText: 'Número*',
+                                  ),
+                                  //onSaved: (e) => nomePessoa = e,
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*nome obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                //const SizedBox(height: 5.0),,
+                              ),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: 'Bairro',
+                                    labelText: 'Bairro*',
+                                  ),
+                                  // onSaved: (e) => nomePessoa = e,
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*nome obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                //const SizedBox(height: 5.0),,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5.0),
+//DADOS
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                //padding: const EdgeInsets.all(0.0),
+                                width: 160.0,
+                                child: TextFormField(
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: '00000-000',
+                                    labelText: 'CEP*',
+                                  ),
+                                  // onSaved: (e) => nomePessoa = e,
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*nome obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                //const SizedBox(height: 5.0),,
+                              ),
+                              SizedBox(
+                                width: 5.0,
+                              ),
+                              Expanded(
+                                child: TextFormField(
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: 'Cidade',
+                                    labelText: 'Cidade*',
+                                  ),
+                                  // onSaved: (e) => nomePessoa = e,
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*nome obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                ),
+                                //const SizedBox(height: 5.0),,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 5.0),
+
+//FORMUALARIO DE TEXTO NOME
+                          TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              filled: true,
+                              //icon: Icon(Icons.person),
+                              hintText: 'nº cel.',
+                              labelText: 'Celular*',
+                            ),
+                            //  onSaved: (e) => nomePessoa = e,
+                            validator: (e) {
+                              if (e.isEmpty) {
+                                return "*nome obrigatório";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 5.0),
+
+                          //FORMUALARIO DE TEXTO NOME
+                          TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              filled: true,
+                              //icon: Icon(Icons.person),
+                              hintText: 'Por favor, iserir nome completo.',
+                              labelText: 'Nome*',
+                            ),
+                            // onSaved: (e) => nomePessoa = e,
+                            validator: (e) {
+                              if (e.isEmpty) {
+                                return "*nome obrigatório";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 8.0),
+
+//FORMULARIO RADIO BUTTON
+                          Row(children: <Widget>[
+                            Text("Estado civil:",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.grey[700])),
+                          ]),
                           Container(
-                            padding: EdgeInsets.all(0.0),
+                            height: tamanho.size.height * 0.09,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[800],
+                                  width: 1.0,
+                                ),
+                              ),
+                              color: Colors.grey[200],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              0,
+                              0,
+                              55,
+                              0,
+                            ),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: <Widget>[
-                                Text("Solteiro"),
+                                Spacer(
+                                  flex: 5,
+                                ),
+                                Text("Solteiro",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
                                 Radio(
                                   value: "Solteiro",
                                   groupValue: clestadoCivil,
@@ -145,7 +339,12 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     });
                                   },
                                 ),
-                                Text("Casado"),
+                                Spacer(
+                                  flex: 3,
+                                ),
+                                Text("Casado",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
                                 Radio(
                                   value: "Casado",
                                   groupValue: clestadoCivil,
@@ -160,28 +359,84 @@ class _InserirPessoaState extends State<InserirPessoa> {
                               ],
                             ),
                           ),
-
-//FORMUALARIO DROPDOWN
-                          Container(
-                            padding: EdgeInsets.all(0.0),
-                            child: Row(
+                          const SizedBox(height: 5.0),
+//INFORMAÇÕES ESPIRITUAL
+                          Column(
+                            children: [Divider()],
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Expanded(
-                                  child: DropdownButtonFormField(
-                                    hint: Text("Grupo"),
-                                    items: _listaItensDropGrupo,
-                                    onChanged: (itemGrupo) {
-                                      setState(() {
-                                        clgrupo = itemGrupo;
-                                      });
-                                    },
-                                  ),
+                                Text("Informação espiritual",
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.grey[700])),
+                              ]),
+
+                          Column(
+                            children: [Divider()],
+                          ),
+                          const SizedBox(height: 5.0),
+
+//MEMBRO OU OBREIRO
+                          Container(
+                            height: tamanho.size.height * 0.09,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[800],
+                                  width: 1.0,
+                                ),
+                              ),
+                              color: Colors.grey[200],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              0,
+                              0,
+                              55,
+                              0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Spacer(
+                                  flex: 5,
+                                ),
+                                Text("Obreiro",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  value: "Obreiro",
+                                  groupValue: clestadoCivil,
+                                  onChanged: (String selecionaEstadoCivil) {
+                                    setState(() {
+                                      clestadoCivil = selecionaEstadoCivil;
+                                    });
+                                  },
+                                ),
+                                Spacer(
+                                  flex: 3,
+                                ),
+                                Text("Membro",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  value: "Membro",
+                                  groupValue: clestadoCivil,
+                                  onChanged: (String selecionaEstadoCivil) {
+                                    setState(() {
+                                      clestadoCivil = selecionaEstadoCivil;
+                                    });
+                                    print("resultado " +
+                                        clestadoCivil.toString());
+                                  },
                                 ),
                               ],
                             ),
                           ),
+                          const SizedBox(height: 8.0),
 
-//FORMUALARIO DE DATA
+//FORMUALARIO DE DATA DO BATISMO
                           DateDropDown(
                             labelText: labelText,
                             valueText:
@@ -191,17 +446,140 @@ class _InserirPessoaState extends State<InserirPessoa> {
                               _selectedDate(context);
                             },
                           ),
+                          const SizedBox(height: 8.0),
 
-//TODO: INSERIR PR QUE BATIZOU
+//FORMUALARIO DE TEXTO PASTOR QUE BATIZOU
+                          TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              filled: true,
+                              //icon: Icon(Icons.person),
+                              hintText: 'Nome do pastor que batizou.',
+                              labelText: 'Pastor que batizou*',
+                            ),
+                            // onSaved: (e) => nomePessoa = e,
+                            validator: (e) {
+                              if (e.isEmpty) {
+                                return "*nome obrigatório";
+                              } else {
+                                return null;
+                              }
+                            },
+                          ),
+                          const SizedBox(height: 5.0),
 
+//FORMULARIO RADIO BUTTON grupo sim ou não
+                          Row(children: <Widget>[
+                            Text("Faz parte de algum grupo:",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.grey[700])),
+                          ]),
+                          const SizedBox(height: 1.0),
+                          Container(
+                            height: tamanho.size.height * 0.09,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[800],
+                                  width: 1.0,
+                                ),
+                              ),
+                              color: Colors.grey[200],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              0,
+                              0,
+                              55,
+                              0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Spacer(
+                                  flex: 5,
+                                ),
+                                Text("Sim",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  value: "Sim",
+                                  groupValue: clestadoCivil,
+                                  onChanged: (String selecionaEstadoCivil) {
+                                    setState(() {
+                                      clestadoCivil = selecionaEstadoCivil;
+                                    });
+                                  },
+                                ),
+                                Spacer(
+                                  flex: 3,
+                                ),
+                                Text("Não",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  value: "Não",
+                                  groupValue: clestadoCivil,
+                                  onChanged: (String selecionaEstadoCivil) {
+                                    setState(() {
+                                      clestadoCivil = selecionaEstadoCivil;
+                                    });
+                                    print("resultado " +
+                                        clestadoCivil.toString());
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+
+// SELECIONAR GRUPO QUE PERTENCE
+                          Container(
+                            height: tamanho.size.height * 0.09,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[800],
+                                  width: 1.1,
+                                ),
+                              ),
+                              color: Colors.grey[200],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(10, 0, 30, 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  child: DropdownButtonFormField(
+                                    decoration:
+                                        InputDecoration.collapsed(hintText: ''),
+                                    //decoration:,
+                                    hint: Text("Selecione o grupo..."),
+                                    items: _listaItensDropGrupo,
+                                    onChanged: (itemGrupo) {
+                                      setState(() {
+                                        clgrupo = itemGrupo;
+                                      });
+                                    },
+                                    style: TextStyle(
+                                        fontSize: 17, color: Colors.grey[700]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+
+                          SizedBox(
+                            height: 30,
+                          ),
                           //FORMATAÇÃO
                         ],
                       ),
                     ),
 
-                    SizedBox(
-                      height: 30,
-                    ),
 //BOTÃO
                     InkWell(
                       onTap: () {
@@ -306,10 +684,12 @@ class _InserirPessoaState extends State<InserirPessoa> {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
       var length = await _imageFile.length();
+
       var uri = Uri.parse(BaseUrl.inserirPessoaComFoto);
       var request = http.MultipartRequest('POST', uri);
+
       request.fields['nomePessoa'] = nomePessoa;
-      request.fields['quantidade'] = quantidade;
+      request.fields['quantidade'] = "1234567";
       request.fields['estadoCivil'] = "$clestadoCivil";
       request.fields['grupo'] = "$clgrupo";
       request.fields['idUsuario'] = idUsuario;
@@ -317,15 +697,16 @@ class _InserirPessoaState extends State<InserirPessoa> {
 
       request.files.add(http.MultipartFile("image", stream, length,
           filename: path.basename(_imageFile.path)));
+
       var response = await request.send();
       if (response.statusCode > 2) {
-        print("Imagem carregada");
+        //print("Imagem carregada");
         setState(() {
           widget.reload();
           Navigator.pop(context);
         });
       } else {
-        print("Falha ao carregar imagem");
+        //print("Falha ao carregar imagem");
       }
     } catch (e) {
       debugPrint("Erro $e");
@@ -400,10 +781,10 @@ class _InserirPessoaState extends State<InserirPessoa> {
   List<DropdownMenuItem<String>> _listaItensDropGrupo = [];
   _carregaItensDropdown() {
     _listaItensDropGrupo.add(
-      DropdownMenuItem(child: Text("Obreiro"), value: "Obreiro"),
+      DropdownMenuItem(child: Text("FJU"), value: "FJU"),
     );
     _listaItensDropGrupo.add(
-      DropdownMenuItem(child: Text("Membro"), value: "Membro"),
+      DropdownMenuItem(child: Text("EVG"), value: "EVG"),
     );
   }
 } //CLASS

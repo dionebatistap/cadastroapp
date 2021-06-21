@@ -12,8 +12,11 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $idUsuario = $_POST['idUsuario'];
     $dataSelecionada = $_POST['dataSelecionada'];
 
-    $image = date('dmYis').str_replace(" ","", basename($_FILES['image']['name']));
+    $imageNome = basename($_FILES['image']['name']);
+    $image = $_POST['nomePessoa'].str_replace("scaled_image_picker","_", $imageNome);
+    
     $imagePath = "../upload/".$image;
+
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
         $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$quantidade','$estadoCivil','$grupo','$image','$dataSelecionada',NOW(),'$idUsuario')";

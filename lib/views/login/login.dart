@@ -107,8 +107,8 @@ class _LoginState extends State<Login> {
   signOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      preferences.setInt("value", null);
-      preferences.setInt("level", null);
+      preferences.setInt("value", 2);
+      preferences.setInt("level", 0);
       _loginStatus = LoginStatus.notSignIn;
     });
   }

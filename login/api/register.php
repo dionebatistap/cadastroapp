@@ -21,17 +21,17 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     } else {
         # code...
 
-        $insert = "INSERT INTO users VALUE(NULL,'$usuario', '$senha', '1', '$nome','1', NOW())";
+        $insert = "INSERT INTO tbl_usuarios VALUE(NULL,'$usuario','$senha','1','$nome','1',NOW())";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;
-            $response['message']="Registrado com sucesso";
+            $response['message']="Registrado com sucesso API";
             echo json_encode($response);
             
         }else {
             #code
             $response['value']=0;
-            $response['message']="Falha ao registrar";
+            $response['message']="Falha ao registrar API";
             echo json_encode($response);
         }
     }
