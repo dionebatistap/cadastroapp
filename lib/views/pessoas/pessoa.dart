@@ -67,7 +67,7 @@ class _PessoaState extends State<Pessoa> {
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold),
                                 ),
-                                Text(x.quantidade),
+                                Text(x.nomePessoa),
                                 Text(x.nome),
                                 Text(x.createdDate),
                               ],
@@ -96,7 +96,6 @@ class _PessoaState extends State<Pessoa> {
 
 /*METODOS*/
 
-
   Future<void> _listarPessoas() async {
     list.clear();
     if (!mounted) return;
@@ -113,7 +112,15 @@ class _PessoaState extends State<Pessoa> {
         final ab = new PessoaModel(
           api['id'],
           api['nomePessoa'],
-          api['quantidade'],
+          api['enderecoPessoa'],
+          api['numeroPessoa'],
+          api['bairroPessoa'],
+          api['cepPessoa'],
+          api['cidadePessoa'],
+          api['celularPessoa'],
+          api['membroObreiro'],
+          api['prBatizou'],
+          api['grupoSimNao'],
           api['estadoCivil'],
           api['grupo'],
           api['createdDate'],

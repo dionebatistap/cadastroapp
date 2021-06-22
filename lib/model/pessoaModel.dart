@@ -1,8 +1,15 @@
 class PessoaModel {
-  
   final String id;
   final String nomePessoa;
-  final String quantidade;
+  final String enderecoPessoa;
+  final String numeroPessoa;
+  final String bairroPessoa;
+  final String cepPessoa;
+  final String cidadePessoa;
+  final String celularPessoa;
+  final String membroObreiro;
+  final String prBatizou;
+  final String grupoSimNao;
   final String estadoCivil;
   final String grupo;
   final String createdDate;
@@ -12,17 +19,22 @@ class PessoaModel {
   final String dataSelecionada;
 
   PessoaModel(
-  this.id,
-  this.nomePessoa,
-  this.quantidade,
-  this.estadoCivil,
-  this.grupo,
-  this.createdDate,
-  this.idUsuario,
-  this.nome,
-  this.image,
-  this.dataSelecionada
-  );
-
-
+      this.id,
+      this.nomePessoa,
+      this.enderecoPessoa,
+      this.numeroPessoa,
+      this.bairroPessoa,
+      this.cepPessoa,
+      this.cidadePessoa,
+      this.celularPessoa,
+      this.membroObreiro,
+      this.prBatizou,
+      this.grupoSimNao,
+      this.estadoCivil,
+      this.grupo,
+      this.createdDate,
+      this.idUsuario,
+      this.nome,
+      this.image,
+      this.dataSelecionada);
 }

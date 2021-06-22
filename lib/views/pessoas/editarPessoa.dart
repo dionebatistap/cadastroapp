@@ -37,6 +37,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
   @override
   void initState() {
     super.initState();
+    //TODO: LIBERAR SETUP PARA EDITAR
     setup();
   }
 
@@ -182,7 +183,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
     });
     vardata = widget.model.dataSelecionada;
     txtNome = TextEditingController(text: widget.model.nomePessoa);
-    txtQuantidade = TextEditingController(text: widget.model.quantidade);
+    txtQuantidade = TextEditingController(text: widget.model.celularPessoa);
   }
 
   Future<Null> _selectedDate(BuildContext context) async {

@@ -18,16 +18,16 @@ require "../config/connect.php";
         $b['cepPessoa'] = $a['cepPessoa'];
         $b['cidadePessoa'] = $a['cidadePessoa'];
         $b['celularPessoa'] = $a['celularPessoa'];
-        $b['estadoCivilPessoa'] = $a['estadoCivilPessoa'];
         $b['membroObreiro'] = $a['membroObreiro'];
-        $b['dataSelecionada'] = $a['dataSelecionada'];
         $b['prBatizou'] = $a['prBatizou'];
         $b['grupoSimNao'] = $a['grupoSimNao'];
-        $b['grupoPertence'] = $a['grupoPertence'];
+        $b['estadoCivil'] = $a['estadoCivil'];
+        $b['grupo'] = $a['grupo'];
         $b['createdDate'] = $a['createdDate'];
-        $b['imagePessoa'] = $a['imagePessoa'];
-        $b['nome'] = $a['nome'];
         $b['idUsuario'] = $a['idUsuario'];
+        $b['image'] = $a['image'];
+        $b['DataSelecionada'] = $a['DataSelecionada'];
+        $b['nome'] = $a['nome'];
 
         array_push($response, $b);
 
