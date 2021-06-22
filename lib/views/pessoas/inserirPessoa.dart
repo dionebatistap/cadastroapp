@@ -19,7 +19,7 @@ class InserirPessoa extends StatefulWidget {
 }
 
 class _InserirPessoaState extends State<InserirPessoa> {
-  String nomePessoa, quantidade, estadoCivil, grupo, idUsuario;
+  String estadoCivil, idUsuario;
 
   final _key = new GlobalKey<FormState>();
   var validarCampos = true;
@@ -678,20 +678,29 @@ class _InserirPessoaState extends State<InserirPessoa> {
   }
 
   submterSemFoto() async {
+    String nome = nomeController.text;
+    String endereco = enderecoController.text;
+    String numero = numeroController.text;
+    String bairro = bairroController.text;
+    String cep = cepController.text;
+    String cidade = cidadeController.text;
+    String celular = celularController.text;
+    String pastorBatizou = prBatizouController.text;
+
     var url = Uri.parse(BaseUrl.inserirPessoaSemFoto);
     final response = await http.post(url, body: {
-      "nomePessoa": "Sem Foto",
-      "enderecoPessoa": "Rua Classe Sem fotos",
-      "numeroPessoa": "139",
-      "bairroPessoa": "Jd Sem Foto",
-      "cepPessoa": "13276280",
-      "cidadePessoa": "Sem Foto",
-      "celularPessoa": "(19)98397-5315",
-      "membroObreiro": "Membro",
-      "prBatizou": "Pr Sem Foto",
-      "grupoSimNao": "Sim",
+      "nomePessoa": "$nome",
+      "enderecoPessoa": "$endereco",
+      "numeroPessoa": "$numero",
+      "bairroPessoa": "$bairro",
+      "cepPessoa": "$cep",
+      "cidadePessoa": "$cidade",
+      "celularPessoa": "$celular",
+      "membroObreiro": "$clMembroObreiro",
+      "prBatizou": "$pastorBatizou",
+      "grupoSimNao": "$grupoSimNao",
       "estadoCivil": "$clestadoCivil",
-      "grupo": "Valor Teste Sem Foto",
+      "grupo": "$clgrupo",
       "idUsuario": idUsuario,
       "dataSelecionada": "$variavelData",
     });
@@ -711,6 +720,15 @@ class _InserirPessoaState extends State<InserirPessoa> {
   }
 
   submterComFoto() async {
+    String nome = nomeController.text;
+    String endereco = enderecoController.text;
+    String numero = numeroController.text;
+    String bairro = bairroController.text;
+    String cep = cepController.text;
+    String cidade = cidadeController.text;
+    String celular = celularController.text;
+    String pastorBatizou = prBatizouController.text;
+
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
@@ -719,18 +737,18 @@ class _InserirPessoaState extends State<InserirPessoa> {
       var uri = Uri.parse(BaseUrl.inserirPessoaComFoto);
       var request = http.MultipartRequest('POST', uri);
 
-      request.fields['nomePessoa'] = "Com foto";
-      request.fields['enderecoPessoa'] = "Rua Classe com Foto";
-      request.fields['numeroPessoa'] = "139";
-      request.fields['bairroPessoa'] = "Jd Com foto";
-      request.fields['cepPessoa'] = "13270000";
-      request.fields['cidadePessoa'] = "Com Foto";
-      request.fields['celularPessoa'] = "(19)98397-5315";
-      request.fields['membroObreiro'] = "Membro";
-      request.fields['prBatizou'] = "Pr Com Foto";
-      request.fields['grupoSimNao'] = "Não";
+      request.fields['nomePessoa'] = "$nome";
+      request.fields['enderecoPessoa'] = "$endereco";
+      request.fields['numeroPessoa'] = "$numero";
+      request.fields['bairroPessoa'] = "$bairro";
+      request.fields['cepPessoa'] = "$cep";
+      request.fields['cidadePessoa'] = "$cidade";
+      request.fields['celularPessoa'] = "$celular";
+      request.fields['membroObreiro'] = "$clMembroObreiro";
+      request.fields['prBatizou'] = "$pastorBatizou";
+      request.fields['grupoSimNao'] = "$grupoSimNao";
       request.fields['estadoCivil'] = "$clestadoCivil";
-      request.fields['grupo'] = "Teste Com Foto";
+      request.fields['grupo'] = "$clgrupo";
       request.fields['idUsuario'] = idUsuario;
       request.fields['dataSelecionada'] = "$variavelData";
 

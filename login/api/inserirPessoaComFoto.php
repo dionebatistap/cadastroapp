@@ -12,34 +12,32 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $cepPessoa = $_POST['cepPessoa'];
     $cidadePessoa = $_POST['cidadePessoa'];
     $celularPessoa = $_POST['celularPessoa'];
-    $estadoCivilPessoa = $_POST['estadoCivilPessoa'];
     $membroObreiro = $_POST['membroObreiro'];
-    $dataSelecionada = $_POST['dataSelecionada'];
     $prBatizou = $_POST['prBatizou'];
     $grupoSimNao = $_POST['grupoSimNao'];
-    $grupoPertence = $_POST['grupoPertence'];
+    $estadoCivil = $_POST['estadoCivil'];
+    $grupo = $_POST['grupo'];
     $idUsuario = $_POST['idUsuario'];
+    $dataSelecionada = $_POST['dataSelecionada'];
 
-    $imageNome = basename($_FILES['imagePessoa']['name']);
-    $tb_image = $_POST['nomePessoa'].str_replace("scaled_image_picker","_", $imageNome);
+    $imageNome = basename($_FILES['image']['name']);
+    $image = $_POST['nomePessoa'].str_replace("scaled_image_picker","_", $imageNome);
     
-    $imagePath = "../upload/".$imagePessoa;
+    $imagePath = "../upload/".$image;
 
-    move_uploaded_file($_FILES['imagePessoa']['tmp_name'],$imagePath);
+    move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa',$estadoCivilPessoa,'$membroObreiro','$dataSelecionada','$prBatizou','$grupoSimNao','$grupoPertence',NOW(),'$imagePessoa','$idUsuario')";
-
-        
+        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$grupoSimNao','$estadoCivil','$grupo','$image','$dataSelecionada',NOW(),'$idUsuario')";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;
-            $response['message']="Pessoa cadastrada com successo API";
+            $response['message']="Pessoa cadastrada com successo";
             echo json_encode($response);
             
         }else {
             #code
             $response['value']=0;
-            $response['message']="Falha ao cadastrar produto API";
+            $response['message']="Falha ao cadastrar produto";
             echo json_encode($response);
         }
     
