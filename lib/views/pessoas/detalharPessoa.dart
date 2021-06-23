@@ -5,6 +5,7 @@ import 'package:cadastroapp/model/pessoaModel.dart';
 class DetalharPessoa extends StatefulWidget {
   final PessoaModel model;
   DetalharPessoa(this.model);
+
   @override
   _DetalharPessoaState createState() => _DetalharPessoaState();
 }

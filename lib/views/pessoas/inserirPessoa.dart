@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:cadastroapp/custom/datePicker.dart';
 import 'package:cadastroapp/model/api.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
@@ -61,6 +62,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
   DateTime variavelData = new DateTime.now();
   final TextStyle valueStyle = TextStyle(fontSize: 16.0);
 
+//FORMATADORES
+  var formataCelular = new MaskTextInputFormatter(
+      mask: '(##)#####-####', filter: {"#": RegExp(r'[0-9]')});
+
+  var formataCep = new MaskTextInputFormatter(
+      mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
+
   @override
   void initState() {
     super.initState();
@@ -81,41 +89,77 @@ class _InserirPessoaState extends State<InserirPessoa> {
               key: _key,
               child: SingleChildScrollView(
                 child: Column(
-                  //padding: EdgeInsets.all(16.0),
-                  //padding: EdgeInsets.fromLTRB(14, 1, 14.0, 14.0),
                   children: <Widget>[
 //CONTAINER DA FOTO
-                    Container(
-                      child: InkWell(
-                        onTap: () {
-                          displayBottomSheet(context);
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(5),
-                              height: 300.0,
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      child: _imageFile == null
+                          ? Container(
+                              width: tamanho.size.width,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                image: DecorationImage(
-                                  image: _imageFile == null
-                                      ? AssetImage('./images/placeholder.png')
-                                      : FileImage(File(_imageFile.path)),
-                                  fit: BoxFit.fill,
+                                  color: Colors.grey[100],
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey[300],
+                                        blurRadius: 0,
+                                        spreadRadius: 3),
+                                  ]),
+                              child: Container(
+                                margin: EdgeInsets.all(8),
+                                child: CircleAvatar(
+                                  backgroundColor: Colors.grey[600],
+                                  child: InkWell(
+                                    onTap: () {
+                                      displayBottomSheet(context);
+                                    },
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(),
+                                        Icon(
+                                          Icons.add_a_photo,
+                                          size: 80,
+                                          color: Colors.grey[100],
+                                        ),
+                                        Text(
+                                          "Adicionar",
+                                          style: TextStyle(
+                                              color: Colors.grey[100]),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  radius: 110,
                                 ),
                               ),
                             )
-                          ],
-                        ),
-                      ),
+                          : Container(
+                              width: tamanho.size.width,
+                              height: 300,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  image: DecorationImage(
+                                      image: FileImage(File(_imageFile.path)),
+                                      fit: BoxFit.cover),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey[200],
+                                        blurRadius: 0,
+                                        spreadRadius: 2),
+                                  ]),
+                            ),
                     ),
 
                     /*inicio*/
                     SizedBox(
-                      height: 1,
+                      height: 3,
                     ),
 
 //CONTAINER DOS FORMULARIOS
+
                     Padding(
                       padding: EdgeInsets.only(left: 5, right: 5),
                       child: Column(
@@ -128,8 +172,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 boxShadow: [
                                   BoxShadow(
                                       color: Colors.grey[200],
-                                      blurRadius: 5,
-                                      spreadRadius: 2)
+                                      blurRadius: 0,
+                                      spreadRadius: 3),
                                 ]),
                             child: Column(
                               children: <Widget>[
@@ -201,57 +245,47 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   ],
                                 ),
                                 const SizedBox(height: 5.0),
-//DADOS
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 3,
-                                      child: TextFormField(
-                                        maxLength: 8,
-                                        keyboardType: TextInputType.number,
-                                        decoration: InputDecoration(
-                                          border: UnderlineInputBorder(),
-                                          filled: true,
-                                          //icon: Icon(Icons.person),
-                                          hintText: '00000-000',
-                                          labelText: 'CEP*',
-                                          suffixIcon: IconButton(
-                                            onPressed: recuperaCep,
-                                            icon: Icon(Icons.search),
-                                            //onPressed: _recuperaCep,
-                                          ),
-                                          counterText: '',
-                                          counterStyle: TextStyle(fontSize: 0),
-                                        ),
-                                        controller: cepController,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 5.0,
-                                    ),
-                                    Expanded(
-                                      flex: 4,
-                                      child: TextFormField(
-                                        textCapitalization:
-                                            TextCapitalization.words,
-                                        decoration: const InputDecoration(
-                                          border: UnderlineInputBorder(),
-                                          filled: true,
-                                          //icon: Icon(Icons.person),
-                                          hintText: 'Cidade',
-                                          labelText: 'Cidade*',
-                                        ),
-                                        controller: cidadeController,
-                                      ),
-                                    ),
-                                  ],
+
+                                TextFormField(
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: 'Cidade',
+                                    labelText: 'Cidade*',
+                                  ),
+                                  controller: cidadeController,
                                 ),
+
+                                const SizedBox(height: 5.0),
+
+                                TextFormField(
+                                  inputFormatters: [formataCep],
+                                  maxLength: 9,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    border: UnderlineInputBorder(),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: '00000-000',
+                                    labelText: 'CEP*',
+                                    suffixIcon: IconButton(
+                                      onPressed: recuperaCep,
+                                      icon: Icon(Icons.search),
+                                      //onPressed: _recuperaCep,
+                                    ),
+                                    counterText: '',
+                                    counterStyle: TextStyle(fontSize: 0),
+                                  ),
+                                  controller: cepController,
+                                ),
+//DADOS
                                 const SizedBox(height: 5.0),
 
 //FORMUALARIO DE TEXTO NOME
                                 TextFormField(
+                                  inputFormatters: [formataCelular],
                                   keyboardType: TextInputType.number,
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
@@ -430,7 +464,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   ),
                                   child: DateDropDown(
                                     labelText: labelText,
-                                    valueText: new DateFormat.yMd()
+                                    valueText: new DateFormat.yMd('pt_Br')
                                         .format(variavelData),
                                     valueStyle: valueStyle,
                                     onPressed: () {
@@ -633,34 +667,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
     });
   }
 
-  Future obterImagemCamera() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
-    }
-  }
-
-  Future obterImagemGaleria() async {
-    final pickedFile = await picker.getImage(
-        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
-    }
-  }
-
   check() {
     final form = _key.currentState;
     if (form.validate() && _imageFile != null) {
@@ -811,6 +817,44 @@ class _InserirPessoaState extends State<InserirPessoa> {
       });
     } else if (response.statusCode == badRequest) {
       print("Errado");
+    }
+  }
+
+  Future obterImagemCamera() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+        Navigator.pop(context);
+      });
+    } else {
+      return;
+    }
+  }
+
+  Future obterImagemGaleria() async {
+    final pickedFile = await picker.getImage(
+        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
+
+
+
+
+
+
+
+
+
+        
+    if (pickedFile != null) {
+      final File file = File(pickedFile.path);
+      setState(() {
+        _imageFile = file;
+        Navigator.pop(context);
+      });
+    } else {
+      return;
     }
   }
 

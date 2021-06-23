@@ -1,7 +1,7 @@
 //import 'dart:convert';
 
+import 'package:cadastroapp/views/pessoas/pessoasLista.dart';
 import 'package:flutter/material.dart';
-import 'package:cadastroapp/views/outrastelas/home.dart';
 import 'package:cadastroapp/views/pessoas/pessoa.dart';
 import 'package:cadastroapp/views/outrastelas/profil.dart';
 import 'package:cadastroapp/views/usuarios/usuarios.dart';
@@ -56,7 +56,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
         ),
         body: TabBarView(
           children: <Widget>[
-            Home(),
+            PessoaLista(),
             Pessoa(),
             Usuarios(),
             Profile(),

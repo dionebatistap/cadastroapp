@@ -1,21 +1,21 @@
 import 'dart:convert';
 
+import 'package:cadastroapp/views/pessoas/pessoaDetalhada.dart';
+import 'package:cadastroapp/views/pessoas/pessoaDetalhes.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
-import 'package:cadastroapp/views/pessoas/editarPessoa.dart';
-import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:http/http.dart' as http;
 
-class Pessoa extends StatefulWidget {
+class PessoaLista extends StatefulWidget {
   @override
-  _PessoaState createState() => _PessoaState();
+  _PessoaLista createState() => _PessoaLista();
 }
 
-class _PessoaState extends State<Pessoa> {
+class _PessoaLista extends State<PessoaLista> {
   var loading = false;
   final list = <PessoaModel>[];
-  
+
   final GlobalKey<RefreshIndicatorState> _refresh =
       GlobalKey<RefreshIndicatorState>();
 
@@ -28,71 +28,36 @@ class _PessoaState extends State<Pessoa> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => InserirPessoa(_listarPessoas)));
-          },
-        ),
         body: RefreshIndicator(
-          onRefresh: _listarPessoas,
-          key: _refresh,
-          child: loading
-              ? Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (context, i) {
-                    final x = list[i];
-                    return Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Image.network(
-                            //'http://www.dionebatistap.com.br/login/upload/'
-                            BaseUrl.upload + x.image,
-                            width: 100.0,
-                            height: 100.0,
-                            fit: BoxFit.cover,
-                          ),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  x.nomePessoa,
-                                  style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(x.nomePessoa),
-                                Text(x.nome),
-                                Text(x.createdDate),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditarPessoa(x, _listarPessoas)));
-                            },
-                            icon: Icon(Icons.edit),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              dialogDelete(x.id);
-                            },
-                            icon: Icon(Icons.delete),
-                          ),
-                        ],
-                      ),
-                    );
-                  }),
-        ));
+      onRefresh: _listarPessoas,
+      key: _refresh,
+      child: loading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: list.length,
+              itemBuilder: (context, i) {
+                final x = list[i];
+                return ListTile(
+                  leading: CircleAvatar(
+                    radius: 32,
+                    backgroundImage: NetworkImage(
+                      BaseUrl.upload + x.image,
+                    ),
+                  ),
+                  title: Text(x.nomePessoa,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                  subtitle: Text(x.celularPessoa),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => PessoaDetalhes(x)));
+                  },
+                );
+              },
+            ),
+    ));
   }
 
 /*METODOS*/
