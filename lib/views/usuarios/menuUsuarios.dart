@@ -111,7 +111,6 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
           api['celularPessoa'],
           api['membroObreiro'],
           api['prBatizou'],
-          api['grupoSimNao'],
           api['estadoCivil'],
           api['grupo'],
           api['createdDate'],

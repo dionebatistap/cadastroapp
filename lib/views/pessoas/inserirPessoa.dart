@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:cadastroapp/custom/datePicker.dart';
 import 'package:cadastroapp/model/api.dart';
@@ -20,28 +21,20 @@ class InserirPessoa extends StatefulWidget {
 }
 
 class _InserirPessoaState extends State<InserirPessoa> {
-  String estadoCivil, idUsuario;
-
+  //VARIAVEIS
+  String estadoCivil, idUsuario, clgrupo;
   final _key = new GlobalKey<FormState>();
   var validarCampos = true;
   File _imageFile;
   final picker = ImagePicker();
-
   //VARIAVEIS RADIO BUTTONS
   String clestadoCivil = "Casado";
   String clMembroObreiro = "Obreiro";
-  String grupoSimNao = "Sim";
-
-  //VARIAVEIS DROPDOWN
-  String clgrupo;
-
-//DADOS PESSOAIS
+//CONTROLLERS TEXTFIELD
   final TextEditingController nomeController =
       TextEditingController(text: "Dione Batista Pereira");
   final TextEditingController celularController =
       TextEditingController(text: "19983975315");
-
-//ENDEREÇO CONTROLLERS
   final TextEditingController enderecoController =
       TextEditingController(text: "Rua Visconde de Cairu");
   final TextEditingController numeroController =
@@ -52,20 +45,17 @@ class _InserirPessoaState extends State<InserirPessoa> {
       TextEditingController(text: "13276280");
   final TextEditingController cidadeController =
       TextEditingController(text: "Valinhos");
-
-//DADOS ESPIRITUAIS
   final TextEditingController prBatizouController =
       TextEditingController(text: "Pr. Leonardo");
 
   //VARIAVEIS DATAPICKER
   String selecionaData, labelText;
   DateTime variavelData = new DateTime.now();
-  final TextStyle valueStyle = TextStyle(fontSize: 16.0);
+  final TextStyle valueStyle = TextStyle(fontSize: 14.0);
 
 //FORMATADORES
   var formataCelular = new MaskTextInputFormatter(
       mask: '(##)#####-####', filter: {"#": RegExp(r'[0-9]')});
-
   var formataCep = new MaskTextInputFormatter(
       mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
 
@@ -80,7 +70,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
   Widget build(BuildContext context) {
     var tamanho = MediaQuery.of(context);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text("Cadastrar Membro"),
+      ),
       body: Container(
         child: OrientationBuilder(
           builder: (context, orientation) {
@@ -150,11 +142,16 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                         blurRadius: 0,
                                         spreadRadius: 2),
                                   ]),
+                              child: InkWell(
+                                onTap: () {
+                                  displayBottomSheet(context);
+                                },
+                              ),
                             ),
                     ),
 
                     /*inicio*/
-                    SizedBox(
+                    const SizedBox(
                       height: 3,
                     ),
 
@@ -280,10 +277,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   ),
                                   controller: cepController,
                                 ),
-//DADOS
                                 const SizedBox(height: 5.0),
-
-//FORMUALARIO DE TEXTO NOME
+//FORMUALARIO DE TEXTO
                                 TextFormField(
                                   inputFormatters: [formataCelular],
                                   keyboardType: TextInputType.number,
@@ -495,73 +490,10 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                           fontSize: 15,
                                           color: Colors.grey[700])),
                                 ]),
-                                const SizedBox(height: 1.0),
-                                Container(
-                                  height: tamanho.size.height * 0.09,
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey[800],
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    color: Colors.grey[200],
-                                    //border: Border.fromBorderSide(),
-                                  ),
-                                  padding: EdgeInsets.fromLTRB(
-                                    0,
-                                    0,
-                                    55,
-                                    0,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Spacer(
-                                        flex: 5,
-                                      ),
-                                      Text("Sim",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[700])),
-                                      Radio(
-                                        value: "Sim",
-                                        groupValue: grupoSimNao,
-                                        onChanged:
-                                            (String selecionaGrupoSimNao) {
-                                          setState(() {
-                                            grupoSimNao = selecionaGrupoSimNao;
-                                            print(grupoSimNao);
-                                          });
-                                        },
-                                      ),
-                                      Spacer(
-                                        flex: 3,
-                                      ),
-                                      Text("Não",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[700])),
-                                      Radio(
-                                        value: "Nao",
-                                        groupValue: grupoSimNao,
-                                        onChanged:
-                                            (String selecionaGrupoSimNao) {
-                                          setState(() {
-                                            grupoSimNao = selecionaGrupoSimNao;
-                                            print(prBatizouController.text);
-                                          });
-                                          print(grupoSimNao);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 8.0),
-
+                                const SizedBox(height: 2.0),
 // SELECIONAR GRUPO QUE PERTENCE
                                 Container(
-                                  height: tamanho.size.height * 0.09,
+                                  height: tamanho.size.height * 0.1,
                                   decoration: BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(
@@ -578,10 +510,16 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     children: <Widget>[
                                       Expanded(
                                         child: DropdownButtonFormField(
+                                          validator: (value) => value == null
+                                              ? 'Por favor selecione uma opção...'
+                                              : null,
                                           decoration: InputDecoration.collapsed(
                                               hintText: ''),
                                           //decoration:,
-                                          hint: Text("Selecione o grupo..."),
+                                          hint: Text("Selecione o grupo...",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.grey[700])),
                                           items: _listaItensDropGrupo,
                                           onChanged: (itemGrupo) {
                                             setState(() {
@@ -607,8 +545,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                                   variavelData.toString());
                                               print("Pr Que batizou: " +
                                                   prBatizouController.text);
-                                              print("Faz parte grupo? : " +
-                                                  grupoSimNao);
                                               print("Que grupo: " + clgrupo);
                                             });
                                           },
@@ -674,6 +610,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
       submterComFoto();
     }
     if (form.validate() && _imageFile == null) {
+      if (clgrupo == null) {
+        clgrupo = "Não possui grupo";
+      }
       form.save();
       submterSemFoto();
     } else {
@@ -704,7 +643,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
       "celularPessoa": "$celular",
       "membroObreiro": "$clMembroObreiro",
       "prBatizou": "$pastorBatizou",
-      "grupoSimNao": "$grupoSimNao",
       "estadoCivil": "$clestadoCivil",
       "grupo": "$clgrupo",
       "idUsuario": idUsuario,
@@ -752,7 +690,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
       request.fields['celularPessoa'] = "$celular";
       request.fields['membroObreiro'] = "$clMembroObreiro";
       request.fields['prBatizou'] = "$pastorBatizou";
-      request.fields['grupoSimNao'] = "$grupoSimNao";
       request.fields['estadoCivil'] = "$clestadoCivil";
       request.fields['grupo'] = "$clgrupo";
       request.fields['idUsuario'] = idUsuario;
@@ -773,7 +710,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
       }
     } catch (e) {
       debugPrint("Erro $e");
-      print("AQUI");
     }
   }
 
@@ -821,12 +757,27 @@ class _InserirPessoaState extends State<InserirPessoa> {
   }
 
   Future obterImagemCamera() async {
-    final pickedFile = await picker.getImage(
+    final image = await picker.getImage(
         source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
+    File pickedFile = await ImageCropper.cropImage(
+      sourcePath: image.path,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      compressQuality: 100,
+      maxWidth: 1920,
+      maxHeight: 1080,
+      compressFormat: ImageCompressFormat.jpg,
+      androidUiSettings: AndroidUiSettings(
+        toolbarColor: Color(0xFF212121),
+        toolbarTitle: "Editar Imagem",
+        statusBarColor: Colors.black54,
+        backgroundColor: Colors.white,
+        toolbarWidgetColor: Colors.white,
+      ),
+    );
     if (pickedFile != null) {
-      final File file = File(pickedFile.path);
+      final File image = File(pickedFile.path);
       setState(() {
-        _imageFile = file;
+        _imageFile = image;
         Navigator.pop(context);
       });
     } else {
@@ -835,18 +786,23 @@ class _InserirPessoaState extends State<InserirPessoa> {
   }
 
   Future obterImagemGaleria() async {
-    final pickedFile = await picker.getImage(
+    final file = await picker.getImage(
         source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-
-
-
-
-
-
-
-
-
-        
+    File pickedFile = await ImageCropper.cropImage(
+      sourcePath: file.path,
+      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+      compressQuality: 100,
+      maxWidth: 1920,
+      maxHeight: 1080,
+      compressFormat: ImageCompressFormat.jpg,
+      androidUiSettings: AndroidUiSettings(
+        toolbarColor: Color(0xFF212121),
+        toolbarTitle: "Editar Imagem",
+        statusBarColor: Colors.black54,
+        backgroundColor: Colors.white,
+        toolbarWidgetColor: Colors.white,
+      ),
+    );
     if (pickedFile != null) {
       final File file = File(pickedFile.path);
       setState(() {
@@ -867,17 +823,31 @@ class _InserirPessoaState extends State<InserirPessoa> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              TextButton(
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  primary: Colors.black45,
+                  backgroundColor: Colors.grey[100],
+                  onSurface: Colors.grey,
+                ),
+                label: Text('Camera'),
+                icon: Icon(Icons.camera_alt),
                 onPressed: () {
                   this.obterImagemCamera();
                 },
-                child: const Text('Câmera'),
+                //child: const Text('Câmera'),
               ),
-              TextButton(
+              TextButton.icon(
+                style: TextButton.styleFrom(
+                  primary: Colors.black45,
+                  backgroundColor: Colors.grey[100],
+                  onSurface: Colors.grey,
+                ),
+                label: Text('Galeria'),
+                icon: Icon(Icons.photo),
                 onPressed: () {
                   this.obterImagemGaleria();
                 },
-                child: const Text('Galeria'),
+                //child: const Text('Galeria'),
               ),
             ],
           ));
@@ -888,10 +858,24 @@ class _InserirPessoaState extends State<InserirPessoa> {
   List<DropdownMenuItem<String>> _listaItensDropGrupo = [];
   _carregaItensDropdown() {
     _listaItensDropGrupo.add(
-      DropdownMenuItem(child: Text("FJU"), value: "FJU"),
+      DropdownMenuItem(
+          child: Text("Não possui grupo",
+              style: TextStyle(fontSize: 18, color: Colors.black87)),
+          value: "Não possui grupo"),
     );
+
     _listaItensDropGrupo.add(
-      DropdownMenuItem(child: Text("EVG"), value: "EVG"),
+      DropdownMenuItem(
+          child: Text("FJU",
+              style: TextStyle(fontSize: 18, color: Colors.black87)),
+          value: "FJU"),
+    );
+
+    _listaItensDropGrupo.add(
+      DropdownMenuItem(
+          child: Text("EVG",
+              style: TextStyle(fontSize: 18, color: Colors.black87)),
+          value: "EVG"),
     );
   }
 }

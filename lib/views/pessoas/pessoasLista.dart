@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cadastroapp/views/pessoas/pessoaDetalhada.dart';
 import 'package:cadastroapp/views/pessoas/pessoaDetalhes.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
@@ -27,13 +26,15 @@ class _PessoaLista extends State<PessoaLista> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: RefreshIndicator(
-      onRefresh: _listarPessoas,
-      key: _refresh,
-      child: loading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
+    return SafeArea(
+      top: true,
+      child: Scaffold(
+          body: RefreshIndicator(
+        onRefresh: _listarPessoas,
+        key: _refresh,
+        child: loading
+            ? Center(child: CircularProgressIndicator())
+            : ListView.builder(
               itemCount: list.length,
               itemBuilder: (context, i) {
                 final x = list[i];
@@ -45,8 +46,8 @@ class _PessoaLista extends State<PessoaLista> {
                     ),
                   ),
                   title: Text(x.nomePessoa,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.bold)),
                   subtitle: Text(x.celularPessoa),
                   onTap: () {
                     Navigator.push(
@@ -57,7 +58,8 @@ class _PessoaLista extends State<PessoaLista> {
                 );
               },
             ),
-    ));
+      )),
+    );
   }
 
 /*METODOS*/
@@ -86,7 +88,6 @@ class _PessoaLista extends State<PessoaLista> {
           api['celularPessoa'],
           api['membroObreiro'],
           api['prBatizou'],
-          api['grupoSimNao'],
           api['estadoCivil'],
           api['grupo'],
           api['createdDate'],

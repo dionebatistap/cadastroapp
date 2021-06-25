@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
-import 'package:http/http.dart' as http;
 
 class PessoaDetalhada extends StatefulWidget {
   final PessoaModel model;
@@ -186,25 +183,6 @@ class _PessoaDetalhadaState extends State<PessoaDetalhada> {
                         ),
                         subtitle: Text(
                           widget.model.prBatizou,
-                          style: TextStyle(
-                            color: Colors.black87,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                        title: Text(
-                          "Faz parte de um grupo ?",
-                          style: TextStyle(
-                            color: Colors.black45,
-                            fontSize: 14,
-                          ),
-                        ),
-                        subtitle: Text(
-                          widget.model.grupoSimNao,
                           style: TextStyle(
                             color: Colors.black87,
                             fontSize: 18,

@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $celularPessoa = $_POST['celularPessoa'];
     $membroObreiro = $_POST['membroObreiro'];
     $prBatizou = $_POST['prBatizou'];
-    $grupoSimNao = $_POST['grupoSimNao'];
     $estadoCivil = $_POST['estadoCivil'];
     $grupo = $_POST['grupo'];
     $idUsuario = $_POST['idUsuario'];
@@ -27,17 +26,17 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
 
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$grupoSimNao','$estadoCivil','$grupo','$image','$dataSelecionada',NOW(),'$idUsuario')";
+        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$image','$dataSelecionada',NOW(),'$idUsuario')";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;
-            $response['message']="Pessoa cadastrada com successo";
+            $response['message']="Cadastro realizado com successo";
             echo json_encode($response);
             
         }else {
             #code
             $response['value']=0;
-            $response['message']="Falha ao cadastrar produto";
+            $response['message']="Falha ao atualizar cadastro";
             echo json_encode($response);
         }
     

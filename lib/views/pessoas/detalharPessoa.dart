@@ -56,7 +56,6 @@ class _DetalharPessoaState extends State<DetalharPessoa> {
                   Text("Cargo: " + widget.model.membroObreiro),
                   Text("Data batismo: " + widget.model.dataSelecionada),
                   Text("Pr Que batizou: " + widget.model.prBatizou),
-                  Text("Está em algum Grupo: " + widget.model.grupoSimNao),
                   Text("Nome Grupo: " + widget.model.grupo),
                 ],
               ),

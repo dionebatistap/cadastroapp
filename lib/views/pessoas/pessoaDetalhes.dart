@@ -1,4 +1,3 @@
-import 'package:cadastroapp/views/pessoas/pessoa.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
@@ -13,267 +12,274 @@ class PessoaDetalhes extends StatefulWidget {
 }
 
 class _PessoaDetalhes extends State<PessoaDetalhes> {
-  String dataformatada = '';
+  String dataCadastroFormatada = '';
+  String dataBatismoformatada = '';
   setupFormato() async {
-    String recebeData = widget.model.dataSelecionada;
-    //var parsedDate = DateTime.parse(recebeData);
-    String convertidaBr =
-        new DateFormat.yMd('pt_Br').format(DateTime.parse(recebeData));
-    setState(() {
-      dataformatada = convertidaBr;
-    });
+    String recebeDataBatismo = widget.model.dataSelecionada;
+    String dataBatismoConvertidaBr =
+        new DateFormat.yMd('pt_Br').format(DateTime.parse(recebeDataBatismo));
 
-    print(dataformatada);
+    String recebeDataCadastro = widget.model.createdDate;
+    String dataCadastroConvertidaBr =
+        new DateFormat.yMd('pt_Br').format(DateTime.parse(recebeDataCadastro));
+
+    setState(() {
+      dataBatismoformatada = dataBatismoConvertidaBr;
+      dataCadastroFormatada = dataCadastroConvertidaBr;
+    });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     setupFormato();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              title: Text(widget.model.nomePessoa),
-              expandedHeight: MediaQuery.of(context).size.height * 0.45,
-              floating: true,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  child: Hero(
-                    tag: widget.model.id,
-                    child: Image.network(
-                      BaseUrl.upload + widget.model.image,
-                      fit: BoxFit.cover,
+    return SafeArea(
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                title: Text(
+                  widget.model.nomePessoa,
+                ),
+                expandedHeight: MediaQuery.of(context).size.height * 0.45,
+                floating: true,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Container(
+                    child: Hero(
+                      tag: widget.model.id,
+                      child: Image.network(
+                        BaseUrl.upload + widget.model.image,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ];
-        },
-        body: Stack(
-          children: <Widget>[
-            SingleChildScrollView(
-              // top: 15.0,
-              // right: 1.0,
-              // left: 1.0,
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(1, 1, 1, 1),
-                    child: Column(
-                      children: <Widget>[
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Nome: ",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
+            ];
+          },
+          body: Stack(
+            children: <Widget>[
+              SingleChildScrollView(
+                // top: 15.0,
+                // right: 1.0,
+                // left: 1.0,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(1, 1, 1, 1),
+                      child: Column(
+                        children: <Widget>[
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Nome: ",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              widget.model.nomePessoa,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          //margin: EdgeInsets.fromLTRB(1, 3, 1, 1),
-                          // margin: EdgeInsets.zero,
-                          //clipBehavior: Clip.antiAlias,
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Endereço:",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
-                              ),
-                            ),
-                            subtitle: Text(
-                              widget.model.enderecoPessoa +
-                                  ', ' +
-                                  widget.model.numeroPessoa +
-                                  '\nBairro: ' +
-                                  widget.model.bairroPessoa +
-                                  '\nCidade: ' +
-                                  widget.model.cidadePessoa +
-                                  '\nCep: ' +
-                                  widget.model.cepPessoa,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 16,
+                              subtitle: Text(
+                                widget.model.nomePessoa,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Celular:",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
+                          Card(
+                            //margin: EdgeInsets.fromLTRB(1, 3, 1, 1),
+                            // margin: EdgeInsets.zero,
+                            //clipBehavior: Clip.antiAlias,
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Endereço:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              widget.model.celularPessoa,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
-                              ),
-                            ),
-                            trailing: IconButton(
-                              icon: Icon(Icons.message),
-                              onPressed: () {
-                                //_textMe(phoneNumber);
-                              },
-                            ),
-                          ),
-                        ),
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Estado Civil:",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
-                              ),
-                            ),
-                            subtitle: Text(
-                              widget.model.estadoCivil,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
+                              subtitle: Text(
+                                widget.model.enderecoPessoa +
+                                    ', ' +
+                                    widget.model.numeroPessoa +
+                                    '\nBairro: ' +
+                                    widget.model.bairroPessoa +
+                                    '\nCidade: ' +
+                                    widget.model.cidadePessoa +
+                                    '\nCep: ' +
+                                    widget.model.cepPessoa,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Cargo:",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Celular:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              widget.model.membroObreiro,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
+                              subtitle: Text(
+                                widget.model.celularPessoa,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Data Batismo nas águas:",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
-                              ),
-                            ),
-                            subtitle: Text(
-                              dataformatada,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
+                              trailing: IconButton(
+                                icon: Icon(Icons.message),
+                                onPressed: () {
+                                  //_textMe(phoneNumber);
+                                },
                               ),
                             ),
                           ),
-                        ),
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Pastor que batizou:",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Estado Civil:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              widget.model.prBatizou,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Faz parte de um grupo ?",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
-                              ),
-                            ),
-                            subtitle: Text(
-                              widget.model.grupoSimNao,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
+                              subtitle: Text(
+                                widget.model.estadoCivil,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Card(
-                          child: ListTile(
-                            contentPadding:
-                                const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                            title: Text(
-                              "Grupo:",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: 14,
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Cargo:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
                               ),
-                            ),
-                            subtitle: Text(
-                              widget.model.grupo,
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 18,
+                              subtitle: Text(
+                                widget.model.membroObreiro,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Data Batismo nas águas:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
+                              ),
+                              subtitle: Text(
+                                dataBatismoformatada,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Pastor que batizou:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
+                              ),
+                              subtitle: Text(
+                                widget.model.prBatizou,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Grupo:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
+                              ),
+                              subtitle: Text(
+                                widget.model.grupo,
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: ListTile(
+                              contentPadding:
+                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                              title: Text(
+                                "Data do cadastro:",
+                                style: TextStyle(
+                                  color: Colors.black26,
+                                  fontSize: 17,
+                                ),
+                              ),
+                              subtitle: Text(
+                                dataCadastroFormatada,
+                                style: TextStyle(
+                                  color: Colors.black38,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

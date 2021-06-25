@@ -22,18 +22,18 @@ class DateDropDown extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: InputDecorator(
-        
-        decoration: InputDecoration(labelText: labelText, border: InputBorder.none),
+        decoration:
+            InputDecoration(labelText: labelText, border: InputBorder.none),
         baseStyle: valueStyle,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center ,
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text("Data Batismo nas águas:",
-                style: TextStyle(fontSize: 16, color: Colors.grey[700])),
+            Text("Data batismo nas águas:",
+                style: TextStyle(fontSize: 13, color: Colors.grey[700])),
             Spacer(
-              flex: 6,
+              flex: 3,
             ),
             Text(
               valueText ?? '',

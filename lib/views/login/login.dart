@@ -39,7 +39,7 @@ class _LoginState extends State<Login> {
       login();
     } else {
       setState(() {
-       // _autovalidate = true;
+        // _autovalidate = true;
       });
     }
   }
@@ -47,10 +47,9 @@ class _LoginState extends State<Login> {
 //Logica para efetuar o login, push no banco de dados
 //antes daqui só passa os dados para o androi, depois para a api
   login() async {
-
     var url = Uri.parse(BaseUrl.login);
-    final response = await http.post(url,
-        body: {"usuario": usuario, "senha": senha});
+    final response =
+        await http.post(url, body: {"usuario": usuario, "senha": senha});
     final data = jsonDecode(response.body);
     int value = data['value'];
     String aviso = data['message'];
@@ -62,14 +61,13 @@ class _LoginState extends State<Login> {
       //Control flow Level
       if (level == "1") {
         setState(() {
-        _loginStatus = LoginStatus.signIn;
-        savePref(value, usuarioAPI, nomeAPI, id, level);
-      });
-        
+          _loginStatus = LoginStatus.signIn;
+          savePref(value, usuarioAPI, nomeAPI, id, level);
+        });
       } else {
         setState(() {
-        _loginStatus = LoginStatus.signInUsuarios;
-        savePref(value, usuarioAPI, nomeAPI, id, level);
+          _loginStatus = LoginStatus.signInUsuarios;
+          savePref(value, usuarioAPI, nomeAPI, id, level);
         });
       }
       print(aviso);
@@ -96,11 +94,11 @@ class _LoginState extends State<Login> {
     setState(() {
       value = preferences.getString("level");
 
-      _loginStatus = value == "1" 
-      ? LoginStatus.signIn 
-      : value == "2"
-      ? LoginStatus.signInUsuarios
-      : LoginStatus.notSignIn;
+      _loginStatus = value == "1"
+          ? LoginStatus.signIn
+          : value == "2"
+              ? LoginStatus.signInUsuarios
+              : LoginStatus.notSignIn;
     });
   }
 
@@ -166,8 +164,8 @@ class _LoginState extends State<Login> {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => InserirUsuario()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InserirUsuario()));
                   },
                   child: Text(
                     "Create a new account in here",
@@ -185,7 +183,7 @@ class _LoginState extends State<Login> {
       case LoginStatus.signInUsuarios:
         return MenuUsuarios(signOut);
         break;
-        default:
+      default:
         return Text("Erro ao carregar menu!");
     }
   }

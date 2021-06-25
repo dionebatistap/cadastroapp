@@ -20,7 +20,6 @@ require "../config/connect.php";
         $b['celularPessoa'] = $a['celularPessoa'];
         $b['membroObreiro'] = $a['membroObreiro'];
         $b['prBatizou'] = $a['prBatizou'];
-        $b['grupoSimNao'] = $a['grupoSimNao'];
         $b['estadoCivil'] = $a['estadoCivil'];
         $b['grupo'] = $a['grupo'];
         $b['createdDate'] = $a['createdDate'];

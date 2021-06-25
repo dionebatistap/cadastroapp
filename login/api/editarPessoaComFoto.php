@@ -5,8 +5,18 @@ require "../config/connect.php";
 if ($_SERVER['REQUEST_METHOD']=="POST"){
     # code ...
     $response = array();
+
     $nomePessoa = $_POST['nomePessoa'];
-    $quantidade = $_POST['quantidade'];
+    $enderecoPessoa = $_POST['enderecoPessoa'];
+    $numeroPessoa = $_POST['numeroPessoa'];
+    $bairroPessoa = $_POST['bairroPessoa'];
+    $cepPessoa = $_POST['cepPessoa'];
+    $cidadePessoa = $_POST['cidadePessoa'];
+    $celularPessoa = $_POST['celularPessoa'];
+    $membroObreiro = $_POST['membroObreiro'];
+    $prBatizou = $_POST['prBatizou'];
+    $estadoCivil = $_POST['estadoCivil'];
+    $grupo = $_POST['grupo'];
     $idPessoa = $_POST['idPessoa'];
     $dataSelecionada = $_POST['dataSelecionada'];
     
@@ -14,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $imagePath = "../upload/".$image;
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', quantidade='$quantidade', DataSelecionada='$dataSelecionada', image='$image' WHERE id='$idPessoa'";
+        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', enderecoPessoa='$enderecoPessoa', numeroPessoa='$numeroPessoa', bairroPessoa='$bairroPessoa', cepPessoa='$cepPessoa', cidadePessoa='$cidadePessoa',celularPessoa='$celularPessoa',membroObreiro='$membroObreiro',prBatizou='$prBatizou', estadoCivil='$estadoCivil', grupo='$grupo', DataSelecionada='$dataSelecionada', image='$image' WHERE id='$idPessoa'";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

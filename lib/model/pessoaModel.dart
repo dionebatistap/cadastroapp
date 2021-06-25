@@ -9,7 +9,6 @@ class PessoaModel {
   final String celularPessoa;
   final String membroObreiro;
   final String prBatizou;
-  final String grupoSimNao;
   final String estadoCivil;
   final String grupo;
   final String createdDate;
@@ -29,7 +28,6 @@ class PessoaModel {
       this.celularPessoa,
       this.membroObreiro,
       this.prBatizou,
-      this.grupoSimNao,
       this.estadoCivil,
       this.grupo,
       this.createdDate,
