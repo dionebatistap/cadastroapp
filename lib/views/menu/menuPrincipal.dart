@@ -1,11 +1,9 @@
 //import 'dart:convert';
 
 import 'package:cadastroapp/views/menu/menu.dart';
-import 'package:cadastroapp/views/pessoas/pessoasLista.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/views/pessoas/pessoa.dart';
 import 'package:cadastroapp/views/outrastelas/profil.dart';
-import 'package:cadastroapp/views/usuarios/usuarios.dart';
 import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,7 +70,7 @@ class _MenuPrincipal extends State<MenuPrincipal> {
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: TabBarView(
               children: <Widget>[
-                PessoaLista(),
+                //PessoaLista(),
                 Pessoa(),
                 BottomAppbar(),
                 Profile(),

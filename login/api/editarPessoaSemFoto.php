@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;
-            $response['message']="Cadastro atualizado com successo";
+            $response['message']="sucesso";
             echo json_encode($response);
             
         }else {

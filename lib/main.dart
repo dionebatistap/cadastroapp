@@ -1,4 +1,3 @@
-import 'package:cadastroapp/utils/AppColors.dart';
 import 'package:cadastroapp/views/login/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

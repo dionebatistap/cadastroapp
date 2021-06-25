@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class PessoaDetalhes extends StatefulWidget {
   final PessoaModel model;
@@ -37,25 +39,43 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark));
     return SafeArea(
       child: Scaffold(
+        appBar: (AppBar(
+          title: Text(widget.model.nomePessoa),
+          toolbarHeight: 70,
+          elevation: 10.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: radiusOnly(bottomLeft: 20, bottomRight: 20),
+          ),
+        )),
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxScrolled) {
             return <Widget>[
               SliverAppBar(
-                title: Text(
-                  widget.model.nomePessoa,
-                ),
+                automaticallyImplyLeading: false,
                 expandedHeight: MediaQuery.of(context).size.height * 0.45,
                 floating: true,
-                pinned: true,
+                pinned: false,
+                snap: false,
+                elevation: 50,
                 flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  //title: Text(widget.model.nomePessoa),
                   background: Container(
                     child: Hero(
                       tag: widget.model.id,
-                      child: Image.network(
-                        BaseUrl.upload + widget.model.image,
-                        fit: BoxFit.cover,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(25),
+                            topLeft: Radius.circular(25)),
+                        child: Image.network(
+                          BaseUrl.upload + widget.model.image,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -66,9 +86,6 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
           body: Stack(
             children: <Widget>[
               SingleChildScrollView(
-                // top: 15.0,
-                // right: 1.0,
-                // left: 1.0,
                 child: Column(
                   children: <Widget>[
                     Padding(

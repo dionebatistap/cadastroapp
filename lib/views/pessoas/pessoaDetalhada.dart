@@ -64,6 +64,7 @@ class _PessoaDetalhadaState extends State<PessoaDetalhada> {
                       // margin: EdgeInsets.zero,
                       //clipBehavior: Clip.antiAlias,
                       child: ListTile(
+                        dense: true,
                         contentPadding: const EdgeInsets.fromLTRB(5, 3, 3, 3),
                         title: Text(
                           "Endereço:",

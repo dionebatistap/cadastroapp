@@ -8,6 +8,7 @@ import 'package:cadastroapp/views/pessoas/editarPessoa.dart';
 import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
+import 'package:flutter/services.dart';
 
 class Pessoa extends StatefulWidget {
   @override
@@ -29,7 +30,20 @@ class _PessoaState extends State<Pessoa> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark));
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Gerenciar Cadastros"),
+        toolbarHeight: 70,
+        elevation: 10.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: radiusOnly(bottomLeft: 20, bottomRight: 20),
+        ),
+      ),
+
+//FLOATING
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         mini: true,
@@ -39,85 +53,157 @@ class _PessoaState extends State<Pessoa> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      //bottomNavigationBar: build(context),
+      // bottomNavigationBar: build(context),
+      bottomNavigationBar: new BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        color: Colors.grey[50],
+        notchMargin: 2.0,
+        clipBehavior: Clip.antiAlias,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.menu,
+              ),
+              color: Colors.grey[50],
+            ),
+          ],
+        ),
+      ),
+ //FLOATINR
       body: RefreshIndicator(
         onRefresh: _listarPessoas,
         key: _refresh,
         child: loading
-            ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (context, i) {
-                  final x = list[i];
-                  return Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Image.network(
-                          //'http://www.dionebatistap.com.br/login/upload/'
-                          BaseUrl.upload + x.image,
-                          width: 100.0,
-                          height: 100.0,
-                          fit: BoxFit.cover,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                x.nomePessoa,
-                                style: TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold),
+            ? Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            : Padding(
+                padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                child: ListView.builder(
+                    itemCount: list.length,
+                    itemBuilder: (context, i) {
+                      final x = list[i];
+                      return Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 20,
+                              backgroundImage: NetworkImage(
+                                BaseUrl.upload + x.image,
                               ),
-                              Text(x.nomePessoa),
-                              Text(x.nome),
-                              Text(x.createdDate),
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                              width: 5.0,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    x.nomePessoa,
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              color: Colors.blueAccent,
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    new MaterialPageRoute(
+                                        builder: (context) =>
+                                            PessoaDetalhes(x)));
+                              },
+                              icon: Icon(
+                                Icons.visibility,
+                                size: 20,
+                              ),
+                            ),
+                            IconButton(
+                              color: Colors.amber[700],
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditarPessoa(x, _listarPessoas)));
+                              },
+                              icon: Icon(
+                                Icons.edit,
+                                size: 20,
+                              ),
+                            ),
+                            IconButton(
+                              color: Colors.red[600],
+                              onPressed: () {
+                                dialogDeletarPessoa(x.id);
+                              },
+                              icon: Icon(
+                                Icons.delete,
+                                size: 20,
+                              ),
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    EditarPessoa(x, _listarPessoas)));
-                          },
-                          icon: Icon(Icons.edit),
-                        ),
-                        // IconButton(
-                        //   onPressed: () {
-                        //     dialogDelete(x.id);
-                        //   },
-                        //   icon: Icon(Icons.delete),
-                        // ),
-                        IconButton(
-                          onPressed: () {
-                            function(x.id);
-                          },
-                          icon: Icon(Icons.delete),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => PessoaDetalhes(x)));
-                          },
-                          icon: Icon(Icons.visibility),
-                        ),
-                      ],
-                    ),
-                  );
-                }),
+                      );
+                    }),
+              ),
       ),
     );
   }
 
 /*METODOS*/
+
+  void mSimpleBottomSheet() {
+    Widget mOption(var icon, var value) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(icon, size: 24, color: Colors.grey[800]),
+            16.width,
+            Text(value, style: primaryTextStyle(size: 16)),
+          ],
+        ),
+      );
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.amber,
+      builder: (builder) {
+        return Container(
+          height: 160.0,
+          color: Colors.transparent,
+          child: Column(
+            children: [
+              mOption(Icons.share, "Share").onTap(() {
+                finish(context);
+                toast('share');
+              }),
+              mOption(Icons.link, "Get Link").onTap(() {
+                finish(context);
+                toast('Get Link');
+              }),
+              mOption(Icons.edit, "Edit Name").onTap(() {
+                finish(context);
+                toast('Edit Name');
+              }),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   Future<void> _listarPessoas() async {
     list.clear();
@@ -178,57 +264,15 @@ class _PessoaState extends State<Pessoa> {
     }
   }
 
-  function(String id) {
+  dialogDeletarPessoa(String id) {
     showConfirmDialogCustom(
       context,
       title: "Deletar este registro permanentemente?",
       dialogType: DialogType.DELETE,
       onAccept: () {
         _delete(id);
-        snackBar(context, title: 'Deleted');
+        snackBar(context, title: 'Deletado');
       },
     );
-  }
-
-/*COMPONENTES*/
-
-  dialogDelete(String id) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            child: ListView(
-              padding: EdgeInsets.all(50.0),
-              shrinkWrap: true,
-              children: <Widget>[
-                Text(
-                  "Deseja deletar ?",
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 50.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text("Não")),
-                    SizedBox(
-                      width: 16.0,
-                    ),
-                    InkWell(
-                        onTap: () {
-                          _delete(id);
-                        },
-                        child: Text("Sim")),
-                  ],
-                ),
-              ],
-            ),
-          );
-        });
   }
 }

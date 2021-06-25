@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cadastroapp/views/menu/menuPrincipal.dart';
+import 'package:cadastroapp/views/pessoas/homePage.dart';
 import 'package:cadastroapp/views/usuarios/inserirUsuario.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -179,7 +179,7 @@ class _LoginState extends State<Login> {
 
         break;
       case LoginStatus.signIn:
-        return MenuPrincipal(signOut);
+        return HomePage(signOut);
       case LoginStatus.signInUsuarios:
         return MenuUsuarios(signOut);
         break;

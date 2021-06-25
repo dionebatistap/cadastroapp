@@ -8,9 +8,11 @@ import 'package:intl/intl.dart';
 import 'package:cadastroapp/custom/datePicker.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
+import 'package:flutter/services.dart';
 
 class InserirPessoa extends StatefulWidget {
   final VoidCallback reload;
@@ -68,10 +70,18 @@ class _InserirPessoaState extends State<InserirPessoa> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark));
     var tamanho = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Cadastrar Membro"),
+        toolbarHeight: 60,
+        elevation: 10.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: radiusOnly(bottomLeft: 20, bottomRight: 20),
+        ),
       ),
       body: Container(
         child: OrientationBuilder(

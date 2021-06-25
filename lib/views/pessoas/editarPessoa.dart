@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +11,7 @@ import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:path/path.dart' as path;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -98,10 +100,18 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark));
     var tamanho = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("Editar Cadastro"),
+        toolbarHeight: 70,
+        elevation: 10.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: radiusOnly(bottomLeft: 20, bottomRight: 20),
+        ),
       ),
       body: Form(
         key: _key,
@@ -512,12 +522,12 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           const SizedBox(height: 10.0),
                           Container(
                             child: ElevatedButton(
-                              child: Text("Salvar"),
+                              child: Text("Atualizar"),
                               onPressed: () {
-                                check();
+                                dialogEditarPessoa();
                               },
                               style: ElevatedButton.styleFrom(
-                                primary: Colors.green[400],
+                                primary: Colors.yellow[700],
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 50, vertical: 10),
                                 textStyle: TextStyle(
@@ -527,6 +537,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                               ),
                             ),
                           ),
+
                           const SizedBox(height: 5.0),
                         ],
                       ),
@@ -552,36 +563,38 @@ class _EditarPessoaState extends State<EditarPessoa> {
     String cidade = cidadeController.text;
     String celular = celularController.text;
     String pastorBatizou = prBatizouController.text;
-
-    var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
-    final response = await http.post(url, body: {
-      "nomePessoa": "$nome",
-      "enderecoPessoa": "$endereco",
-      "numeroPessoa": "$numero",
-      "bairroPessoa": "$bairro",
-      "cepPessoa": "$cep",
-      "cidadePessoa": "$cidade",
-      "celularPessoa": "$celular",
-      "membroObreiro": "$clMembroObreiro",
-      "prBatizou": "$pastorBatizou",
-      "estadoCivil": "$clestadoCivil",
-      "grupo": "$clgrupo",
-      "idUsuario": idUsuario,
-      "idPessoa": widget.model.id,
-      "dataSelecionada": "$variavelData",
-    });
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String aviso = data['message'];
-    if (value == 1) {
-      print(aviso);
-      setState(() {
-        widget.reload();
-        Navigator.pop(context);
+    try {
+      var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
+      final response = await http.post(url, body: {
+        "nomePessoa": "$nome",
+        "enderecoPessoa": "$endereco",
+        "numeroPessoa": "$numero",
+        "bairroPessoa": "$bairro",
+        "cepPessoa": "$cep",
+        "cidadePessoa": "$cidade",
+        "celularPessoa": "$celular",
+        "membroObreiro": "$clMembroObreiro",
+        "prBatizou": "$pastorBatizou",
+        "estadoCivil": "$clestadoCivil",
+        "grupo": "$clgrupo",
+        "idUsuario": idUsuario,
+        "idPessoa": widget.model.id,
+        "dataSelecionada": "$variavelData",
       });
-    } else {
-      print(aviso);
-      print(print);
+
+      final data = jsonDecode(response.body);
+      int value = data['value'];
+      String aviso = data['message'];
+      if (value == 1) {
+        print(aviso);
+        setState(() {
+          widget.reload();
+          Navigator.pop(context);
+        });
+      } else {}
+    } catch (e) {
+      debugPrint("Erro $e");
+      print("AQUI");
     }
   }
 
@@ -617,13 +630,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
       request.fields['idUsuario'] = idUsuario;
       request.fields['idPessoa'] = widget.model.id;
       request.fields['dataSelecionada'] = "$variavelData";
-
       request.files.add(http.MultipartFile("image", stream, length,
           filename: path.basename(_imageFile.path)));
-
       var response = await request.send();
+
       if (response.statusCode > 2) {
-        print("Imagem carregada");
         setState(() {
           widget.reload();
           Navigator.pop(context);
@@ -651,18 +662,27 @@ class _EditarPessoaState extends State<EditarPessoa> {
             new DateFormat.yMd('pt_Br').format(DateTime.parse(vardata));
         dataFormatada = convertidaBr;
       });
-    } else {}
+    } else {
+      print("ERRO selecionar data");
+    }
   }
 
+  String msgSnackConfirma = 'inicializada';
   check() {
     final form = _key.currentState;
     if (form.validate() && _imageFile != null) {
       form.save();
       editarPessoaComFoto();
+      setState(() {
+        msgSnackConfirma = 'Registro Atualizado';
+      });
     }
     if (form.validate() && _imageFile == null) {
       form.save();
       editarPessoaSemFoto();
+      setState(() {
+        msgSnackConfirma = 'Registro Atualizado';
+      });
     } else {
       return "Erro!";
     }
@@ -815,6 +835,18 @@ class _EditarPessoaState extends State<EditarPessoa> {
           child: Text("EVG",
               style: TextStyle(fontSize: 18, color: Colors.black87)),
           value: "EVG"),
+    );
+  }
+
+  dialogEditarPessoa() {
+    showConfirmDialogCustom(
+      context,
+      title: "Salvar dados atualizados?",
+      dialogType: DialogType.UPDATE,
+      onAccept: () {
+        check();
+        snackBar(context, title: msgSnackConfirma);
+      },
     );
   }
 } //CLASS
