@@ -1,23 +1,23 @@
 import 'dart:convert';
 
-import 'package:cadastroapp/views/pessoas/pessoaDetalhes.dart';
+import 'package:cadastroapp/model/usuarioModel.dart';
+import 'package:cadastroapp/views/usuarios/editarUsuario.dart';
+import 'package:cadastroapp/views/usuarios/inserirUsuario.dart';
+import 'package:cadastroapp/views/usuarios/usuarioDetalhes.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
-import 'package:cadastroapp/model/pessoaModel.dart';
-import 'package:cadastroapp/views/pessoas/editarPessoa.dart';
-import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter/services.dart';
 
-class Pessoa extends StatefulWidget {
+class Usuario extends StatefulWidget {
   @override
-  _PessoaState createState() => _PessoaState();
+  _UsuarioState createState() => _UsuarioState();
 }
 
-class _PessoaState extends State<Pessoa> {
+class _UsuarioState extends State<Usuario> {
   var loading = false;
-  final list = <PessoaModel>[];
+  final list = <UsuarioModel>[];
 
   final GlobalKey<RefreshIndicatorState> _refresh =
       GlobalKey<RefreshIndicatorState>();
@@ -26,7 +26,7 @@ class _PessoaState extends State<Pessoa> {
   void initState() {
     super.initState();
     getPref();
-    _listarPessoas();
+    _listarUsuarios();
   }
 
   @override
@@ -36,7 +36,7 @@ class _PessoaState extends State<Pessoa> {
         statusBarIconBrightness: Brightness.dark));
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gerenciar Cadastros"),
+        title: Text("Gerenciar Usuários"),
         toolbarHeight: 70,
         elevation: 10.0,
         shape: RoundedRectangleBorder(
@@ -45,14 +45,24 @@ class _PessoaState extends State<Pessoa> {
       ),
 
 //FLOATING
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        mini: true,
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => InserirPessoa(_listarPessoas)));
-        },
-      ),
+      floatingActionButton: (permissaoUsuario != '1')
+          ? FloatingActionButton(
+              child: Icon(Icons.add),
+              mini: true,
+              onPressed: () {
+                toast('Sem permissão para inserir usuário');
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (context) => InserirUsuario(_listarUsuarios)));
+              },
+            )
+          : FloatingActionButton(
+              child: Icon(Icons.add),
+              mini: true,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => InserirUsuario(_listarUsuarios)));
+              },
+            ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       // bottomNavigationBar: build(context),
       bottomNavigationBar: new BottomAppBar(
@@ -76,7 +86,7 @@ class _PessoaState extends State<Pessoa> {
       ),
       //FLOATINR
       body: RefreshIndicator(
-        onRefresh: _listarPessoas,
+        onRefresh: _listarUsuarios,
         key: _refresh,
         child: loading
             ? Padding(
@@ -94,11 +104,17 @@ class _PessoaState extends State<Pessoa> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            CircleAvatar(
-                              radius: 20,
-                              backgroundImage: NetworkImage(
-                                BaseUrl.upload + x.image,
-                              ),
+                            // CircleAvatar(
+                            //   radius: 20,
+                            //   backgroundImage: NetworkImage(
+                            //       'https://static.vecteezy.com/ti/vetor-gratis/p1/2275847-avatar-masculino-perfil-icone-de-homem-caucasiano-sorridente-vetor.jpg'
+
+                            //       //BaseUrl.upload + x.image,
+                            //       ),
+                            // ),
+                            Icon(
+                              Icons.account_circle,
+                              size: 45,
                             ),
                             SizedBox(
                               width: 5.0,
@@ -108,11 +124,33 @@ class _PessoaState extends State<Pessoa> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    x.nomePessoa,
+                                    x.nome,
                                     style: TextStyle(
-                                        fontSize: 15.0,
+                                        fontSize: 13.0,
                                         fontWeight: FontWeight.bold),
                                   ),
+                                  Text(
+                                    x.usuario,
+                                    style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w100),
+                                  ),
+                                  x.statusUser == 'ativo'
+                                      ? Text(
+                                          x.statusUser,
+                                          style: TextStyle(
+                                              fontSize: 9,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.green[600]),
+                                        )
+                                      : Text(
+                                          x.statusUser,
+                                          style: TextStyle(
+                                            fontSize: 9,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.redAccent,
+                                          ),
+                                        )
                                 ],
                               ),
                             ),
@@ -123,30 +161,16 @@ class _PessoaState extends State<Pessoa> {
                                     context,
                                     new MaterialPageRoute(
                                         builder: (context) =>
-                                            PessoaDetalhes(x)));
+                                            UsuarioDetalhes(x)));
                               },
                               icon: Icon(
                                 Icons.visibility,
                                 size: 20,
                               ),
                             ),
-                            (permissaoUsuario == '1' || permissaoUsuario == '2')
+
+                            (permissaoUsuario != '1')
                                 ? IconButton(
-                                    color: Colors.amber[700],
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              EditarPessoa(x, _listarPessoas),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      size: 20,
-                                    ),
-                                  )
-                                : IconButton(
                                     color: Colors.grey[300],
                                     onPressed: () {
                                       toast('Sem permissão para editar');
@@ -155,7 +179,22 @@ class _PessoaState extends State<Pessoa> {
                                       Icons.edit,
                                       size: 20,
                                     ),
+                                  )
+                                : IconButton(
+                                    color: Colors.amber[700],
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  EditarUsuario(
+                                                      x, _listarUsuarios)));
+                                    },
+                                    icon: Icon(
+                                      Icons.edit,
+                                      size: 20,
+                                    ),
                                   ),
+
                             (permissaoUsuario != '1')
                                 ? IconButton(
                                     color: Colors.grey[300],
@@ -170,7 +209,7 @@ class _PessoaState extends State<Pessoa> {
                                 : IconButton(
                                     color: Colors.red[600],
                                     onPressed: () {
-                                      dialogDeletarPessoa(x.id);
+                                      dialogDeletarUsuario(x.id);
                                     },
                                     icon: Icon(
                                       Icons.delete,
@@ -187,8 +226,8 @@ class _PessoaState extends State<Pessoa> {
   }
 
 /*METODOS*/
-  String permissaoUsuario;
 
+  String permissaoUsuario;
   getPref() async {
     String levelUserPref;
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -198,37 +237,27 @@ class _PessoaState extends State<Pessoa> {
     });
   }
 
-  Future<void> _listarPessoas() async {
+  Future<void> _listarUsuarios() async {
     list.clear();
     if (!mounted) return;
     setState(() {
       loading = true;
     });
 
-    var url = Uri.parse(BaseUrl.listarPessoa);
+    var url = Uri.parse(BaseUrl.listarUsuarios);
     final response = await http.get(url);
     if (response.contentLength == 2) {
     } else {
       final data = jsonDecode(response.body);
       data.forEach((api) {
-        final ab = new PessoaModel(
+        final ab = new UsuarioModel(
           api['id'],
-          api['nomePessoa'],
-          api['enderecoPessoa'],
-          api['numeroPessoa'],
-          api['bairroPessoa'],
-          api['cepPessoa'],
-          api['cidadePessoa'],
-          api['celularPessoa'],
-          api['membroObreiro'],
-          api['prBatizou'],
-          api['estadoCivil'],
-          api['grupo'],
-          api['createdDate'],
-          api['idUsuario'],
+          api['usuario'],
+          api['senha'],
+          api['levelUser'],
           api['nome'],
-          api['image'],
-          api['DataSelecionada'],
+          api['statusUser'],
+          api['createdDate'],
         );
         list.add(ab);
       });
@@ -239,17 +268,17 @@ class _PessoaState extends State<Pessoa> {
     }
   }
 
+//OK
   _delete(String id) async {
-    var url = Uri.parse(BaseUrl.deletarPessoa);
-    final response = await http.post(url, body: {"idPessoa": id});
+    var url = Uri.parse(BaseUrl.deletarUsuario);
+    final response = await http.post(url, body: {"idUsuario": id});
     final data = jsonDecode(response.body);
     int value = data['value'];
     String aviso = data['message'];
     if (value == 1) {
       if (!mounted) return;
       setState(() {
-        //Navigator.pop(context);
-        _listarPessoas();
+        _listarUsuarios();
         print(aviso);
       });
     } else {
@@ -257,7 +286,7 @@ class _PessoaState extends State<Pessoa> {
     }
   }
 
-  dialogDeletarPessoa(String id) {
+  dialogDeletarUsuario(String id) {
     showConfirmDialogCustom(
       context,
       title: "Deletar este registro permanentemente?",

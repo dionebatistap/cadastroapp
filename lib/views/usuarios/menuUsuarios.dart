@@ -5,6 +5,7 @@ import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:http/http.dart' as http;
 import 'package:cadastroapp/views/pessoas/detalharPessoa.dart';
+import 'package:nb_utils/nb_utils.dart';
 
 class MenuUsuarios extends StatefulWidget {
   final VoidCallback signOut;
@@ -30,59 +31,64 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Text("Visualizar Cadastros"),
+        toolbarHeight: 70,
+        elevation: 10.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: radiusOnly(bottomLeft: 20, bottomRight: 20),
+        ),
         actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.shopping_cart),
-          ),
           IconButton(
             onPressed: () {
               setState(() {
                 widget.signOut();
               });
             },
-            icon: Icon(Icons.lock_open),
+            icon: Icon(Icons.exit_to_app),
           ),
         ],
       ),
       body: Container(child: OrientationBuilder(
         builder: (context, orientation) {
-          return GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-              ),
-              itemCount: list.length,
-              itemBuilder: (context, i) {
-                final x = list[i];
-                return InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => DetalharPessoa(x)));
-                  },
-                  child: Card(
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Hero(
-                            tag: x.id,
-                            child: Image.network(
-                              BaseUrl.upload + x.image,
-                              fit: BoxFit.cover,
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
+            child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
+                ),
+                itemCount: list.length,
+                itemBuilder: (context, i) {
+                  final x = list[i];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DetalharPessoa(x)));
+                    },
+                    child: Card(
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Hero(
+                              tag: x.id,
+                              child: Image.network(
+                                BaseUrl.upload + x.image,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
-                        ),
-                        Text(
-                          x.nomePessoa,
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                      ],
+                          Text(
+                            x.nomePessoa,
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              });
+                  );
+                }),
+          );
         },
       )),
     );

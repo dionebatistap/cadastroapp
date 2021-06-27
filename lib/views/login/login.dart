@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:cadastroapp/model/usuarioModel.dart';
 import 'package:cadastroapp/views/pessoas/homePage.dart';
-import 'package:cadastroapp/views/usuarios/inserirUsuario.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cadastroapp/model/api.dart';
@@ -51,23 +51,25 @@ class _LoginState extends State<Login> {
     final response =
         await http.post(url, body: {"usuario": usuario, "senha": senha});
     final data = jsonDecode(response.body);
+    print(data);
     int value = data['value'];
     String aviso = data['message'];
     String usuarioAPI = data['usuario'];
     String nomeAPI = data['nome'];
     String id = data['id'];
-    String level = data['level'];
+    String levelUser = data['levelUser'];
+    String statusUser = data['statusUser'];
     if (value == 1) {
-      //Control flow Level
-      if (level == "1") {
+      if (((levelUser == "1") || (levelUser == "2") || (levelUser == "3")) &&
+          (statusUser == "ativo")) {
         setState(() {
           _loginStatus = LoginStatus.signIn;
-          savePref(value, usuarioAPI, nomeAPI, id, level);
+          savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
         });
       } else {
         setState(() {
           _loginStatus = LoginStatus.signInUsuarios;
-          savePref(value, usuarioAPI, nomeAPI, id, level);
+          savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
         });
       }
       print(aviso);
@@ -76,27 +78,28 @@ class _LoginState extends State<Login> {
     }
   }
 
-  savePref(
-      int value, String usuario, String nome, String id, String level) async {
+  savePref(int value, String usuario, String nome, String id, String levelUser,
+      String statusUser) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("value", value);
-      preferences.setString("nome", nome);
       preferences.setString("usuario", usuario);
+      preferences.setString("nome", nome);
       preferences.setString("id", id);
-      preferences.setString("level", level);
+      preferences.setString("levelUser", levelUser);
+      preferences.setString("statusUser", statusUser);
     });
   }
 
-  var value;
+  String value;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      value = preferences.getString("level");
+      value = preferences.getString("levelUser");
 
       _loginStatus = value == "1"
           ? LoginStatus.signIn
-          : value == "2"
+          : value == "0"
               ? LoginStatus.signInUsuarios
               : LoginStatus.notSignIn;
     });
@@ -105,10 +108,45 @@ class _LoginState extends State<Login> {
   signOut() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
-      preferences.setInt("value", 2);
-      preferences.setInt("level", 0);
+      preferences.setInt("value", 0);
+      preferences.setString("levelUser", "0");
+      preferences.setString("statusUser", "0");
       _loginStatus = LoginStatus.notSignIn;
     });
+  }
+
+  var loading = false;
+  final list = <UsuarioModel>[];
+  // ignore: unused_element
+  Future<void> _listarUsuarios() async {
+    list.clear();
+    if (!mounted) return;
+    setState(() {
+      loading = true;
+    });
+
+    var url = Uri.parse(BaseUrl.listarUsuarios);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new UsuarioModel(
+          api['id'],
+          api['usuario'],
+          api['senha'],
+          api['levelUser'],
+          api['nome'],
+          api['statusUser'],
+          api['createdDate'],
+        );
+        list.add(ab);
+      });
+      if (!mounted) return;
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
@@ -131,6 +169,7 @@ class _LoginState extends State<Login> {
               padding: EdgeInsets.all(16.0),
               children: <Widget>[
                 TextFormField(
+                  keyboardType: TextInputType.emailAddress,
                   validator: (e) {
                     if (!e.contains("@")) {
                       return "Formato Errado (E-MAIL)";
@@ -162,16 +201,16 @@ class _LoginState extends State<Login> {
                   },
                   child: Text("Login"),
                 ),
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => InserirUsuario()));
-                  },
-                  child: Text(
-                    "Create a new account in here",
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                // InkWell(
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //         builder: (context) => InserirUsuario(_listarUsuarios)));
+                //   },
+                //   child: Text(
+                //     "Create a new account in here",
+                //     textAlign: TextAlign.center,
+                //   ),
+                // ),
               ],
             ),
           ),

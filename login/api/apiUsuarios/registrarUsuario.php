@@ -7,10 +7,15 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $response = array();
     $usuario = $_POST['usuario'];
     $senha = md5($_POST['senha']);
+    $levelUser = $_POST['levelUser'];
     $nome = $_POST['nome'];
+    $statusUser = $_POST['statusUser'];
 
-    $cek = "SELECT * FROM users WHERE usuario='$usuario'";
+    
+
+    $cek = "SELECT * FROM tbl_usuarios WHERE usuario='$usuario'";
     $result = mysqli_fetch_array(mysqli_query($con, $cek));
+
 
     if (isset($result)) {
         # code...
@@ -21,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     } else {
         # code...
 
-        $insert = "INSERT INTO tbl_usuarios VALUE(NULL,'$usuario','$senha','1','$nome','1',NOW())";
+        $insert = "INSERT INTO tbl_usuarios VALUE(NULL,'$usuario','$senha','$levelUser','$nome','$statusUser',NOW())";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

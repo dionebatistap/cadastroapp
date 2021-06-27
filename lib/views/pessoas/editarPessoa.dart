@@ -519,26 +519,29 @@ class _EditarPessoaState extends State<EditarPessoa> {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 10.0),
-                          Container(
-                            child: ElevatedButton(
-                              child: Text("Atualizar"),
+                          const SizedBox(height: 15.0),
+                          Material(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0)),
+                            elevation: 3.0,
+                            color: Colors.grey[300],
+                            clipBehavior: Clip.antiAlias,
+                            child: MaterialButton(
+                              splashColor: Colors.green[600],
+                              focusColor: Colors.green[600],
+                              hoverColor: Colors.green[600],
+                              highlightColor: Colors.green[600],
+                              minWidth: 200.0,
+                              height: 35,
                               onPressed: () {
                                 dialogEditarPessoa();
                               },
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.yellow[700],
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 50, vertical: 10),
-                                textStyle: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0)),
-                              ),
+                              child: Text("Salvar",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.grey[700])),
                             ),
                           ),
-
-                          const SizedBox(height: 5.0),
+                          const SizedBox(height: 15.0),
                         ],
                       ),
                     ),

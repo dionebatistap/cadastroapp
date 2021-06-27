@@ -1,38 +1,50 @@
 import 'dart:convert';
 
+import 'package:cadastroapp/model/usuarioModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:cadastroapp/model/api.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-//CLASSE QUE REGISTRA USUARIOS
-
-class InserirUsuario extends StatefulWidget {
+class EditarUsuario extends StatefulWidget {
+  final UsuarioModel model;
   final VoidCallback reload;
-  InserirUsuario(this.reload);
+  EditarUsuario(this.model, this.reload);
 
   @override
-  _InserirUsuario createState() => _InserirUsuario();
+  _EditarUsuario createState() => _EditarUsuario();
 }
 
-class _InserirUsuario extends State<InserirUsuario> {
+class _EditarUsuario extends State<EditarUsuario> {
   final _key = new GlobalKey<FormState>();
 
-  final TextEditingController nomeController = TextEditingController();
-  final TextEditingController usuarioController = TextEditingController();
-  final TextEditingController senhaController = TextEditingController();
-  final TextEditingController senhaConfirmaController = TextEditingController();
+  TextEditingController nomeController = TextEditingController();
+  TextEditingController usuarioController = TextEditingController();
+  TextEditingController senhaController = TextEditingController();
+  TextEditingController senhaConfirmaController = TextEditingController();
 
-  String clstatusUsuario, cllevel;
+  String clstatusUsuario, cllevel, levelSelecionado, idUsuarioString;
+  int idUsuarioInt;
 
   bool _secureText = true;
 
   var validate = true;
 
+  setup() async {
+    nomeController = TextEditingController(text: widget.model.nome);
+    usuarioController = TextEditingController(text: widget.model.usuario);
+    clstatusUsuario = widget.model.statusUser;
+    levelSelecionado = widget.model.levelUser;
+    cllevel = levelSelecionado;
+    idUsuarioString = widget.model.id;
+    idUsuarioInt = int.parse(idUsuarioString);
+  }
+
   @override
   void initState() {
     super.initState();
+    setup();
     _carregaItensDropdown();
   }
 
@@ -44,7 +56,7 @@ class _InserirUsuario extends State<InserirUsuario> {
     var tamanho = MediaQuery.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cadastrar Usuário"),
+        title: Text("Editar Usuário"),
         toolbarHeight: 70,
         elevation: 10.0,
         shape: RoundedRectangleBorder(
@@ -87,7 +99,7 @@ class _InserirUsuario extends State<InserirUsuario> {
                         ),
                         const SizedBox(height: 8.0),
                         TextFormField(
-                          keyboardType: TextInputType.emailAddress,
+                          enabled: false,
                           validator: (e) {
                             if (e.isEmpty) {
                               return "Preenchimento obrigatório";
@@ -160,12 +172,6 @@ class _InserirUsuario extends State<InserirUsuario> {
                               ),
                             ),
                             labelText: "Confirmar senha",
-                            // suffixIcon: IconButton(
-                            //   onPressed: showHide,
-                            //   icon: Icon(
-                            //     _secureText ? Icons.visibility_off : Icons.visibility,
-                            //   ),
-                            // ),
                           ),
                         ),
                         const SizedBox(height: 8.0),
@@ -196,6 +202,7 @@ class _InserirUsuario extends State<InserirUsuario> {
                                       style: TextStyle(
                                           fontSize: 18,
                                           color: Colors.grey[700])),
+                                  value: levelSelecionado,
                                   items: _listaLevels,
                                   onChanged: (level) {
                                     setState(() {
@@ -280,7 +287,7 @@ class _InserirUsuario extends State<InserirUsuario> {
                             onPressed: () {
                               check();
                             },
-                            child: Text("Salvar",
+                            child: Text("Atualizar",
                                 style: TextStyle(
                                     fontSize: 18, color: Colors.grey[700])),
                           ),
@@ -321,16 +328,17 @@ class _InserirUsuario extends State<InserirUsuario> {
     String usuario = usuarioController.text;
     String senha = senhaController.text;
 
-    var url = Uri.parse(BaseUrl.registrarUsuario);
+    var url = Uri.parse(BaseUrl.editarUsuario);
 
     final response = await http.post(
       url,
       body: {
-        "nome": nome,
-        "usuario": usuario,
-        "senha": senha,
-        "levelUser": cllevel,
-        "statusUser": clstatusUsuario,
+        "usuario": "$usuario",
+        "senha": "$senha",
+        "levelUser": "$cllevel",
+        "nome": "$nome",
+        "statusUser": "$clstatusUsuario",
+        "idUsuario": '$idUsuarioInt',
       },
     );
 
@@ -340,7 +348,7 @@ class _InserirUsuario extends State<InserirUsuario> {
     String aviso = data['message'];
     if (value == 1) {
       setState(() {
-        //widget.reload();
+        widget.reload();
         Navigator.pop(context);
         print(aviso);
       });
@@ -354,30 +362,23 @@ class _InserirUsuario extends State<InserirUsuario> {
   _carregaItensDropdown() {
     _listaLevels.add(
       DropdownMenuItem(
-          child: Text("Admin - (Opções liberadas)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+          child: Text("Admin",
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "1"),
     );
 
     _listaLevels.add(
       DropdownMenuItem(
           child: Text("Level 2 - (Cadastrar e editar)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "2"),
     );
 
     _listaLevels.add(
       DropdownMenuItem(
           child: Text("Level 3 - (Somente Cadastrar)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "3"),
-    );
-
-    _listaLevels.add(
-      DropdownMenuItem(
-          child: Text("Level 4 - (Somente Visualizar)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
-          value: "4"),
     );
   }
 } //CLASS

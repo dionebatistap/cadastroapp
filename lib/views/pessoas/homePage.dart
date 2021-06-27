@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:cadastroapp/views/pessoas/pessoa.dart';
 import 'package:cadastroapp/views/pessoas/pessoaDetalhes.dart';
+import 'package:cadastroapp/views/usuarios/usuario.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
@@ -26,14 +27,17 @@ class _HomePage extends State<HomePage> {
     });
   }
 
-  String usuario = "", nome = "";
+  String usuario = "", nome = "", statusUser = "";
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       usuario = preferences.getString("usuario");
       nome = preferences.getString("nome");
+      statusUser = preferences.getString("statusUser");
+      print(statusUser);
     });
   }
+
   //LOGOUT
 
   var loading = false;
@@ -69,11 +73,13 @@ class _HomePage extends State<HomePage> {
                   UserAccountsDrawerHeader(
                     currentAccountPicture: ClipRRect(
                       borderRadius: BorderRadius.circular(40),
-                      child: Image.network(
-                          'https://static.vecteezy.com/ti/vetor-gratis/p1/2275847-avatar-masculino-perfil-icone-de-homem-caucasiano-sorridente-vetor.jpg'),
+                      child: Icon(
+                        Icons.account_circle,
+                        size: 70,
+                      ),
                     ),
-                    accountName: Text("Dione"),
-                    accountEmail: Text("dionebatistap@gmail.com"),
+                    accountName: Text("$nome"),
+                    accountEmail: Text("$usuario"),
                     decoration: BoxDecoration(
                       color: Colors.grey[50],
                       border: Border.all(width: 2.0, color: Colors.grey[50]),
@@ -81,15 +87,6 @@ class _HomePage extends State<HomePage> {
                   ),
                   const SizedBox(
                     height: 4,
-                  ),
-                  ListTile(
-                    title: Text("Membros"),
-                    subtitle: Text("Membros Cadastrados"),
-                    leading: Icon(Icons.home),
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => HomePage(signOut)));
-                    },
                   ),
                   ListTile(
                     title: Text("Opções"),
@@ -106,10 +103,13 @@ class _HomePage extends State<HomePage> {
                     leading: Icon(Icons.account_circle),
                     onTap: () {
                       print("home");
+
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Usuario()));
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 200),
+                    padding: const EdgeInsets.only(top: 270),
                     child: Divider(
                       height: 1,
                       color: Colors.grey.withOpacity(0.6),

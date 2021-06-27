@@ -453,7 +453,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 ),
                                 const SizedBox(height: 8.0),
 
-//FORMUALARIO DE DATA DO BATISMO
+//FORMULARIO DE DATA DO BATISMO
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 5, 30, 0),
                                   height: tamanho.size.height * 0.09,
@@ -493,7 +493,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 ),
                                 const SizedBox(height: 5.0),
 
-//FORMULARIO RADIO BUTTON grupo sim ou não
+// SELECIONAR GRUPO QUE PERTENCE
                                 Row(children: <Widget>[
                                   Text("Faz parte de algum grupo:",
                                       style: TextStyle(
@@ -501,7 +501,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                           color: Colors.grey[700])),
                                 ]),
                                 const SizedBox(height: 2.0),
-// SELECIONAR GRUPO QUE PERTENCE
                                 Container(
                                   height: tamanho.size.height * 0.1,
                                   decoration: BoxDecoration(
@@ -567,25 +566,31 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   ),
                                 ),
                                 const SizedBox(height: 10.0),
-                                Container(
-                                  child: ElevatedButton(
-                                    child: Text("Salvar"),
+                                const SizedBox(height: 15.0),
+                                Material(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(18.0)),
+                                  elevation: 3.0,
+                                  color: Colors.grey[300],
+                                  clipBehavior: Clip.antiAlias,
+                                  child: MaterialButton(
+                                    splashColor: Colors.green[600],
+                                    focusColor: Colors.green[600],
+                                    hoverColor: Colors.green[600],
+                                    highlightColor: Colors.green[600],
+                                    minWidth: 200.0,
+                                    height: 35,
                                     onPressed: () {
                                       check();
                                     },
-                                    style: ElevatedButton.styleFrom(
-                                      primary: Colors.green[400],
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 50, vertical: 10),
-                                      textStyle: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20.0)),
-                                    ),
+                                    child: Text("Salvar",
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.grey[700])),
                                   ),
                                 ),
+                                const SizedBox(height: 15.0),
                                 const SizedBox(height: 5.0),
                                 //FORMATAÇÃO
                               ],
@@ -829,38 +834,39 @@ class _InserirPessoaState extends State<InserirPessoa> {
         context: context,
         builder: (BuildContext bc) {
           return Container(
-              child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  primary: Colors.black45,
-                  backgroundColor: Colors.grey[100],
-                  onSurface: Colors.grey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    primary: Colors.black45,
+                    backgroundColor: Colors.grey[100],
+                    onSurface: Colors.grey,
+                  ),
+                  label: Text('Camera'),
+                  icon: Icon(Icons.camera_alt),
+                  onPressed: () {
+                    this.obterImagemCamera();
+                  },
+                  //child: const Text('Câmera'),
                 ),
-                label: Text('Camera'),
-                icon: Icon(Icons.camera_alt),
-                onPressed: () {
-                  this.obterImagemCamera();
-                },
-                //child: const Text('Câmera'),
-              ),
-              TextButton.icon(
-                style: TextButton.styleFrom(
-                  primary: Colors.black45,
-                  backgroundColor: Colors.grey[100],
-                  onSurface: Colors.grey,
+                TextButton.icon(
+                  style: TextButton.styleFrom(
+                    primary: Colors.black45,
+                    backgroundColor: Colors.grey[100],
+                    onSurface: Colors.grey,
+                  ),
+                  label: Text('Galeria'),
+                  icon: Icon(Icons.photo),
+                  onPressed: () {
+                    this.obterImagemGaleria();
+                  },
+                  //child: const Text('Galeria'),
                 ),
-                label: Text('Galeria'),
-                icon: Icon(Icons.photo),
-                onPressed: () {
-                  this.obterImagemGaleria();
-                },
-                //child: const Text('Galeria'),
-              ),
-            ],
-          ));
+              ],
+            ),
+          );
         });
   }
 
