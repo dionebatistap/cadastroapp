@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PessoaDetalhes extends StatefulWidget {
   final PessoaModel model;
@@ -161,11 +163,49 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                                   fontSize: 18,
                                 ),
                               ),
-                              trailing: IconButton(
-                                icon: Icon(Icons.message),
-                                onPressed: () {
-                                  //_textMe(phoneNumber);
+                              trailing: PopupMenuButton(
+                                icon: Icon(Icons.more_vert),
+                                onSelected: (value) {
+                                  if (value == 'whatsapp') {
+                                    whatsappAction(widget.model.celularPessoa);
+                                    print("Mensagem");
+                                  } else if (value == 'call') {
+                                    callAction(widget.model.celularPessoa);
+                                    print("Ligar");
+                                  } else {
+                                    smsAction(widget.model.celularPessoa);
+                                    print("Whatsapp");
+                                  }
                                 },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    child: ListTile(
+                                        leading: Icon(
+                                          FontAwesomeIcons.whatsapp,
+                                          color: Colors.green[600],
+                                        ),
+                                        title: Text('Whatsapp')),
+                                    value: 'whatsapp',
+                                  ),
+                                  PopupMenuItem(
+                                    child: ListTile(
+                                        leading: Icon(
+                                          Icons.call,
+                                          color: Colors.blueAccent,
+                                        ),
+                                        title: Text('Ligar')),
+                                    value: 'call',
+                                  ),
+                                  PopupMenuItem(
+                                    child: ListTile(
+                                        leading: Icon(
+                                          Icons.message,
+                                          color: Colors.blue[600],
+                                        ),
+                                        title: Text('Mensagem')),
+                                    value: 'message',
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -300,5 +340,33 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
         ),
       ),
     );
+  }
+
+  callAction(String number) async {
+    String url = 'tel:$number';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Não foi possível $number';
+    }
+  }
+
+  smsAction(String number) async {
+    String url = 'sms:$number';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Não foi possível enviar sms para $number';
+    }
+  }
+
+  whatsappAction(String number) async {
+    var whatsappUrl = "whatsapp://send?phone=+55$number&text=Olá, tudo bem ?";
+
+    if (await canLaunch(whatsappUrl)) {
+      await launch(whatsappUrl);
+    } else {
+      throw 'Não foi possível abrir $whatsappUrl';
+    }
   }
 }

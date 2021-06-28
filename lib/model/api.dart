@@ -15,4 +15,12 @@ class BaseUrl {
   static String listarUsuarios = 'http://www.dionebatistap.com.br/login/api/listarUsuarios.php';
   static String deletarUsuario = 'http://www.dionebatistap.com.br/login/api/deletarUsuario.php';
   static String editarUsuario = 'http://www.dionebatistap.com.br/login/api/editarUsuario.php';
+
+  //GRUPOS
+static String listarGrupos = 'http://www.dionebatistap.com.br/login/api/listarGrupos.php';
+static String inserirGrupo = 'http://www.dionebatistap.com.br/login/api/inserirGrupo.php';
+static String editarGrupo = 'http://www.dionebatistap.com.br/login/api/editarGrupo.php';
+static String deletarGrupo = 'http://www.dionebatistap.com.br/login/api/deletarGrupo.php';
+
+
 }

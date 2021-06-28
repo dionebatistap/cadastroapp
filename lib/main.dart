@@ -15,7 +15,6 @@ void main() async {
       statusBarColor: Colors.white,
       statusBarBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.black54,
-      //statusBarColor: Colors.white,
     ),
   );
   //CONTROLLER MODO RETRATO

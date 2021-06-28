@@ -340,7 +340,7 @@ class _InserirUsuario extends State<InserirUsuario> {
     String aviso = data['message'];
     if (value == 1) {
       setState(() {
-        //widget.reload();
+        widget.reload();
         Navigator.pop(context);
         print(aviso);
       });

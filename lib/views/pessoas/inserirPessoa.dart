@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cadastroapp/model/grupoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
@@ -24,7 +25,7 @@ class InserirPessoa extends StatefulWidget {
 
 class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS
-  String estadoCivil, idUsuario, clgrupo;
+  String estadoCivil, idUsuario, clgrupo, prefControle;
   final _key = new GlobalKey<FormState>();
   var validarCampos = true;
   File _imageFile;
@@ -65,7 +66,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
   void initState() {
     super.initState();
     getPref();
-    _carregaItensDropdown();
+    _listarGrupos();
+    _listaAddDropGrupos();
+    //_carregaItensDropdown();
   }
 
   @override
@@ -615,6 +618,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       idUsuario = preferences.getString("id");
+      prefControle = preferences.getString("statusUser");
     });
   }
 
@@ -630,6 +634,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
       }
       form.save();
       submterSemFoto();
+      print(prefControle);
     } else {
       setState(() {
         validarCampos = true;
@@ -870,28 +875,49 @@ class _InserirPessoaState extends State<InserirPessoa> {
         });
   }
 
-//DROPDOWN LIST GRUPOS
   List<DropdownMenuItem<String>> _listaItensDropGrupo = [];
-  _carregaItensDropdown() {
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(
-          child: Text("Não possui grupo",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
-          value: "Não possui grupo"),
-    );
+//LISTAR GRUPOS DO BANCO
 
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(
-          child: Text("FJU",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
-          value: "FJU"),
-    );
+  final list = <GrupoModel>[];
+  Future<void> _listarGrupos() async {
+    list.clear();
+    if (!mounted) return;
+    setState(() {
+      //  loading = true;
+    });
 
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(
-          child: Text("EVG",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
-          value: "EVG"),
-    );
+    var url = Uri.parse(BaseUrl.listarGrupos);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new GrupoModel(
+          api['id'],
+          api['nomeGrupo'],
+        );
+        list.add(ab);
+      });
+      if (!mounted) return;
+      setState(() {
+        //loading = false;
+        _listaAddDropGrupos();
+      });
+    }
   }
-}
+
+  final _carregarApiGrupos = [];
+  Future<void> _listaAddDropGrupos() async {
+    setState(() {
+      for (int i = 0; i < list.length; i++) {
+        _carregarApiGrupos.add(list[i].nomeGrupo);
+        _listaItensDropGrupo.add(
+          DropdownMenuItem(
+              child: Text(list[i].nomeGrupo,
+                  style: TextStyle(fontSize: 18, color: Colors.black87)),
+              value: list[i].nomeGrupo),
+        );
+      }
+    });
+  }
+} //CLASS

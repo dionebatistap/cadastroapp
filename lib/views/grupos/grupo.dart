@@ -1,23 +1,23 @@
 import 'dart:convert';
 
-import 'package:cadastroapp/model/usuarioModel.dart';
-import 'package:cadastroapp/views/usuarios/editarUsuario.dart';
-import 'package:cadastroapp/views/usuarios/inserirUsuario.dart';
-import 'package:cadastroapp/views/usuarios/usuarioDetalhes.dart';
+import 'package:cadastroapp/model/grupoModel.dart';
+import 'package:cadastroapp/views/grupos/editarGrupo.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 import 'package:flutter/services.dart';
 
-class Usuario extends StatefulWidget {
+import 'inserirGrupo.dart';
+
+class Grupo extends StatefulWidget {
   @override
-  _UsuarioState createState() => _UsuarioState();
+  _GrupoState createState() => _GrupoState();
 }
 
-class _UsuarioState extends State<Usuario> {
+class _GrupoState extends State<Grupo> {
   var loading = false;
-  final list = <UsuarioModel>[];
+  final list = <GrupoModel>[];
 
   final GlobalKey<RefreshIndicatorState> _refresh =
       GlobalKey<RefreshIndicatorState>();
@@ -26,7 +26,7 @@ class _UsuarioState extends State<Usuario> {
   void initState() {
     super.initState();
     getPref();
-    _listarUsuarios();
+    _listarGrupos();
   }
 
   @override
@@ -36,7 +36,7 @@ class _UsuarioState extends State<Usuario> {
         statusBarIconBrightness: Brightness.dark));
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gerenciar Usuários"),
+        title: Text("Gerenciar Grupos"),
         toolbarHeight: 70,
         elevation: 10.0,
         shape: RoundedRectangleBorder(
@@ -60,7 +60,7 @@ class _UsuarioState extends State<Usuario> {
               mini: true,
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => InserirUsuario(_listarUsuarios)));
+                    builder: (context) => InserirGrupo(_listarGrupos)));
               },
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -86,7 +86,7 @@ class _UsuarioState extends State<Usuario> {
       ),
       //FLOATINR
       body: RefreshIndicator(
-        onRefresh: _listarUsuarios,
+        onRefresh: _listarGrupos,
         key: _refresh,
         child: loading
             ? Padding(
@@ -104,72 +104,27 @@ class _UsuarioState extends State<Usuario> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            // CircleAvatar(
-                            //   radius: 20,
-                            //   backgroundImage: NetworkImage(
-                            //       'https://static.vecteezy.com/ti/vetor-gratis/p1/2275847-avatar-masculino-perfil-icone-de-homem-caucasiano-sorridente-vetor.jpg'
-
-                            //       //BaseUrl.upload + x.image,
-                            //       ),
-                            // ),
                             Icon(
-                              Icons.account_circle,
-                              size: 45,
+                              Icons.groups_rounded,
+                              size: 35,
                               color: Colors.grey[400],
                             ),
-                            SizedBox(
-                              width: 5.0,
+                            const SizedBox(
+                              width: 8.0,
                             ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    x.nome,
+                                    x.nomeGrupo,
                                     style: TextStyle(
                                         fontSize: 13.0,
                                         fontWeight: FontWeight.bold),
                                   ),
-                                  Text(
-                                    x.usuario,
-                                    style: TextStyle(
-                                        fontSize: 9,
-                                        fontWeight: FontWeight.w100),
-                                  ),
-                                  x.statusUser == 'ativo'
-                                      ? Text(
-                                          x.statusUser,
-                                          style: TextStyle(
-                                              fontSize: 9,
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.green[600]),
-                                        )
-                                      : Text(
-                                          x.statusUser,
-                                          style: TextStyle(
-                                            fontSize: 9,
-                                            fontWeight: FontWeight.w800,
-                                            color: Colors.redAccent,
-                                          ),
-                                        )
                                 ],
                               ),
                             ),
-                            IconButton(
-                              color: Colors.blueAccent,
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    new MaterialPageRoute(
-                                        builder: (context) =>
-                                            UsuarioDetalhes(x)));
-                              },
-                              icon: Icon(
-                                Icons.visibility,
-                                size: 20,
-                              ),
-                            ),
-
                             (permissaoUsuario != '1')
                                 ? IconButton(
                                     color: Colors.grey[300],
@@ -186,16 +141,14 @@ class _UsuarioState extends State<Usuario> {
                                     onPressed: () {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  EditarUsuario(
-                                                      x, _listarUsuarios)));
+                                              builder: (context) => EditarGrupo(
+                                                  x, _listarGrupos)));
                                     },
                                     icon: Icon(
                                       Icons.edit,
                                       size: 20,
                                     ),
                                   ),
-
                             (permissaoUsuario != '1')
                                 ? IconButton(
                                     color: Colors.grey[300],
@@ -238,27 +191,22 @@ class _UsuarioState extends State<Usuario> {
     });
   }
 
-  Future<void> _listarUsuarios() async {
+  Future<void> _listarGrupos() async {
     list.clear();
     if (!mounted) return;
     setState(() {
       loading = true;
     });
 
-    var url = Uri.parse(BaseUrl.listarUsuarios);
+    var url = Uri.parse(BaseUrl.listarGrupos);
     final response = await http.get(url);
     if (response.contentLength == 2) {
     } else {
       final data = jsonDecode(response.body);
       data.forEach((api) {
-        final ab = new UsuarioModel(
+        final ab = new GrupoModel(
           api['id'],
-          api['usuario'],
-          api['senha'],
-          api['levelUser'],
-          api['nome'],
-          api['statusUser'],
-          api['createdDate'],
+          api['nomeGrupo'],
         );
         list.add(ab);
       });
@@ -271,15 +219,15 @@ class _UsuarioState extends State<Usuario> {
 
 //OK
   _delete(String id) async {
-    var url = Uri.parse(BaseUrl.deletarUsuario);
-    final response = await http.post(url, body: {"idUsuario": id});
+    var url = Uri.parse(BaseUrl.deletarGrupo);
+    final response = await http.post(url, body: {"idGrupo": id});
     final data = jsonDecode(response.body);
     int value = data['value'];
     String aviso = data['message'];
     if (value == 1) {
       if (!mounted) return;
       setState(() {
-        _listarUsuarios();
+        _listarGrupos();
         print(aviso);
       });
     } else {
@@ -298,4 +246,4 @@ class _UsuarioState extends State<Usuario> {
       },
     );
   }
-}
+} //CLASS

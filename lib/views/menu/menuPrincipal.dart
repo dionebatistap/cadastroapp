@@ -1,6 +1,5 @@
 //import 'dart:convert';
 
-import 'package:cadastroapp/views/menu/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/views/pessoas/pessoa.dart';
 import 'package:cadastroapp/views/outrastelas/profil.dart';
@@ -72,7 +71,6 @@ class _MenuPrincipal extends State<MenuPrincipal> {
               children: <Widget>[
                 //PessoaLista(),
                 Pessoa(),
-                BottomAppbar(),
                 Profile(),
               ],
             ),
