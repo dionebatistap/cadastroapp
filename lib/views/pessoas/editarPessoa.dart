@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cadastroapp/model/grupoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -46,8 +47,9 @@ class _EditarPessoaState extends State<EditarPessoa> {
 //VARIAVEIS RADIO BUTTONS
   String clestadoCivil;
   String clMembroObreiro;
-  String itemGrupoSelecionado;
+  String isBatizada;
   //VARIAVEIS DROPDOWN
+  String itemGrupoSelecionado;
   String clgrupo;
   //VARIAVEIS DATAPICKER
   String vardata, dataFormatada;
@@ -79,6 +81,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
     clMembroObreiro = widget.model.membroObreiro;
     clgrupo = widget.model.grupo;
     itemGrupoSelecionado = widget.model.grupo;
+    isBatizada = widget.model.isBatizada;
     setState(() {
       dataFormatada = convertidaBr;
     });
@@ -94,7 +97,8 @@ class _EditarPessoaState extends State<EditarPessoa> {
   @override
   void initState() {
     super.initState();
-    _carregaItensDropdown();
+    _listarGrupos();
+    _listaAddDropGrupos();
     setup();
   }
 
@@ -454,7 +458,67 @@ class _EditarPessoaState extends State<EditarPessoa> {
                             ),
                           ),
                           const SizedBox(height: 8.0),
-
+//BATIZADO NAS AGUAS
+                          Row(children: <Widget>[
+                            Text("Batizado nas águas:",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.grey[700])),
+                          ]),
+                          Container(
+                            height: tamanho.size.height * 0.09,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey[800],
+                                  width: 1.0,
+                                ),
+                              ),
+                              color: Colors.grey[200],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              0,
+                              0,
+                              55,
+                              0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Spacer(
+                                  flex: 5,
+                                ),
+                                Text("Sim",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  value: "Sim",
+                                  groupValue: isBatizada,
+                                  onChanged: (String selecionaIsBatizado) {
+                                    setState(() {
+                                      isBatizada = selecionaIsBatizado;
+                                    });
+                                  },
+                                ),
+                                Spacer(
+                                  flex: 3,
+                                ),
+                                Text("Não",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  value: "Não",
+                                  groupValue: isBatizada,
+                                  onChanged: (String selecionaIsBatizado) {
+                                    setState(() {
+                                      isBatizada = selecionaIsBatizado;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
 //FORMUALARIO DE TEXTO PASTOR QUE BATIZOU
                           TextFormField(
                             textCapitalization: TextCapitalization.words,
@@ -527,10 +591,10 @@ class _EditarPessoaState extends State<EditarPessoa> {
                             color: Colors.grey[300],
                             clipBehavior: Clip.antiAlias,
                             child: MaterialButton(
-                              splashColor: Colors.green[600],
-                              focusColor: Colors.green[600],
-                              hoverColor: Colors.green[600],
-                              highlightColor: Colors.green[600],
+                              splashColor: Colors.grey[400],
+                              focusColor: Colors.grey[400],
+                              hoverColor: Colors.grey[400],
+                              highlightColor: Colors.grey[400],
                               minWidth: 200.0,
                               height: 35,
                               onPressed: () {
@@ -566,6 +630,9 @@ class _EditarPessoaState extends State<EditarPessoa> {
     String cidade = cidadeController.text;
     String celular = celularController.text;
     String pastorBatizou = prBatizouController.text;
+    if (cep.isEmptyOrNull) {
+      cep = '00000-000';
+    }
     try {
       var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
       final response = await http.post(url, body: {
@@ -580,6 +647,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
         "prBatizou": "$pastorBatizou",
         "estadoCivil": "$clestadoCivil",
         "grupo": "$clgrupo",
+        "isBatizada": "$isBatizada",
         "idUsuario": idUsuario,
         "idPessoa": widget.model.id,
         "dataSelecionada": "$variavelData",
@@ -610,6 +678,9 @@ class _EditarPessoaState extends State<EditarPessoa> {
     String cidade = cidadeController.text;
     String celular = celularController.text;
     String pastorBatizou = prBatizouController.text;
+    if (cep.isEmptyOrNull) {
+      cep = '00000-000';
+    }
 
     try {
       var stream = http.ByteStream(_imageFile.openRead());
@@ -630,6 +701,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
       request.fields['prBatizou'] = "$pastorBatizou";
       request.fields['estadoCivil'] = "$clestadoCivil";
       request.fields['grupo'] = "$clgrupo";
+      request.fields['isBatizada'] = "$isBatizada";
       request.fields['idUsuario'] = idUsuario;
       request.fields['idPessoa'] = widget.model.id;
       request.fields['dataSelecionada'] = "$variavelData";
@@ -691,6 +763,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
     }
   }
 
+  String cepNaoEncontrado;
   Future recuperaCep() async {
     final int ok = 200;
     final int badRequest = 400;
@@ -700,23 +773,36 @@ class _EditarPessoaState extends State<EditarPessoa> {
     String baseUrl = 'https://viacep.com.br/ws/';
     String cepDigitado = '$cep';
     String tiporetorno = '/json/';
-    final uri = Uri.parse('$baseUrl/$cepDigitado/$tiporetorno');
-    http.Response response;
-    response = await http.get(uri);
-    print(response.body);
-
-    if (response.statusCode == ok) {
-      Map<String, dynamic> retorno = json.decode(response.body);
-      String enderecoAPI = retorno["logradouro"];
-      String cidadeAPI = retorno["localidade"];
-      String bairroAPI = retorno["bairro"];
-      setState(() {
-        enderecoController.text = enderecoAPI;
-        cidadeController.text = cidadeAPI;
-        bairroController.text = bairroAPI;
-      });
-    } else if (response.statusCode == badRequest) {
-      print("Errado");
+    print(cepDigitado);
+    if ((cepDigitado != null) &&
+        (cepDigitado.length == 9) &&
+        (cepDigitado.isNotEmpty)) {
+      final uri = Uri.parse('$baseUrl/$cepDigitado/$tiporetorno');
+      http.Response response;
+      response = await http.get(uri);
+      print(response.body);
+      if (response.statusCode == ok) {
+        Map<String, dynamic> retorno = json.decode(response.body);
+        String enderecoAPI = retorno["logradouro"];
+        String cidadeAPI = retorno["localidade"];
+        String bairroAPI = retorno["bairro"];
+        bool cepNaoEncontradoApi = retorno["erro"];
+        if (cepNaoEncontradoApi == null) {
+          setState(() {
+            enderecoController.text = enderecoAPI;
+            cidadeController.text = cidadeAPI;
+            bairroController.text = bairroAPI;
+            toast("Cep localizado");
+          });
+        } else {
+          snackBar(context, title: "Cep não encontrado");
+        }
+      } else if (response.statusCode == badRequest) {
+        print("Servidor de cep offline");
+      }
+    } else {
+      snackBar(context, title: "Cep Inválido");
+      print("Cep invalido");
     }
   }
 
@@ -820,25 +906,46 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
   //DROPDOWN LIST GRUPOS
   List<DropdownMenuItem<String>> _listaItensDropGrupo = [];
-  _carregaItensDropdown() {
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(
-          child: Text("Não possui grupo",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
-          value: "Não possui grupo"),
-    );
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(
-          child: Text("FJU",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
-          value: "FJU"),
-    );
-    _listaItensDropGrupo.add(
-      DropdownMenuItem(
-          child: Text("EVG",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
-          value: "EVG"),
-    );
+  final list = <GrupoModel>[];
+  Future<void> _listarGrupos() async {
+    list.clear();
+    if (!mounted) return;
+    setState(() {
+      //  loading = true;
+    });
+    var url = Uri.parse(BaseUrl.listarGrupos);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new GrupoModel(
+          api['id'],
+          api['nomeGrupo'],
+        );
+        list.add(ab);
+      });
+      if (!mounted) return;
+      setState(() {
+        //loading = false;
+        _listaAddDropGrupos();
+      });
+    }
+  }
+
+  final _carregarApiGrupos = [];
+  Future<void> _listaAddDropGrupos() async {
+    setState(() {
+      for (int i = 0; i < list.length; i++) {
+        _carregarApiGrupos.add(list[i].nomeGrupo);
+        _listaItensDropGrupo.add(
+          DropdownMenuItem(
+              child: Text(list[i].nomeGrupo,
+                  style: TextStyle(fontSize: 18, color: Colors.black87)),
+              value: list[i].nomeGrupo),
+        );
+      }
+    });
   }
 
   dialogEditarPessoa() {

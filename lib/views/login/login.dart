@@ -1,16 +1,19 @@
 import 'dart:convert';
 
+import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/usuarioModel.dart';
 import 'package:cadastroapp/views/menu/homePage.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/views/usuarios/menuUsuarios.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  State<StatefulWidget> createState() {
+    return _LoginState();
+  }
 }
 
 enum LoginStatus { notSignIn, signIn, signInUsuarios }
@@ -21,6 +24,197 @@ class _LoginState extends State<Login> {
   final _key = new GlobalKey<FormState>();
 
   bool _secureText = true;
+
+  final TextEditingController usuarioController = TextEditingController();
+  final TextEditingController senhaController = TextEditingController();
+
+  @override
+  void initState() {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.grey[850],
+        statusBarIconBrightness: Brightness.light));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    switch (_loginStatus) {
+      case LoginStatus.notSignIn:
+        return Scaffold(
+          body: Form(
+            key: _key,
+            child: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 2.7,
+                      decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey[400].withOpacity(0.7),
+                                blurRadius: 2,
+                                spreadRadius: 3),
+                          ],
+                          color: Colors.grey[850],
+                          borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(90))),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(padding: const EdgeInsets.only(top: 30)),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Align(
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.add,
+                                  size: 50,
+                                  color: Colors.grey[200],
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.groups,
+                                  size: 150,
+                                  color: Colors.grey[200],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(padding: const EdgeInsets.only(top: 8)),
+                          Spacer(),
+                          //Spacer(),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(bottom: 25, right: 32),
+                              child: Text(
+                                'Cadastro de Membros',
+                                style: TextStyle(
+                                    color: Colors.grey[200],
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      width: MediaQuery.of(context).size.width,
+                      padding: EdgeInsets.only(top: 80),
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            height: 55,
+                            padding: EdgeInsets.only(
+                                top: 4, left: 16, right: 16, bottom: 4),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black12, blurRadius: 5)
+                                ]),
+                            child: TextField(
+                              controller: usuarioController,
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+                                hintText: 'E-mail',
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width / 1.1,
+                            height: 55,
+                            margin: EdgeInsets.only(top: 12),
+                            padding: EdgeInsets.only(
+                                top: 4, left: 16, right: 16, bottom: 4),
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black12, blurRadius: 5)
+                                ]),
+                            child: TextField(
+                              controller: senhaController,
+                              obscureText: _secureText,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: showHide,
+                                  icon: Icon(
+                                    _secureText
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
+                                ),
+                                border: InputBorder.none,
+                                icon: Icon(
+                                  Icons.vpn_key,
+                                  color: Colors.grey,
+                                ),
+                                hintText: 'Password',
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Material(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18.0)),
+                            elevation: 4.0,
+                            color: Colors.grey[850],
+                            clipBehavior: Clip.antiAlias,
+                            child: MaterialButton(
+                              splashColor: Colors.grey[400],
+                              focusColor: Colors.grey[400],
+                              hoverColor: Colors.grey[400],
+                              minWidth: 300.0,
+                              height: 35,
+                              onPressed: () {
+                                check();
+                              },
+                              child: Text("Login",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.grey[100],
+                                      fontWeight: FontWeight.w600)),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+        break;
+      case LoginStatus.signIn:
+        return HomePage(signOut);
+      case LoginStatus.signInUsuarios:
+        return MenuUsuarios(signOut);
+        break;
+      default:
+        return Text("Erro ao carregar menu!");
+    }
+  }
 
   showHide() {
     setState(() {
@@ -47,6 +241,9 @@ class _LoginState extends State<Login> {
 //Logica para efetuar o login, push no banco de dados
 //antes daqui só passa os dados para o androi, depois para a api
   login() async {
+    usuario = usuarioController.text;
+    senha = senhaController.text;
+
     var url = Uri.parse(BaseUrl.login);
     final response =
         await http.post(url, body: {"usuario": usuario, "senha": senha});
@@ -110,7 +307,11 @@ class _LoginState extends State<Login> {
     setState(() {
       preferences.setInt("value", 0);
       preferences.setString("levelUser", "0");
-      preferences.setString("statusUser", "0");
+      preferences.setString("statusUser", "");
+      preferences.setString("levelUser", "");
+      preferences.setString("id", "");
+      preferences.setString("usuario", "");
+
       _loginStatus = LoginStatus.notSignIn;
     });
   }
@@ -150,80 +351,9 @@ class _LoginState extends State<Login> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    getPref();
+  void dispose() {
+    super.dispose();
+    usuarioController.dispose();
+    senhaController.dispose();
   }
-
-  @override
-  Widget build(BuildContext context) {
-    switch (_loginStatus) {
-      case LoginStatus.notSignIn:
-        return Scaffold(
-          appBar: AppBar(),
-          body: Form(
-            //autovalidate: _autovalidate,
-            autovalidateMode: AutovalidateMode.onUserInteraction,
-            key: _key,
-            child: ListView(
-              padding: EdgeInsets.all(16.0),
-              children: <Widget>[
-                TextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (e) {
-                    if (!e.contains("@")) {
-                      return "Formato Errado (E-MAIL)";
-                    } else {
-                      return null;
-                    }
-                  },
-                  onSaved: (e) => usuario = e,
-                  decoration: InputDecoration(
-                    labelText: "Usuario",
-                  ),
-                ),
-                TextFormField(
-                  obscureText: _secureText,
-                  onSaved: (e) => senha = e,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    suffixIcon: IconButton(
-                      onPressed: showHide,
-                      icon: Icon(
-                        _secureText ? Icons.visibility_off : Icons.visibility,
-                      ),
-                    ),
-                  ),
-                ),
-                MaterialButton(
-                  onPressed: () {
-                    check();
-                  },
-                  child: Text("Login"),
-                ),
-                // InkWell(
-                //   onTap: () {
-                //     Navigator.of(context).push(MaterialPageRoute(
-                //         builder: (context) => InserirUsuario(_listarUsuarios)));
-                //   },
-                //   child: Text(
-                //     "Create a new account in here",
-                //     textAlign: TextAlign.center,
-                //   ),
-                // ),
-              ],
-            ),
-          ),
-        );
-
-        break;
-      case LoginStatus.signIn:
-        return HomePage(signOut);
-      case LoginStatus.signInUsuarios:
-        return MenuUsuarios(signOut);
-        break;
-      default:
-        return Text("Erro ao carregar menu!");
-    }
-  }
-}
+} //CLASS

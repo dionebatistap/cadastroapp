@@ -27,29 +27,22 @@ class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS
   String estadoCivil, idUsuario, clgrupo, prefControle;
   final _key = new GlobalKey<FormState>();
-  var validarCampos = true;
+  var validate = true;
   File _imageFile;
   final picker = ImagePicker();
   //VARIAVEIS RADIO BUTTONS
-  String clestadoCivil = "Casado";
-  String clMembroObreiro = "Obreiro";
+  String clestadoCivil = "Solteiro";
+  String clMembroObreiro = "Membro";
+  String isBatizada = "Não";
 //CONTROLLERS TEXTFIELD
-  final TextEditingController nomeController =
-      TextEditingController(text: "Dione Batista Pereira");
-  final TextEditingController celularController =
-      TextEditingController(text: "19983975315");
-  final TextEditingController enderecoController =
-      TextEditingController(text: "Rua Visconde de Cairu");
-  final TextEditingController numeroController =
-      TextEditingController(text: "139");
-  final TextEditingController bairroController =
-      TextEditingController(text: "Jardim Vela Vista");
-  final TextEditingController cepController =
-      TextEditingController(text: "13276280");
-  final TextEditingController cidadeController =
-      TextEditingController(text: "Valinhos");
-  final TextEditingController prBatizouController =
-      TextEditingController(text: "Pr. Leonardo");
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController celularController = TextEditingController();
+  final TextEditingController enderecoController = TextEditingController();
+  final TextEditingController numeroController = TextEditingController();
+  final TextEditingController bairroController = TextEditingController();
+  final TextEditingController cepController = TextEditingController();
+  final TextEditingController cidadeController = TextEditingController();
+  final TextEditingController prBatizouController = TextEditingController();
 
   //VARIAVEIS DATAPICKER
   String selecionaData, labelText;
@@ -90,7 +83,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
         child: OrientationBuilder(
           builder: (context, orientation) {
             return Form(
-              //autovalidate: validarCampos,
+              //autovalidateMode: AutovalidateMode.always,
               key: _key,
               child: SingleChildScrollView(
                 child: Column(
@@ -189,6 +182,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
                               children: <Widget>[
 //FORMUALARIO DE TEXTO NOME
                                 TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*campo obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
                                     border: UnderlineInputBorder(),
@@ -204,6 +204,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
 
 //FORMUALARIO DE TEXTO ENDEREÇO
                                 TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
                                     border: UnderlineInputBorder(),
@@ -223,6 +230,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     Expanded(
                                       flex: 1,
                                       child: TextFormField(
+                                        validator: (e) {
+                                          if (e.isEmpty) {
+                                            return "*obrigatório";
+                                          } else {
+                                            return null;
+                                          }
+                                        },
                                         keyboardType: TextInputType.number,
                                         decoration: const InputDecoration(
                                           border: UnderlineInputBorder(),
@@ -240,6 +254,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     Expanded(
                                       flex: 2,
                                       child: TextFormField(
+                                        validator: (e) {
+                                          if (e.isEmpty) {
+                                            return "*obrigatório";
+                                          } else {
+                                            return null;
+                                          }
+                                        },
                                         textCapitalization:
                                             TextCapitalization.words,
                                         decoration: const InputDecoration(
@@ -257,6 +278,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 const SizedBox(height: 5.0),
 
                                 TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*campo obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
                                     border: UnderlineInputBorder(),
@@ -271,6 +299,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 const SizedBox(height: 5.0),
 
                                 TextFormField(
+                                  // validator: (e) {
+                                  //   if (e.isEmpty) {
+                                  //     return "*campo obrigatório";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
                                   inputFormatters: [formataCep],
                                   maxLength: 9,
                                   keyboardType: TextInputType.number,
@@ -293,6 +328,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 const SizedBox(height: 5.0),
 //FORMUALARIO DE TEXTO
                                 TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*campo obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                   inputFormatters: [formataCelular],
                                   keyboardType: TextInputType.number,
                                   textCapitalization: TextCapitalization.words,
@@ -418,24 +460,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                       Spacer(
                                         flex: 5,
                                       ),
-                                      Text("Obreiro",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[700])),
-                                      Radio(
-                                        value: "Obreiro",
-                                        groupValue: clMembroObreiro,
-                                        onChanged:
-                                            (String selecionaMembroObreiro) {
-                                          setState(() {
-                                            clMembroObreiro =
-                                                selecionaMembroObreiro;
-                                          });
-                                        },
-                                      ),
-                                      Spacer(
-                                        flex: 3,
-                                      ),
                                       Text("Membro",
                                           style: TextStyle(
                                               fontSize: 16,
@@ -451,11 +475,94 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                           });
                                         },
                                       ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                      Text("Obreiro",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Obreiro",
+                                        groupValue: clMembroObreiro,
+                                        onChanged:
+                                            (String selecionaMembroObreiro) {
+                                          setState(() {
+                                            clMembroObreiro =
+                                                selecionaMembroObreiro;
+                                          });
+                                        },
+                                      ),
                                     ],
                                   ),
                                 ),
                                 const SizedBox(height: 8.0),
-
+//BATIZADO NAS AGUAS
+                                Row(children: <Widget>[
+                                  Text("Batizado nas águas:",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey[700])),
+                                ]),
+                                Container(
+                                  height: tamanho.size.height * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                        color: Colors.grey[800],
+                                        width: 1.0,
+                                      ),
+                                    ),
+                                    color: Colors.grey[200],
+                                    //border: Border.fromBorderSide(),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    55,
+                                    0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Spacer(
+                                        flex: 5,
+                                      ),
+                                      Text("Sim",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Sim",
+                                        groupValue: isBatizada,
+                                        onChanged:
+                                            (String selecionaIsBatizado) {
+                                          setState(() {
+                                            isBatizada = selecionaIsBatizado;
+                                          });
+                                        },
+                                      ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                      Text("Não",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Não",
+                                        groupValue: isBatizada,
+                                        onChanged:
+                                            (String selecionaIsBatizado) {
+                                          setState(() {
+                                            isBatizada = selecionaIsBatizado;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
 //FORMULARIO DE DATA DO BATISMO
                                 Container(
                                   padding: EdgeInsets.fromLTRB(10, 5, 30, 0),
@@ -484,6 +591,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
 
 //FORMUALARIO DE TEXTO PASTOR QUE BATIZOU
                                 TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
                                     border: UnderlineInputBorder(),
@@ -578,10 +692,10 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   color: Colors.grey[300],
                                   clipBehavior: Clip.antiAlias,
                                   child: MaterialButton(
-                                    splashColor: Colors.green[600],
-                                    focusColor: Colors.green[600],
-                                    hoverColor: Colors.green[600],
-                                    highlightColor: Colors.green[600],
+                                    splashColor: Colors.grey[400],
+                                    focusColor: Colors.grey[400],
+                                    hoverColor: Colors.grey[400],
+                                    highlightColor: Colors.grey[400],
                                     minWidth: 200.0,
                                     height: 35,
                                     onPressed: () {
@@ -593,8 +707,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                             color: Colors.grey[700])),
                                   ),
                                 ),
-                                const SizedBox(height: 15.0),
-                                const SizedBox(height: 5.0),
+                                const SizedBox(height: 20.0),
                                 //FORMATAÇÃO
                               ],
                             ),
@@ -637,7 +750,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
       print(prefControle);
     } else {
       setState(() {
-        validarCampos = true;
+        validate = true;
       });
     }
   }
@@ -651,6 +764,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String cidade = cidadeController.text;
     String celular = celularController.text;
     String pastorBatizou = prBatizouController.text;
+    if (cep.isEmptyOrNull) {
+      cep = '00000-000';
+    }
 
     var url = Uri.parse(BaseUrl.inserirPessoaSemFoto);
     final response = await http.post(url, body: {
@@ -665,6 +781,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
       "prBatizou": "$pastorBatizou",
       "estadoCivil": "$clestadoCivil",
       "grupo": "$clgrupo",
+      "isBatizada": "$isBatizada",
       "idUsuario": idUsuario,
       "dataSelecionada": "$variavelData",
     });
@@ -692,7 +809,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String cidade = cidadeController.text;
     String celular = celularController.text;
     String pastorBatizou = prBatizouController.text;
-
+    if (cep.isEmptyOrNull) {
+      cep = '00000-000';
+    }
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
@@ -712,6 +831,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
       request.fields['prBatizou'] = "$pastorBatizou";
       request.fields['estadoCivil'] = "$clestadoCivil";
       request.fields['grupo'] = "$clgrupo";
+      request.fields['isBatizada'] = "$isBatizada";
       request.fields['idUsuario'] = idUsuario;
       request.fields['dataSelecionada'] = "$variavelData";
 
@@ -747,6 +867,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
     } else {}
   }
 
+  String cepNaoEncontrado;
   Future recuperaCep() async {
     final int ok = 200;
     final int badRequest = 400;
@@ -756,81 +877,103 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String baseUrl = 'https://viacep.com.br/ws/';
     String cepDigitado = '$cep';
     String tiporetorno = '/json/';
-    final uri = Uri.parse('$baseUrl/$cepDigitado/$tiporetorno');
-    http.Response response;
-    response = await http.get(uri);
-    print(response.body);
-
-    if (response.statusCode == ok) {
-      Map<String, dynamic> retorno = json.decode(response.body);
-      String enderecoAPI = retorno["logradouro"];
-      String cidadeAPI = retorno["localidade"];
-      String bairroAPI = retorno["bairro"];
-      setState(() {
-        enderecoController.text = enderecoAPI;
-        cidadeController.text = cidadeAPI;
-        bairroController.text = bairroAPI;
-      });
-    } else if (response.statusCode == badRequest) {
-      print("Errado");
+    print(cepDigitado);
+    if ((cepDigitado != null) &&
+        (cepDigitado.length == 9) &&
+        (cepDigitado.isNotEmpty)) {
+      final uri = Uri.parse('$baseUrl/$cepDigitado/$tiporetorno');
+      http.Response response;
+      response = await http.get(uri);
+      print(response.body);
+      if (response.statusCode == ok) {
+        Map<String, dynamic> retorno = json.decode(response.body);
+        String enderecoAPI = retorno["logradouro"];
+        String cidadeAPI = retorno["localidade"];
+        String bairroAPI = retorno["bairro"];
+        bool cepNaoEncontradoApi = retorno["erro"];
+        if (cepNaoEncontradoApi == null) {
+          setState(() {
+            enderecoController.text = enderecoAPI;
+            cidadeController.text = cidadeAPI;
+            bairroController.text = bairroAPI;
+            toast("Cep localizado");
+          });
+        } else {
+          //toast("Cep não encontrado");
+          snackBar(context, title: "Cep não encontrado");
+        }
+      } else if (response.statusCode == badRequest) {
+        print("Servidor de cep offline");
+      }
+    } else {
+      snackBar(context, title: "Cep Inválido");
+      print("Cep invalido");
     }
   }
 
   Future obterImagemCamera() async {
     final image = await picker.getImage(
         source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
-    File pickedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressQuality: 100,
-      maxWidth: 1920,
-      maxHeight: 1080,
-      compressFormat: ImageCompressFormat.jpg,
-      androidUiSettings: AndroidUiSettings(
-        toolbarColor: Color(0xFF212121),
-        toolbarTitle: "Editar Imagem",
-        statusBarColor: Colors.black54,
-        backgroundColor: Colors.white,
-        toolbarWidgetColor: Colors.white,
-      ),
-    );
-    if (pickedFile != null) {
-      final File image = File(pickedFile.path);
-      setState(() {
-        _imageFile = image;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
+    try {
+      File pickedFile = await ImageCropper.cropImage(
+        sourcePath: image.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        compressQuality: 100,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Color(0xFF212121),
+          toolbarTitle: "Editar Imagem",
+          statusBarColor: Colors.black54,
+          backgroundColor: Colors.white,
+          toolbarWidgetColor: Colors.white,
+        ),
+      );
+      if (pickedFile != null) {
+        final File image = File(pickedFile.path);
+        setState(() {
+          _imageFile = image;
+          Navigator.pop(context);
+        });
+      } else {
+        return "Erro patch called null";
+      }
+    } catch (e) {
+      return "Erro patch called null";
     }
   }
 
   Future obterImagemGaleria() async {
-    final file = await picker.getImage(
-        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-    File pickedFile = await ImageCropper.cropImage(
-      sourcePath: file.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressQuality: 100,
-      maxWidth: 1920,
-      maxHeight: 1080,
-      compressFormat: ImageCompressFormat.jpg,
-      androidUiSettings: AndroidUiSettings(
-        toolbarColor: Color(0xFF212121),
-        toolbarTitle: "Editar Imagem",
-        statusBarColor: Colors.black54,
-        backgroundColor: Colors.white,
-        toolbarWidgetColor: Colors.white,
-      ),
-    );
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
+    try {
+      final file = await picker.getImage(
+          source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
+      File pickedFile = await ImageCropper.cropImage(
+        sourcePath: file.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        compressQuality: 100,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Color(0xFF212121),
+          toolbarTitle: "Editar Imagem",
+          statusBarColor: Colors.black54,
+          backgroundColor: Colors.white,
+          toolbarWidgetColor: Colors.white,
+        ),
+      );
+      if (pickedFile != null) {
+        final File file = File(pickedFile.path);
+        setState(() {
+          _imageFile = file;
+          Navigator.pop(context);
+        });
+      } else {
+        return "Erro patch called null";
+      }
+    } catch (e) {
+      return "Erro patch called null";
     }
   }
 
@@ -876,8 +1019,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
   }
 
   List<DropdownMenuItem<String>> _listaItensDropGrupo = [];
-//LISTAR GRUPOS DO BANCO
-
   final list = <GrupoModel>[];
   Future<void> _listarGrupos() async {
     list.clear();
@@ -885,7 +1026,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
     setState(() {
       //  loading = true;
     });
-
     var url = Uri.parse(BaseUrl.listarGrupos);
     final response = await http.get(url);
     if (response.contentLength == 2) {

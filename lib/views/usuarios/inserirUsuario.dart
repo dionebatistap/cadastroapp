@@ -160,12 +160,6 @@ class _InserirUsuario extends State<InserirUsuario> {
                               ),
                             ),
                             labelText: "Confirmar senha",
-                            // suffixIcon: IconButton(
-                            //   onPressed: showHide,
-                            //   icon: Icon(
-                            //     _secureText ? Icons.visibility_off : Icons.visibility,
-                            //   ),
-                            // ),
                           ),
                         ),
                         const SizedBox(height: 8.0),
@@ -271,10 +265,10 @@ class _InserirUsuario extends State<InserirUsuario> {
                           color: Colors.grey[300],
                           clipBehavior: Clip.antiAlias,
                           child: MaterialButton(
-                            splashColor: Colors.green[600],
-                            focusColor: Colors.green[600],
-                            hoverColor: Colors.green[600],
-                            highlightColor: Colors.green[600],
+                            splashColor: Colors.grey[400],
+                            focusColor: Colors.grey[400],
+                            hoverColor: Colors.grey[400],
+                            highlightColor: Colors.grey[400],
                             minWidth: 200.0,
                             height: 35,
                             onPressed: () {

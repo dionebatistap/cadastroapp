@@ -1,4 +1,5 @@
-import 'package:cadastroapp/views/login/login.dart';
+import 'package:cadastroapp/views/obsoleto/loginObsoleto.dart';
+import 'package:cadastroapp/views/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -14,7 +15,7 @@ void main() async {
     SystemUiOverlayStyle(
       statusBarColor: Colors.white,
       statusBarBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.black54,
+      systemNavigationBarColor: Colors.grey[850],
     ),
   );
   //CONTROLLER MODO RETRATO
@@ -42,6 +43,6 @@ void main() async {
       GlobalWidgetsLocalizations.delegate
     ],
     supportedLocales: [const Locale('pt', 'BR')],
-    home: Login(),
+    home: GSSplashScreen(),
   ));
 }

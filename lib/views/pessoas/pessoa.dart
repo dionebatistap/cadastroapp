@@ -224,6 +224,7 @@ class _PessoaState extends State<Pessoa> {
           api['prBatizou'],
           api['estadoCivil'],
           api['grupo'],
+          api['isBatizada'],
           api['createdDate'],
           api['idUsuario'],
           api['nome'],

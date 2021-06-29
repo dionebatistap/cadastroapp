@@ -74,10 +74,37 @@ class _HomePage extends State<HomePage> {
                 topRight: Radius.circular(35),
                 bottomRight: Radius.circular(35)),
             child: Drawer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
+              child: ListView(
+                // crossAxisAlignment: CrossAxisAlignment.stretch,
+                //mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                    ),
+                    child: ListTile(
+                      title: Text(
+                        'Sair',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.black38.withOpacity(0.2),
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      trailing: Icon(
+                        Icons.power_settings_new,
+                        color: Colors.red[700],
+                      ),
+                      onTap: () {
+                        widget.signOut();
+                      },
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    color: Colors.grey.withOpacity(0.6),
+                  ),
                   UserAccountsDrawerHeader(
                     currentAccountPicture: ClipRRect(
                       borderRadius: BorderRadius.circular(40),
@@ -91,15 +118,23 @@ class _HomePage extends State<HomePage> {
                     accountEmail: Text("$usuario"),
                     decoration: BoxDecoration(
                       color: Colors.grey[50],
-                      border: Border.all(width: 2.0, color: Colors.grey[50]),
+                      border: Border.all(width: 5.0, color: Colors.grey[50]),
                     ),
                   ),
                   const SizedBox(
-                    height: 4,
+                    height: 2,
                   ),
                   ListTile(
-                    title: Text("Opções"),
-                    subtitle: Text("Editar/Remover Membro"),
+                    title: Text("Membros",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 15)),
+                    subtitle: Text("Editar/Remover",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[400],
+                            fontSize: 12)),
                     leading: Icon(Icons.settings),
                     onTap: () {
                       Navigator.of(context).push(
@@ -107,8 +142,16 @@ class _HomePage extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    title: Text("Usuários"),
-                    subtitle: Text("Gerenciar"),
+                    title: Text("Usuários",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 15)),
+                    subtitle: Text("Gerenciar",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[400],
+                            fontSize: 12)),
                     leading: Icon(Icons.account_circle),
                     onTap: () {
                       Navigator.of(context).push(
@@ -116,37 +159,20 @@ class _HomePage extends State<HomePage> {
                     },
                   ),
                   ListTile(
-                    title: Text("Grupos"),
-                    subtitle: Text("Gerenciar"),
+                    title: Text("Grupos",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 15)),
+                    subtitle: Text("Gerenciar",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[400],
+                            fontSize: 12)),
                     leading: Icon(Icons.groups_rounded),
                     onTap: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => Grupo()));
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 200),
-                    child: Divider(
-                      height: 1,
-                      color: Colors.grey.withOpacity(0.6),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text(
-                      'Sair',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                        color: Colors.black54,
-                      ),
-                      textAlign: TextAlign.left,
-                    ),
-                    trailing: Icon(
-                      Icons.power_settings_new,
-                      color: Colors.red,
-                    ),
-                    onTap: () {
-                      widget.signOut();
                     },
                   ),
                 ],
@@ -301,6 +327,7 @@ class _HomePage extends State<HomePage> {
           api['prBatizou'],
           api['estadoCivil'],
           api['grupo'],
+          api['isBatizada'],
           api['createdDate'],
           api['idUsuario'],
           api['nome'],
@@ -343,6 +370,7 @@ class _HomePage extends State<HomePage> {
           api['prBatizou'],
           api['estadoCivil'],
           api['grupo'],
+          api['isBatizada'],
           api['createdDate'],
           api['idUsuario'],
           api['nome'],

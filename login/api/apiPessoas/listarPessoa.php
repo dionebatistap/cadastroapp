@@ -7,7 +7,7 @@ require "../config/connect.php";
     $response = array();
 
     $sql = mysqli_query($con, "SELECT a.*, b.nome FROM tbl_pessoas a
-    left join tbl_usuarios b on a.idUsuario = b.id");
+    left join tbl_usuarios b on a.idUsuario = b.id ORDER BY nomePessoa");
     while ($a = mysqli_fetch_array($sql)) {
         # code...
         $b['id'] = $a['id'];
@@ -22,6 +22,7 @@ require "../config/connect.php";
         $b['prBatizou'] = $a['prBatizou'];
         $b['estadoCivil'] = $a['estadoCivil'];
         $b['grupo'] = $a['grupo'];
+        $b['isBatizada'] = $a['isBatizada'];
         $b['createdDate'] = $a['createdDate'];
         $b['idUsuario'] = $a['idUsuario'];
         $b['image'] = $a['image'];

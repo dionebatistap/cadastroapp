@@ -6,7 +6,7 @@ require "../config/connect.php";
 
     $response = array();
 
-    $sql = mysqli_query($con, "SELECT * FROM tbl_usuarios");
+    $sql = mysqli_query($con, "SELECT * FROM tbl_usuarios ORDER BY nome");
     while ($a = mysqli_fetch_array($sql)) {
         # code...
         $b['id'] = $a['id'];

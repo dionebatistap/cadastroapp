@@ -11,6 +11,7 @@ class PessoaModel {
   final String prBatizou;
   final String estadoCivil;
   final String grupo;
+  final String isBatizada;
   final String createdDate;
   final String idUsuario;
   final String nome;
@@ -30,6 +31,7 @@ class PessoaModel {
       this.prBatizou,
       this.estadoCivil,
       this.grupo,
+      this.isBatizada,
       this.createdDate,
       this.idUsuario,
       this.nome,

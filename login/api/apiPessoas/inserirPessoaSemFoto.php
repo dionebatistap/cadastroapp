@@ -16,11 +16,12 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $prBatizou = $_POST['prBatizou'];
     $estadoCivil = $_POST['estadoCivil'];
     $grupo = $_POST['grupo'];
+    $isBatizada = $_POST['isBatizada'];
     $dataSelecionada = $_POST['dataSelecionada'];
     $idUsuario = $_POST['idUsuario'];
     $image = "placeholder.jpeg";
 
-        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$image','$dataSelecionada',NOW(),'$idUsuario')";
+        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$isBatizada','$image','$dataSelecionada',NOW(),'$idUsuario')";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

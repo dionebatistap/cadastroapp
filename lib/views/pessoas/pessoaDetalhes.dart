@@ -143,6 +143,16 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                                   fontSize: 16,
                                 ),
                               ),
+                              trailing: IconButton(
+                                icon: Icon(Icons.location_on_outlined),
+                                onPressed: () {
+                                  mapaCidade(widget.model.enderecoPessoa +
+                                      widget.model.numeroPessoa +
+                                      widget.model.bairroPessoa +
+                                      widget.model.cidadePessoa);
+                                  //_textMe(phoneNumber);
+                                },
+                              ),
                             ),
                           ),
                           Card(
@@ -234,7 +244,7 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                               contentPadding:
                                   const EdgeInsets.fromLTRB(5, 3, 3, 3),
                               title: Text(
-                                "Cargo:",
+                                "Membro/Obreiro:",
                                 style: TextStyle(
                                   color: Colors.black26,
                                   fontSize: 17,
@@ -254,14 +264,14 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                               contentPadding:
                                   const EdgeInsets.fromLTRB(5, 3, 3, 3),
                               title: Text(
-                                "Data Batismo nas águas:",
+                                "Batizado nas águas:",
                                 style: TextStyle(
                                   color: Colors.black26,
                                   fontSize: 17,
                                 ),
                               ),
                               subtitle: Text(
-                                dataBatismoformatada,
+                                widget.model.isBatizada,
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 18,
@@ -269,26 +279,50 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                               ),
                             ),
                           ),
-                          Card(
-                            child: ListTile(
-                              contentPadding:
-                                  const EdgeInsets.fromLTRB(5, 3, 3, 3),
-                              title: Text(
-                                "Pastor que batizou:",
-                                style: TextStyle(
-                                  color: Colors.black26,
-                                  fontSize: 17,
-                                ),
-                              ),
-                              subtitle: Text(
-                                widget.model.prBatizou,
-                                style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ),
-                          ),
+                          widget.model.isBatizada == 'Sim'
+                              ? Card(
+                                  child: ListTile(
+                                    contentPadding:
+                                        const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                                    title: Text(
+                                      "Data Batismo nas águas:",
+                                      style: TextStyle(
+                                        color: Colors.black26,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      dataBatismoformatada,
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          widget.model.isBatizada == 'Sim'
+                              ? Card(
+                                  child: ListTile(
+                                    contentPadding:
+                                        const EdgeInsets.fromLTRB(5, 3, 3, 3),
+                                    title: Text(
+                                      "Pastor que batizou:",
+                                      style: TextStyle(
+                                        color: Colors.black26,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      widget.model.prBatizou,
+                                      style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(),
                           Card(
                             child: ListTile(
                               contentPadding:
@@ -367,6 +401,17 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
       await launch(whatsappUrl);
     } else {
       throw 'Não foi possível abrir $whatsappUrl';
+    }
+  }
+
+  mapaCidade(String adress) async {
+    var mapa = "https://www.google.com/maps/search/?api=1&query=$adress";
+    final String encodedURl = Uri.encodeFull(mapa);
+
+    if (await canLaunch(encodedURl)) {
+      await launch(encodedURl);
+    } else {
+      throw 'Não foi possível abrir $mapa';
     }
   }
 }
