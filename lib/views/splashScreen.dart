@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class GSSplashScreen extends StatefulWidget {
-  static String tag = '/GSSplashScreen';
+class TelaAbertura extends StatefulWidget {
+  // static String tag = '/TelaAbertura';
 
   @override
-  GSSplashScreenState createState() => GSSplashScreenState();
+  TelaAberturaState createState() => TelaAberturaState();
 }
 
-class GSSplashScreenState extends State<GSSplashScreen>
+class TelaAberturaState extends State<TelaAbertura>
     with SingleTickerProviderStateMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -80,4 +80,4 @@ class GSSplashScreenState extends State<GSSplashScreen>
       ),
     );
   }
-}
+} //CLASS

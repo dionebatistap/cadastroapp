@@ -43,9 +43,10 @@ class _EditarUsuario extends State<EditarUsuario> {
 
   @override
   void initState() {
-    super.initState();
+    getPref();
     setup();
     _carregaItensDropdown();
+    super.initState();
   }
 
   @override
@@ -79,6 +80,7 @@ class _EditarUsuario extends State<EditarUsuario> {
                     child: Column(
                       children: <Widget>[
                         TextFormField(
+                          enabled: permissaoUsuario == "1" ? true : false,
                           textCapitalization: TextCapitalization.words,
                           validator: (e) {
                             if (e.isEmpty) {
@@ -99,7 +101,7 @@ class _EditarUsuario extends State<EditarUsuario> {
                         ),
                         const SizedBox(height: 8.0),
                         TextFormField(
-                          enabled: false,
+                          enabled: permissaoUsuario == "1" ? true : false,
                           validator: (e) {
                             if (e.isEmpty) {
                               return "Preenchimento obrigatório";
@@ -142,6 +144,7 @@ class _EditarUsuario extends State<EditarUsuario> {
                                 _secureText
                                     ? Icons.visibility_off
                                     : Icons.visibility,
+                                color: Colors.grey[800],
                               ),
                             ),
                             border: OutlineInputBorder(
@@ -204,11 +207,15 @@ class _EditarUsuario extends State<EditarUsuario> {
                                           color: Colors.grey[700])),
                                   value: levelSelecionado,
                                   items: _listaLevels,
-                                  onChanged: (level) {
-                                    setState(() {
-                                      cllevel = level;
-                                    });
-                                  },
+                                  onChanged: (permissaoUsuario == "1")
+                                      ? (level) =>
+                                          setState(() => cllevel = level)
+                                      : null,
+                                  // (level) {
+                                  //   setState(() {
+                                  //     cllevel = level;
+                                  //   });
+                                  // },
                                   style: TextStyle(
                                       fontSize: 16, color: Colors.grey[700]),
                                 ),
@@ -218,58 +225,63 @@ class _EditarUsuario extends State<EditarUsuario> {
                         ),
                         const SizedBox(height: 8.0),
 
-                        Container(
-                          height: tamanho.size.height * 0.09,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)),
-                            border:
-                                Border.all(width: 1.1, color: Colors.grey[500]),
-                            //color: Colors.grey[200],
-                            //border: Border.fromBorderSide(),
-                          ),
-                          padding: EdgeInsets.fromLTRB(
-                            0,
-                            0,
-                            55,
-                            0,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Spacer(
-                                flex: 5,
-                              ),
-                              Text("Ativo",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey[700])),
-                              Radio(
-                                value: "ativo",
-                                groupValue: clstatusUsuario,
-                                onChanged: (String valor) {
-                                  setState(() {
-                                    clstatusUsuario = valor;
-                                  });
-                                },
-                              ),
-                              Spacer(
-                                flex: 3,
-                              ),
-                              Text("Inativo",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey[700])),
-                              Radio(
-                                value: "inativo",
-                                groupValue: clstatusUsuario,
-                                onChanged: (String valor) {
-                                  setState(() {
-                                    clstatusUsuario = valor;
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
+                        permissaoUsuario == "1"
+                            ? Container(
+                                height: tamanho.size.height * 0.09,
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10.0)),
+                                  border: Border.all(
+                                      width: 1.1, color: Colors.grey[500]),
+                                  //color: Colors.grey[200],
+                                  //border: Border.fromBorderSide(),
+                                ),
+                                padding: EdgeInsets.fromLTRB(
+                                  0,
+                                  0,
+                                  55,
+                                  0,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: <Widget>[
+                                    Spacer(
+                                      flex: 5,
+                                    ),
+                                    Text("Ativo",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[700])),
+                                    Radio(
+                                      value: "ativo",
+                                      groupValue: clstatusUsuario,
+                                      onChanged: (String valor) {
+                                        setState(() {
+                                          clstatusUsuario = valor;
+                                        });
+                                      },
+                                    ),
+                                    Spacer(
+                                      flex: 3,
+                                    ),
+                                    Text("Inativo",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[700])),
+                                    Radio(
+                                      value: "inativo",
+                                      groupValue: clstatusUsuario,
+                                      onChanged: (String valor) {
+                                        setState(() {
+                                          clstatusUsuario = valor;
+                                        });
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(),
+
                         const SizedBox(height: 15.0),
                         Material(
                           shape: RoundedRectangleBorder(
@@ -303,6 +315,19 @@ class _EditarUsuario extends State<EditarUsuario> {
         }),
       ),
     );
+  }
+
+  bool habilitado = true;
+
+  String permissaoUsuario, idUsuario;
+  getPref() async {
+    String levelUserPref;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      levelUserPref = preferences.getString("levelUser");
+      idUsuario = preferences.getString("id");
+      permissaoUsuario = levelUserPref;
+    });
   }
 
   check() {

@@ -191,9 +191,20 @@ class _EditarPessoaState extends State<EditarPessoa> {
                         children: <Widget>[
 //nome
                           TextFormField(
+                            validator: (e) {
+                              if (e.isEmpty) {
+                                return "*obrigatório";
+                              } else {
+                                return null;
+                              }
+                            },
                             textCapitalization: TextCapitalization.words,
                             decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(15.0),
+                                ),
+                              ),
                               filled: true,
                               //icon: Icon(Icons.person),
                               hintText: 'Por favor, iserir nome completo.',
@@ -205,9 +216,20 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
 //FORMUALARIO DE TEXTO ENDEREÇO
                           TextFormField(
+                            validator: (e) {
+                              if (e.isEmpty) {
+                                return "*obrigatório";
+                              } else {
+                                return null;
+                              }
+                            },
                             textCapitalization: TextCapitalization.words,
                             decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(15.0),
+                                ),
+                              ),
                               filled: true,
                               //icon: Icon(Icons.person),
                               hintText: 'Rua, Avenida...',
@@ -222,9 +244,20 @@ class _EditarPessoaState extends State<EditarPessoa> {
                               Expanded(
                                 flex: 1,
                                 child: TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                   keyboardType: TextInputType.number,
                                   decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText: 'nº',
@@ -239,9 +272,20 @@ class _EditarPessoaState extends State<EditarPessoa> {
                               Expanded(
                                 flex: 2,
                                 child: TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText: 'Bairro',
@@ -255,9 +299,20 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           const SizedBox(height: 5.0),
 
                           TextFormField(
+                            validator: (e) {
+                              if (e.isEmpty) {
+                                return "*obrigatório";
+                              } else {
+                                return null;
+                              }
+                            },
                             textCapitalization: TextCapitalization.words,
                             decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(15.0),
+                                ),
+                              ),
                               filled: true,
                               //icon: Icon(Icons.person),
                               hintText: 'Cidade',
@@ -273,7 +328,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
                             maxLength: 9,
                             keyboardType: TextInputType.number,
                             decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(15.0),
+                                ),
+                              ),
                               filled: true,
                               //icon: Icon(Icons.person),
                               hintText: '00000-000',
@@ -293,11 +352,22 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
                           //FORMUALARIO DE TEXTO
                           TextFormField(
+                            validator: (e) {
+                              if (e.isEmpty) {
+                                return "*obrigatório";
+                              } else {
+                                return null;
+                              }
+                            },
                             inputFormatters: [formataCelular],
                             keyboardType: TextInputType.number,
                             textCapitalization: TextCapitalization.words,
                             decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(15.0),
+                                ),
+                              ),
                               filled: true,
                               //icon: Icon(Icons.person),
                               hintText: 'nº cel.',
@@ -317,13 +387,12 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           Container(
                             height: tamanho.size.height * 0.09,
                             decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[800],
-                                  width: 1.0,
-                                ),
-                              ),
-                              color: Colors.grey[200],
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+
+                              color: Colors.grey[100],
                               //border: Border.fromBorderSide(),
                             ),
                             padding: EdgeInsets.fromLTRB(
@@ -381,13 +450,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           Container(
                             height: tamanho.size.height * 0.09,
                             decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[800],
-                                  width: 1.0,
-                                ),
-                              ),
-                              color: Colors.grey[200],
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.grey[100],
                               //border: Border.fromBorderSide(),
                             ),
                             padding: EdgeInsets.fromLTRB(
@@ -439,13 +506,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
                             padding: EdgeInsets.fromLTRB(10, 5, 30, 0),
                             height: tamanho.size.height * 0.09,
                             decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[800],
-                                  width: 1.1,
-                                ),
-                              ),
-                              color: Colors.grey[200],
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.grey[100],
                               //border: Border.fromBorderSide(),
                             ),
                             child: DateDropDown(
@@ -467,13 +532,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           Container(
                             height: tamanho.size.height * 0.09,
                             decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[800],
-                                  width: 1.0,
-                                ),
-                              ),
-                              color: Colors.grey[200],
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.grey[100],
                               //border: Border.fromBorderSide(),
                             ),
                             padding: EdgeInsets.fromLTRB(
@@ -523,7 +586,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           TextFormField(
                             textCapitalization: TextCapitalization.words,
                             decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius: const BorderRadius.all(
+                                  const Radius.circular(15.0),
+                                ),
+                              ),
                               filled: true,
                               //icon: Icon(Icons.person),
                               hintText: 'Nome do pastor que batizou.',
@@ -544,13 +611,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           Container(
                             height: tamanho.size.height * 0.09,
                             decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: Colors.grey[800],
-                                  width: 1.1,
-                                ),
-                              ),
-                              color: Colors.grey[200],
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.grey[100],
                               //border: Border.fromBorderSide(),
                             ),
                             padding: EdgeInsets.fromLTRB(10, 0, 30, 0),
@@ -633,6 +698,9 @@ class _EditarPessoaState extends State<EditarPessoa> {
     if (cep.isEmptyOrNull) {
       cep = '00000-000';
     }
+    if (pastorBatizou.isEmptyOrNull) {
+      pastorBatizou = 'Não informado';
+    }
     try {
       var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
       final response = await http.post(url, body: {
@@ -681,7 +749,9 @@ class _EditarPessoaState extends State<EditarPessoa> {
     if (cep.isEmptyOrNull) {
       cep = '00000-000';
     }
-
+    if (pastorBatizou.isEmptyOrNull) {
+      pastorBatizou = 'Não informado';
+    }
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();

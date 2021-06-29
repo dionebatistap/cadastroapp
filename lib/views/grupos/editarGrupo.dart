@@ -95,10 +95,10 @@ class _EditarGrupo extends State<EditarGrupo> {
                           color: Colors.grey[300],
                           clipBehavior: Clip.antiAlias,
                           child: MaterialButton(
-                            splashColor: Colors.green[600],
-                            focusColor: Colors.green[600],
-                            hoverColor: Colors.green[600],
-                            highlightColor: Colors.green[600],
+                            splashColor: Colors.grey[400],
+                            focusColor: Colors.grey[400],
+                            hoverColor: Colors.grey[400],
+                            highlightColor: Colors.grey[400],
                             minWidth: 200.0,
                             height: 35,
                             onPressed: () {

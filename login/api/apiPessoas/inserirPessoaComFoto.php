@@ -34,11 +34,8 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     //REMOVER ACENTOS E RENOMEAR A IMAGEM DE ACORDO COM O NOME DO MEMBRO
     $nome_imagem = preg_replace("/[^a-zA-Z0-9]/", "", strtr($_POST['nomePessoa'], $caracteres_sem_acento));
     $nome_imagem = strtolower($nome_imagem);
-
     $imageNome = basename($_FILES['image']['name']);
     $image =  $nome_imagem.str_replace("image_cropper","", $imageNome);
-    
-    
     $imagePath = "../upload/".$image;
 
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);

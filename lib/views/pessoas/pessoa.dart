@@ -29,6 +29,12 @@ class _PessoaState extends State<Pessoa> {
     _listarPessoas();
   }
 
+  FocusNode focusNode = FocusNode();
+  Widget appBarTitle = Text("Gerenciar Cadastros",
+      style: TextStyle(
+          fontWeight: FontWeight.normal, color: Colors.black, fontSize: 18));
+  Icon actionIcon = Icon(Icons.search, color: Colors.white);
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
@@ -36,12 +42,50 @@ class _PessoaState extends State<Pessoa> {
         statusBarIconBrightness: Brightness.dark));
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gerenciar Cadastros"),
+        title: appBarTitle,
         toolbarHeight: 70,
         elevation: 10.0,
         shape: RoundedRectangleBorder(
           borderRadius: radiusOnly(bottomLeft: 20, bottomRight: 20),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(actionIcon.icon, color: Colors.black),
+            onPressed: () {
+              if (this.actionIcon.icon == Icons.search) {
+                this.actionIcon = Icon(Icons.close, color: textPrimaryColor);
+                this.appBarTitle = TextField(
+                  focusNode: focusNode,
+                  onChanged: (textoPesquisa) {
+                    setState(() {
+                      _listarPessoasFiltradas(textoPesquisa.toLowerCase());
+                    });
+                  },
+                  style: TextStyle(color: textPrimaryColor, fontSize: 20),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    prefixIcon: Icon(Icons.search, color: Colors.grey[500]),
+                    hintText: "Localizar...",
+                    hintStyle: TextStyle(
+                        fontWeight: FontWeight.normal, color: Colors.grey[500]),
+                  ),
+                );
+                setState(() {});
+              } else {
+                setState(() {
+                  _listarPessoas();
+                  this.actionIcon = Icon(Icons.search, color: Colors.redAccent);
+                  this.appBarTitle = Text(
+                    "Pesquisar cadastro",
+                    style: TextStyle(
+                        fontWeight: FontWeight.normal, color: Colors.black),
+                  );
+                });
+              }
+              FocusScope.of(context).requestFocus(focusNode);
+            },
+          ),
+        ],
       ),
 
 //FLOATING
@@ -64,13 +108,18 @@ class _PessoaState extends State<Pessoa> {
           crossAxisAlignment: CrossAxisAlignment.end,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.menu,
-              ),
+            // IconButton(
+            //   onPressed: () {},
+            //   icon: Icon(
+            //     Icons.menu,
+            //   ),
+            //   color: Colors.grey[50],
+            // ),
+            Icon(
+              Icons.menu,
               color: Colors.grey[50],
-            ),
+              size: 40,
+            )
           ],
         ),
       ),
@@ -268,5 +317,51 @@ class _PessoaState extends State<Pessoa> {
         snackBar(context, title: 'Deletado');
       },
     );
+  }
+
+  Future<void> _listarPessoasFiltradas(String textoPesquisa) async {
+    list.clear();
+    if (!mounted) return;
+    setState(() {
+      loading = true;
+    });
+
+    var url = Uri.parse(BaseUrl.listarPessoa);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new PessoaModel(
+          api['id'],
+          api['nomePessoa'],
+          api['enderecoPessoa'],
+          api['numeroPessoa'],
+          api['bairroPessoa'],
+          api['cepPessoa'],
+          api['cidadePessoa'],
+          api['celularPessoa'],
+          api['membroObreiro'],
+          api['prBatizou'],
+          api['estadoCivil'],
+          api['grupo'],
+          api['isBatizada'],
+          api['createdDate'],
+          api['idUsuario'],
+          api['nome'],
+          api['image'],
+          api['DataSelecionada'],
+        );
+        if ((ab.nomePessoa.toLowerCase()).contains(textoPesquisa) ||
+            (ab.membroObreiro.toLowerCase()).contains(textoPesquisa) ||
+            (ab.grupo.toLowerCase()).contains(textoPesquisa)) {
+          list.add(ab);
+        }
+      });
+      if (!mounted) return;
+      setState(() {
+        loading = false;
+      });
+    }
   }
 }

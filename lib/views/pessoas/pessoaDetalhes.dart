@@ -46,6 +46,7 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
         statusBarIconBrightness: Brightness.dark));
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.grey[250],
         appBar: (AppBar(
           title: Text(widget.model.nomePessoa),
           toolbarHeight: 70,

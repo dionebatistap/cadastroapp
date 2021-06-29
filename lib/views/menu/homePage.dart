@@ -250,13 +250,11 @@ class _HomePage extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.menu,
-                  ),
+                Icon(
+                  Icons.menu,
                   color: Colors.grey[50],
-                ),
+                  size: 40,
+                )
               ],
             ),
           ),

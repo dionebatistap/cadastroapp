@@ -68,19 +68,17 @@ class _UsuarioState extends State<Usuario> {
       bottomNavigationBar: new BottomAppBar(
         shape: CircularNotchedRectangle(),
         color: Colors.grey[50],
-        notchMargin: 2.0,
+        notchMargin: 3.0,
         clipBehavior: Clip.antiAlias,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.menu,
-              ),
+            Icon(
+              Icons.menu,
               color: Colors.grey[50],
-            ),
+              size: 40,
+            )
           ],
         ),
       ),
@@ -104,14 +102,6 @@ class _UsuarioState extends State<Usuario> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            // CircleAvatar(
-                            //   radius: 20,
-                            //   backgroundImage: NetworkImage(
-                            //       'https://static.vecteezy.com/ti/vetor-gratis/p1/2275847-avatar-masculino-perfil-icone-de-homem-caucasiano-sorridente-vetor.jpg'
-
-                            //       //BaseUrl.upload + x.image,
-                            //       ),
-                            // ),
                             Icon(
                               Icons.account_circle,
                               size: 45,
@@ -169,8 +159,7 @@ class _UsuarioState extends State<Usuario> {
                                 size: 20,
                               ),
                             ),
-
-                            (permissaoUsuario != '1')
+                            (permissaoUsuario != "1") && (x.id != idUsuario)
                                 ? IconButton(
                                     color: Colors.grey[300],
                                     onPressed: () {
@@ -195,7 +184,6 @@ class _UsuarioState extends State<Usuario> {
                                       size: 20,
                                     ),
                                   ),
-
                             (permissaoUsuario != '1')
                                 ? IconButton(
                                     color: Colors.grey[300],
@@ -228,12 +216,13 @@ class _UsuarioState extends State<Usuario> {
 
 /*METODOS*/
 
-  String permissaoUsuario;
+  String permissaoUsuario, idUsuario;
   getPref() async {
     String levelUserPref;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       levelUserPref = preferences.getString("levelUser");
+      idUsuario = preferences.getString("id");
       permissaoUsuario = levelUserPref;
     });
   }

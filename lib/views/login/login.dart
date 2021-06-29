@@ -7,6 +7,7 @@ import 'package:cadastroapp/views/usuarios/menuUsuarios.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
@@ -26,13 +27,14 @@ class _LoginState extends State<Login> {
   bool _secureText = true;
 
   final TextEditingController usuarioController = TextEditingController();
-  final TextEditingController senhaController = TextEditingController();
+  TextEditingController senhaController = TextEditingController();
 
   @override
   void initState() {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.grey[850],
         statusBarIconBrightness: Brightness.light));
+    getPref();
     super.initState();
   }
 
@@ -162,6 +164,7 @@ class _LoginState extends State<Login> {
                                     _secureText
                                         ? Icons.visibility_off
                                         : Icons.visibility,
+                                    color: Colors.grey[850],
                                   ),
                                 ),
                                 border: InputBorder.none,
@@ -174,26 +177,56 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           Spacer(),
-                          Material(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18.0)),
-                            elevation: 4.0,
-                            color: Colors.grey[850],
-                            clipBehavior: Clip.antiAlias,
-                            child: MaterialButton(
-                              splashColor: Colors.grey[400],
-                              focusColor: Colors.grey[400],
-                              hoverColor: Colors.grey[400],
-                              minWidth: 300.0,
-                              height: 35,
-                              onPressed: () {
-                                check();
-                              },
-                              child: Text("Login",
+                          // Material(
+                          //   shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(18.0)),
+                          //   elevation: 4.0,
+                          //   color: Colors.grey[850],
+                          //   clipBehavior: Clip.antiAlias,
+                          //   child: MaterialButton(
+                          //     splashColor: Colors.grey[400],
+                          //     focusColor: Colors.grey[400],
+                          //     hoverColor: Colors.grey[400],
+                          //     minWidth: 300.0,
+                          //     height: 35,
+                          //     onPressed: () {
+                          //       check();
+                          //     },
+                          //     child: Text("Login",
+                          //         style: TextStyle(
+                          //             fontSize: 18,
+                          //             color: Colors.grey[100],
+                          //             fontWeight: FontWeight.w600)),
+                          //   ),
+                          // ),
+                          InkWell(
+                            onTap: () {
+                              check();
+                            },
+                            child: Container(
+                              height: 45,
+                              width: MediaQuery.of(context).size.width / 1.2,
+                              decoration: BoxDecoration(
+                                color: Colors.grey[850],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(50),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.grey[400].withOpacity(0.7),
+                                      blurRadius: 1,
+                                      spreadRadius: 2),
+                                ],
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Login'.toUpperCase(),
                                   style: TextStyle(
-                                      fontSize: 18,
                                       color: Colors.grey[100],
-                                      fontWeight: FontWeight.w600)),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -229,12 +262,9 @@ class _LoginState extends State<Login> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      //print("$usuario, $senha"); *verificar retorno*
       login();
     } else {
-      setState(() {
-        // _autovalidate = true;
-      });
+      setState(() {});
     }
   }
 
@@ -242,11 +272,11 @@ class _LoginState extends State<Login> {
 //antes daqui só passa os dados para o androi, depois para a api
   login() async {
     usuario = usuarioController.text;
-    senha = senhaController.text;
+    String senha2 = senhaController.text;
 
     var url = Uri.parse(BaseUrl.login);
     final response =
-        await http.post(url, body: {"usuario": usuario, "senha": senha});
+        await http.post(url, body: {"usuario": usuario, "senha": senha2});
     final data = jsonDecode(response.body);
     print(data);
     int value = data['value'];
@@ -262,15 +292,18 @@ class _LoginState extends State<Login> {
         setState(() {
           _loginStatus = LoginStatus.signIn;
           savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
+          senhaController.text = '';
         });
       } else {
         setState(() {
           _loginStatus = LoginStatus.signInUsuarios;
           savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
+          senhaController.text = '';
         });
       }
       print(aviso);
     } else {
+      snackBar(context, title: "Usuário ou senha inválido");
       print(aviso);
     }
   }
@@ -294,11 +327,12 @@ class _LoginState extends State<Login> {
     setState(() {
       value = preferences.getString("levelUser");
 
-      _loginStatus = value == "1"
-          ? LoginStatus.signIn
-          : value == "0"
-              ? LoginStatus.signInUsuarios
-              : LoginStatus.notSignIn;
+      _loginStatus =
+          (value == "1") || (value == "2") || (value == "3") || (value == "4")
+              ? LoginStatus.signIn
+              : value == "0"
+                  ? LoginStatus.signInUsuarios
+                  : LoginStatus.notSignIn;
     });
   }
 

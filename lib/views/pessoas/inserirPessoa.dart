@@ -191,7 +191,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText:
@@ -213,7 +217,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText: 'Rua, Avenida...',
@@ -239,7 +247,12 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                         },
                                         keyboardType: TextInputType.number,
                                         decoration: const InputDecoration(
-                                          border: UnderlineInputBorder(),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              const Radius.circular(15.0),
+                                            ),
+                                          ),
                                           filled: true,
                                           //icon: Icon(Icons.person),
                                           hintText: 'nº',
@@ -264,7 +277,12 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                         textCapitalization:
                                             TextCapitalization.words,
                                         decoration: const InputDecoration(
-                                          border: UnderlineInputBorder(),
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              const Radius.circular(15.0),
+                                            ),
+                                          ),
                                           filled: true,
                                           //icon: Icon(Icons.person),
                                           hintText: 'Bairro',
@@ -287,7 +305,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText: 'Cidade',
@@ -310,7 +332,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   maxLength: 9,
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText: '00000-000',
@@ -339,7 +365,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   keyboardType: TextInputType.number,
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText: 'nº cel.',
@@ -359,13 +389,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 Container(
                                   height: tamanho.size.height * 0.09,
                                   decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey[800],
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    color: Colors.grey[200],
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
                                     //border: Border.fromBorderSide(),
                                   ),
                                   padding: EdgeInsets.fromLTRB(
@@ -439,13 +467,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 Container(
                                   height: tamanho.size.height * 0.09,
                                   decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey[800],
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    color: Colors.grey[200],
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
                                     //border: Border.fromBorderSide(),
                                   ),
                                   padding: EdgeInsets.fromLTRB(
@@ -507,13 +533,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 Container(
                                   height: tamanho.size.height * 0.09,
                                   decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey[800],
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    color: Colors.grey[200],
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
                                     //border: Border.fromBorderSide(),
                                   ),
                                   padding: EdgeInsets.fromLTRB(
@@ -568,13 +592,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   padding: EdgeInsets.fromLTRB(10, 5, 30, 0),
                                   height: tamanho.size.height * 0.09,
                                   decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey[800],
-                                        width: 1.1,
-                                      ),
-                                    ),
-                                    color: Colors.grey[200],
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
                                     //border: Border.fromBorderSide(),
                                   ),
                                   child: DateDropDown(
@@ -591,16 +613,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
 
 //FORMUALARIO DE TEXTO PASTOR QUE BATIZOU
                                 TextFormField(
-                                  validator: (e) {
-                                    if (e.isEmpty) {
-                                      return "*obrigatório";
-                                    } else {
-                                      return null;
-                                    }
-                                  },
                                   textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
-                                    border: UnderlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
                                     filled: true,
                                     //icon: Icon(Icons.person),
                                     hintText: 'Nome do pastor que batizou.',
@@ -621,13 +640,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 Container(
                                   height: tamanho.size.height * 0.1,
                                   decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey[800],
-                                        width: 1.1,
-                                      ),
-                                    ),
-                                    color: Colors.grey[200],
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
                                     //border: Border.fromBorderSide(),
                                   ),
                                   padding: EdgeInsets.fromLTRB(10, 0, 30, 0),
@@ -650,28 +667,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                           onChanged: (itemGrupo) {
                                             setState(() {
                                               clgrupo = itemGrupo;
-
-                                              print("Nome: " +
-                                                  nomeController.text);
-                                              print("Endereço: " +
-                                                  enderecoController.text);
-                                              print("Numero: " +
-                                                  numeroController.text);
-                                              print("Bairro: " +
-                                                  bairroController.text);
-                                              print(
-                                                  "Cep: " + cepController.text);
-                                              print("Cidade: " +
-                                                  cidadeController.text);
-                                              print("Estado Civil: " +
-                                                  clestadoCivil);
-                                              print(
-                                                  "Cargo: " + clMembroObreiro);
-                                              print("Data Batismo: " +
-                                                  variavelData.toString());
-                                              print("Pr Que batizou: " +
-                                                  prBatizouController.text);
-                                              print("Que grupo: " + clgrupo);
                                             });
                                           },
                                           style: TextStyle(
@@ -767,6 +762,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
     if (cep.isEmptyOrNull) {
       cep = '00000-000';
     }
+    if (pastorBatizou.isEmptyOrNull) {
+      pastorBatizou = 'Não informado';
+    }
 
     var url = Uri.parse(BaseUrl.inserirPessoaSemFoto);
     final response = await http.post(url, body: {
@@ -811,6 +809,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String pastorBatizou = prBatizouController.text;
     if (cep.isEmptyOrNull) {
       cep = '00000-000';
+    }
+    if (pastorBatizou.isEmptyOrNull) {
+      pastorBatizou = 'Não informado';
     }
     try {
       var stream = http.ByteStream(_imageFile.openRead());

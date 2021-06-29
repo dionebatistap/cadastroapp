@@ -1,4 +1,3 @@
-import 'package:cadastroapp/views/obsoleto/loginObsoleto.dart';
 import 'package:cadastroapp/views/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -29,10 +28,20 @@ void main() async {
       brightness: Brightness.light,
       //fontFamily: 'ProductSans',
       fontFamily: GoogleFonts.poppins().fontFamily,
+      //inputDecorationTheme: InputDecorationTheme(focusColor: Colors.amber),
       accentColor: Colors.black87,
       indicatorColor: Colors.black87,
+      disabledColor: Colors.grey[300],
       iconTheme: IconThemeData(color: Colors.black87),
       dialogBackgroundColor: Colors.white,
+      accentIconTheme: IconThemeData(color: Colors.grey[850]),
+      primaryIconTheme: IconThemeData(color: Colors.grey[850]),
+      hintColor: Colors.grey[800],
+      textSelectionTheme: TextSelectionThemeData(
+        cursorColor: Colors.grey[600],
+        selectionColor: Colors.grey[450],
+        selectionHandleColor: Colors.grey[800],
+      ),
       dialogTheme: DialogTheme(backgroundColor: Colors.white),
       floatingActionButtonTheme:
           FloatingActionButtonThemeData(backgroundColor: Colors.black54),
@@ -43,6 +52,6 @@ void main() async {
       GlobalWidgetsLocalizations.delegate
     ],
     supportedLocales: [const Locale('pt', 'BR')],
-    home: GSSplashScreen(),
+    home: TelaAbertura(),
   ));
 }
