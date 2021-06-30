@@ -342,7 +342,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     hintText: '00000-000',
                                     labelText: 'CEP*',
                                     suffixIcon: IconButton(
-                                      onPressed: recuperaCep,
+                                      onPressed: _recuperaCep,
                                       icon: Icon(Icons.search),
                                       //onPressed: _recuperaCep,
                                     ),
@@ -684,7 +684,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                       borderRadius:
                                           BorderRadius.circular(18.0)),
                                   elevation: 3.0,
-                                  color: Colors.grey[300],
+                                  color: Colors.grey[800],
                                   clipBehavior: Clip.antiAlias,
                                   child: MaterialButton(
                                     splashColor: Colors.grey[400],
@@ -698,8 +698,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     },
                                     child: Text("Salvar",
                                         style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.grey[700])),
+                                            fontSize: 20,
+                                            color: Colors.grey[200])),
                                   ),
                                 ),
                                 const SizedBox(height: 20.0),
@@ -734,14 +734,14 @@ class _InserirPessoaState extends State<InserirPessoa> {
     final form = _key.currentState;
     if (form.validate() && _imageFile != null) {
       form.save();
-      submterComFoto();
+      _submterComFoto();
     }
     if (form.validate() && _imageFile == null) {
       if (clgrupo == null) {
         clgrupo = "Não possui grupo";
       }
       form.save();
-      submterSemFoto();
+      _submterSemFoto();
       print(prefControle);
     } else {
       setState(() {
@@ -750,7 +750,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
     }
   }
 
-  submterSemFoto() async {
+  Future<void> _submterSemFoto() async {
     String nome = nomeController.text;
     String endereco = enderecoController.text;
     String numero = numeroController.text;
@@ -765,40 +765,46 @@ class _InserirPessoaState extends State<InserirPessoa> {
     if (pastorBatizou.isEmptyOrNull) {
       pastorBatizou = 'Não informado';
     }
-
-    var url = Uri.parse(BaseUrl.inserirPessoaSemFoto);
-    final response = await http.post(url, body: {
-      "nomePessoa": "$nome",
-      "enderecoPessoa": "$endereco",
-      "numeroPessoa": "$numero",
-      "bairroPessoa": "$bairro",
-      "cepPessoa": "$cep",
-      "cidadePessoa": "$cidade",
-      "celularPessoa": "$celular",
-      "membroObreiro": "$clMembroObreiro",
-      "prBatizou": "$pastorBatizou",
-      "estadoCivil": "$clestadoCivil",
-      "grupo": "$clgrupo",
-      "isBatizada": "$isBatizada",
-      "idUsuario": idUsuario,
-      "dataSelecionada": "$variavelData",
-    });
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String aviso = data['message'];
-    if (value == 1) {
-      print(aviso);
-      setState(() {
-        widget.reload();
-        Navigator.pop(context);
+    try {
+      var url = Uri.parse(BaseUrl.inserirPessoaSemFoto);
+      final response = await http.post(url, body: {
+        "nomePessoa": "$nome",
+        "enderecoPessoa": "$endereco",
+        "numeroPessoa": "$numero",
+        "bairroPessoa": "$bairro",
+        "cepPessoa": "$cep",
+        "cidadePessoa": "$cidade",
+        "celularPessoa": "$celular",
+        "membroObreiro": "$clMembroObreiro",
+        "prBatizou": "$pastorBatizou",
+        "estadoCivil": "$clestadoCivil",
+        "grupo": "$clgrupo",
+        "isBatizada": "$isBatizada",
+        "idUsuario": idUsuario,
+        "dataSelecionada": "$variavelData",
       });
-    } else {
-      print(aviso);
-      print(print);
+      final data = jsonDecode(response.body);
+      int value = data['value'];
+      String aviso = data['message'];
+      if (value == 1) {
+        print(aviso);
+        setState(() {
+          widget.reload();
+          Navigator.pop(context);
+          snackBar(context,
+              title: "Cadastrado com sucesso.",
+              backgroundColor: Colors.green[600]);
+        });
+      } else {
+        snackBar(context,
+            title: "Falha ao cadastrar.", backgroundColor: Colors.red[600]);
+      }
+    } catch (e) {
+      debugPrint("Inserir pessoa sem foto: $e");
     }
   }
 
-  submterComFoto() async {
+  Future<void> _submterComFoto() async {
     String nome = nomeController.text;
     String endereco = enderecoController.text;
     String numero = numeroController.text;
@@ -841,16 +847,19 @@ class _InserirPessoaState extends State<InserirPessoa> {
 
       var response = await request.send();
       if (response.statusCode > 2) {
-        print("Imagem carregada");
         setState(() {
           widget.reload();
           Navigator.pop(context);
+          snackBar(context,
+              title: "Cadastrado com sucesso.",
+              backgroundColor: Colors.green[600]);
         });
       } else {
-        print("Falha ao carregar imagem");
+        snackBar(context,
+            title: "Falha ao cadastrar.", backgroundColor: Colors.red[600]);
       }
     } catch (e) {
-      debugPrint("Erro $e");
+      debugPrint("Inserir pessoa com foto: $e");
     }
   }
 
@@ -869,7 +878,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
   }
 
   String cepNaoEncontrado;
-  Future recuperaCep() async {
+  Future<void> _recuperaCep() async {
     final int ok = 200;
     final int badRequest = 400;
 
@@ -878,7 +887,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String baseUrl = 'https://viacep.com.br/ws/';
     String cepDigitado = '$cep';
     String tiporetorno = '/json/';
-    print(cepDigitado);
     if ((cepDigitado != null) &&
         (cepDigitado.length == 9) &&
         (cepDigitado.isNotEmpty)) {
@@ -897,25 +905,26 @@ class _InserirPessoaState extends State<InserirPessoa> {
             enderecoController.text = enderecoAPI;
             cidadeController.text = cidadeAPI;
             bairroController.text = bairroAPI;
-            toast("Cep localizado");
+            toast("Cep localizado.");
           });
         } else {
           //toast("Cep não encontrado");
-          snackBar(context, title: "Cep não encontrado");
+          snackBar(context,
+              title: "Cep não encontrado.", backgroundColor: Colors.red[600]);
         }
       } else if (response.statusCode == badRequest) {
         print("Servidor de cep offline");
       }
     } else {
-      snackBar(context, title: "Cep Inválido");
-      print("Cep invalido");
+      snackBar(context,
+          title: "Cep Inválido.", backgroundColor: Colors.red[600]);
     }
   }
 
-  Future obterImagemCamera() async {
-    final image = await picker.getImage(
-        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
+  Future<void> _obterImagemCamera() async {
     try {
+      final image = await picker.getImage(
+          source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
       File pickedFile = await ImageCropper.cropImage(
         sourcePath: image.path,
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
@@ -941,11 +950,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
         return "Erro patch called null";
       }
     } catch (e) {
-      return "Erro patch called null";
+      return "Inserir Pessoa->>> patch called null $e";
     }
   }
 
-  Future obterImagemGaleria() async {
+  Future<void> _obterImagemGaleria() async {
     try {
       final file = await picker.getImage(
           source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
@@ -974,7 +983,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
         return "Erro patch called null";
       }
     } catch (e) {
-      return "Erro patch called null";
+      return "Inserir Pessoa->>> patch called null $e";
     }
   }
 
@@ -996,7 +1005,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                   label: Text('Camera'),
                   icon: Icon(Icons.camera_alt),
                   onPressed: () {
-                    this.obterImagemCamera();
+                    this._obterImagemCamera();
                   },
                   //child: const Text('Câmera'),
                 ),
@@ -1009,7 +1018,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                   label: Text('Galeria'),
                   icon: Icon(Icons.photo),
                   onPressed: () {
-                    this.obterImagemGaleria();
+                    this._obterImagemGaleria();
                   },
                   //child: const Text('Galeria'),
                 ),
@@ -1055,7 +1064,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
         _listaItensDropGrupo.add(
           DropdownMenuItem(
               child: Text(list[i].nomeGrupo,
-                  style: TextStyle(fontSize: 18, color: Colors.black87)),
+                  style: TextStyle(fontSize: 16, color: Colors.black87)),
               value: list[i].nomeGrupo),
         );
       }

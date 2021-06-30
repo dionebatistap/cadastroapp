@@ -268,8 +268,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-//Logica para efetuar o login, push no banco de dados
-//antes daqui só passa os dados para o androi, depois para a api
   login() async {
     usuario = usuarioController.text;
     String senha2 = senhaController.text;
@@ -287,7 +285,10 @@ class _LoginState extends State<Login> {
     String levelUser = data['levelUser'];
     String statusUser = data['statusUser'];
     if (value == 1) {
-      if (((levelUser == "1") || (levelUser == "2") || (levelUser == "3")) &&
+      if (((levelUser == "1") ||
+              (levelUser == "2") ||
+              (levelUser == "3") ||
+              (levelUser == "4")) &&
           (statusUser == "ativo")) {
         setState(() {
           _loginStatus = LoginStatus.signIn;
@@ -303,7 +304,7 @@ class _LoginState extends State<Login> {
       }
       print(aviso);
     } else {
-      snackBar(context, title: "Usuário ou senha inválido");
+      snackBar(context, title: "Usuário ou senha inválido.");
       print(aviso);
     }
   }

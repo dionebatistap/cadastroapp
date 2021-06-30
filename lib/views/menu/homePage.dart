@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:flutter/services.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:nb_utils/nb_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,14 +49,14 @@ class _HomePage extends State<HomePage> {
   final GlobalKey<RefreshIndicatorState> _refresh =
       GlobalKey<RefreshIndicatorState>();
 
+  FocusNode focusNode = FocusNode();
   @override
   void initState() {
-    super.initState();
     getPref();
     _listarPessoas();
+    super.initState();
   }
 
-  FocusNode focusNode = FocusNode();
   Widget appBarTitle = Text("Cadastro de Membros",
       style: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.black, fontSize: 18));
@@ -80,7 +81,7 @@ class _HomePage extends State<HomePage> {
                 children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Colors.grey[300],
                     ),
                     child: ListTile(
                       title: Text(
@@ -88,7 +89,7 @@ class _HomePage extends State<HomePage> {
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 16,
-                          color: Colors.black38.withOpacity(0.2),
+                          color: Colors.black54.withOpacity(0.4),
                         ),
                         textAlign: TextAlign.left,
                       ),
@@ -97,7 +98,7 @@ class _HomePage extends State<HomePage> {
                         color: Colors.red[700],
                       ),
                       onTap: () {
-                        widget.signOut();
+                        dialogSignOut();
                       },
                     ),
                   ),
@@ -135,7 +136,7 @@ class _HomePage extends State<HomePage> {
                             fontWeight: FontWeight.normal,
                             color: Colors.grey[400],
                             fontSize: 12)),
-                    leading: Icon(Icons.settings),
+                    leading: Icon(FontAwesomeIcons.usersCog),
                     onTap: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => Pessoa()));
@@ -152,7 +153,7 @@ class _HomePage extends State<HomePage> {
                             fontWeight: FontWeight.normal,
                             color: Colors.grey[400],
                             fontSize: 12)),
-                    leading: Icon(Icons.account_circle),
+                    leading: Icon(FontAwesomeIcons.userAstronaut),
                     onTap: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => Usuario()));
@@ -170,6 +171,23 @@ class _HomePage extends State<HomePage> {
                             color: Colors.grey[400],
                             fontSize: 12)),
                     leading: Icon(Icons.groups_rounded),
+                    onTap: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => Grupo()));
+                    },
+                  ),
+                  ListTile(
+                    title: Text("Filtros",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 15)),
+                    subtitle: Text("Gerenciar",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[400],
+                            fontSize: 12)),
+                    leading: Icon(FontAwesomeIcons.sortAmountDown),
                     onTap: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => Grupo()));
@@ -194,10 +212,12 @@ class _HomePage extends State<HomePage> {
                     this.actionIcon =
                         Icon(Icons.close, color: textPrimaryColor);
                     this.appBarTitle = TextField(
+                      autofocus: true,
+                      showCursor: true,
                       focusNode: focusNode,
                       onChanged: (textoPesquisa) {
                         setState(() {
-                          _listarPessoasFiltradas(textoPesquisa.toLowerCase());
+                          _filtrarMembros(textoPesquisa.toLowerCase());
                         });
                       },
                       style: TextStyle(color: textPrimaryColor, fontSize: 20),
@@ -214,8 +234,7 @@ class _HomePage extends State<HomePage> {
                   } else {
                     setState(() {
                       _listarPessoas();
-                      this.actionIcon =
-                          Icon(Icons.search, color: Colors.redAccent);
+                      this.actionIcon = Icon(Icons.search, color: Colors.black);
                       this.appBarTitle = Text(
                         "Pesquisar cadastro",
                         style: TextStyle(
@@ -223,7 +242,7 @@ class _HomePage extends State<HomePage> {
                       );
                     });
                   }
-                  FocusScope.of(context).requestFocus(focusNode);
+                  //FocusScope.of(context).requestFocus(focusNode);
                 },
               ),
             ],
@@ -268,31 +287,71 @@ class _HomePage extends State<HomePage> {
                   )
                 : Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: ListView.builder(
-                      itemCount: list.length,
-                      itemBuilder: (context, i) {
-                        final x = list[i];
-                        return ListTile(
-                          dense: true,
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: NetworkImage(
-                              BaseUrl.upload + x.image,
+                    child: listafiltrarMembros.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: listafiltrarMembros.length,
+                            itemBuilder: (context, i) {
+                              final x = listafiltrarMembros[i];
+                              return ListTile(
+                                dense: true,
+                                leading: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: NetworkImage(
+                                    BaseUrl.upload + x.image,
+                                  ),
+                                ),
+                                title: Text(x.nomePessoa,
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold)),
+                                subtitle: Text(x.celularPessoa),
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      new MaterialPageRoute(
+                                          builder: (context) =>
+                                              PessoaDetalhes(x)));
+                                },
+                              );
+                            },
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.frown,
+                                  size: 55,
+                                  color: Colors.grey[400],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Nada encontrado!",
+                                      style: TextStyle(
+                                        color: Colors.grey[400],
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  "tente outra vez!",
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontSize: 20,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                          title: Text(x.nomePessoa,
-                              style: TextStyle(
-                                  fontSize: 15, fontWeight: FontWeight.bold)),
-                          subtitle: Text(x.celularPessoa),
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                new MaterialPageRoute(
-                                    builder: (context) => PessoaDetalhes(x)));
-                          },
-                        );
-                      },
-                    ),
                   ),
           )),
     );
@@ -302,6 +361,7 @@ class _HomePage extends State<HomePage> {
 
   Future<void> _listarPessoas() async {
     list.clear();
+    listafiltrarMembros.clear();
     if (!mounted) return;
     setState(() {
       loading = true;
@@ -334,117 +394,45 @@ class _HomePage extends State<HomePage> {
         );
 
         list.add(ab);
+        listafiltrarMembros.add(ab);
       });
       if (!mounted) return;
       setState(() {
         loading = false;
       });
-    }
-  }
-
-  Future<void> _listarPessoasFiltradas(String textoPesquisa) async {
-    list.clear();
-    if (!mounted) return;
-    setState(() {
-      loading = true;
-    });
-
-    var url = Uri.parse(BaseUrl.listarPessoa);
-    final response = await http.get(url);
-    if (response.contentLength == 2) {
-    } else {
-      final data = jsonDecode(response.body);
-      data.forEach((api) {
-        final ab = new PessoaModel(
-          api['id'],
-          api['nomePessoa'],
-          api['enderecoPessoa'],
-          api['numeroPessoa'],
-          api['bairroPessoa'],
-          api['cepPessoa'],
-          api['cidadePessoa'],
-          api['celularPessoa'],
-          api['membroObreiro'],
-          api['prBatizou'],
-          api['estadoCivil'],
-          api['grupo'],
-          api['isBatizada'],
-          api['createdDate'],
-          api['idUsuario'],
-          api['nome'],
-          api['image'],
-          api['DataSelecionada'],
-        );
-        if ((ab.nomePessoa.toLowerCase()).contains(textoPesquisa) ||
-            (ab.membroObreiro.toLowerCase()).contains(textoPesquisa) ||
-            (ab.grupo.toLowerCase()).contains(textoPesquisa)) {
-          list.add(ab);
-        }
-      });
-      if (!mounted) return;
-      setState(() {
-        loading = false;
-      });
-    }
-  }
-
-  _delete(String id) async {
-    var url = Uri.parse(BaseUrl.deletarPessoa);
-    final response = await http.post(url, body: {"idPessoa": id});
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String aviso = data['message'];
-    if (value == 1) {
-      if (!mounted) return;
-      setState(() {
-        Navigator.pop(context);
-        _listarPessoas();
-        print(aviso);
-      });
-    } else {
-      print(aviso);
     }
   }
 
 /*COMPONENTES*/
 
-  dialogDelete(String id) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            child: ListView(
-              padding: EdgeInsets.all(16.0),
-              shrinkWrap: true,
-              children: <Widget>[
-                Text(
-                  "Deseja deletar ?",
-                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text("Não")),
-                    SizedBox(
-                      width: 16.0,
-                    ),
-                    InkWell(
-                        onTap: () {
-                          _delete(id);
-                        },
-                        child: Text("Sim")),
-                  ],
-                ),
-              ],
-            ),
-          );
-        });
+  List listafiltrarMembros = [];
+  bool chave = false;
+  //String textoPesquisa;
+  Future<void> _filtrarMembros(String textoPesquisa) async {
+    listafiltrarMembros.clear();
+    if (textoPesquisa.isNotEmpty) {
+      setState(() {});
+    }
+    list.forEach((ab) {
+      if ((ab.nomePessoa.toLowerCase()).contains(textoPesquisa) ||
+          (ab.membroObreiro.toLowerCase()).contains(textoPesquisa) ||
+          (ab.grupo.toLowerCase()).contains(textoPesquisa)) {
+        listafiltrarMembros.add(ab);
+      } else {
+        setState(() {});
+      }
+    });
+    setState(() {});
   }
-}
+
+  dialogSignOut() async {
+    showConfirmDialogCustom(
+      context,
+      title: "Deseja sair?",
+      dialogType: DialogType.CONFIRMATION,
+      onAccept: () {
+        widget.signOut();
+      },
+    );
+  }
+} //CLASS

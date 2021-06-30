@@ -68,7 +68,7 @@ class _UsuarioState extends State<Usuario> {
       bottomNavigationBar: new BottomAppBar(
         shape: CircularNotchedRectangle(),
         color: Colors.grey[50],
-        notchMargin: 3.0,
+        notchMargin: 4.0,
         clipBehavior: Clip.antiAlias,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -259,20 +259,24 @@ class _UsuarioState extends State<Usuario> {
   }
 
 //OK
-  _delete(String id) async {
+  Future<void> _delete(String id) async {
     var url = Uri.parse(BaseUrl.deletarUsuario);
     final response = await http.post(url, body: {"idUsuario": id});
     final data = jsonDecode(response.body);
     int value = data['value'];
-    String aviso = data['message'];
+    //String aviso = data['message'];
     if (value == 1) {
       if (!mounted) return;
       setState(() {
         _listarUsuarios();
-        print(aviso);
+        snackBar(context,
+            title: "Usuário deletado com sucesso",
+            backgroundColor: Colors.green[600]);
       });
     } else {
-      print(aviso);
+      snackBar(context,
+          title: "Este usuário não pode ser deletado",
+          backgroundColor: Colors.red[600]);
     }
   }
 
@@ -283,7 +287,6 @@ class _UsuarioState extends State<Usuario> {
       dialogType: DialogType.DELETE,
       onAccept: () {
         _delete(id);
-        snackBar(context, title: 'Deletado');
       },
     );
   }

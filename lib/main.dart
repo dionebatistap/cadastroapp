@@ -36,15 +36,15 @@ void main() async {
       dialogBackgroundColor: Colors.white,
       accentIconTheme: IconThemeData(color: Colors.grey[850]),
       primaryIconTheme: IconThemeData(color: Colors.grey[850]),
-      hintColor: Colors.grey[800],
+      hintColor: Colors.grey[400],
       textSelectionTheme: TextSelectionThemeData(
-        cursorColor: Colors.grey[600],
+        cursorColor: Colors.grey[500],
         selectionColor: Colors.grey[450],
-        selectionHandleColor: Colors.grey[800],
+        selectionHandleColor: Colors.grey[600],
       ),
       dialogTheme: DialogTheme(backgroundColor: Colors.white),
       floatingActionButtonTheme:
-          FloatingActionButtonThemeData(backgroundColor: Colors.black54),
+          FloatingActionButtonThemeData(backgroundColor: Colors.grey[800]),
     ),
     //OS WIDGETS EM PORTUGUES (datapicker)
     localizationsDelegates: [

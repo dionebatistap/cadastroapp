@@ -338,7 +338,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                               hintText: '00000-000',
                               labelText: 'CEP*',
                               suffixIcon: IconButton(
-                                onPressed: recuperaCep,
+                                onPressed: _recuperaCep,
                                 icon: Icon(Icons.search),
                                 //onPressed: _recuperaCep,
                               ),
@@ -653,7 +653,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0)),
                             elevation: 3.0,
-                            color: Colors.grey[300],
+                            color: Colors.grey[800],
                             clipBehavior: Clip.antiAlias,
                             child: MaterialButton(
                               splashColor: Colors.grey[400],
@@ -667,7 +667,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                               },
                               child: Text("Salvar",
                                   style: TextStyle(
-                                      fontSize: 18, color: Colors.grey[700])),
+                                      fontSize: 20, color: Colors.grey[200])),
                             ),
                           ),
                           const SizedBox(height: 15.0),
@@ -686,7 +686,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
 /* METODOS */
 
-  editarPessoaSemFoto() async {
+  Future<void> _editarPessoaSemFoto() async {
     String nome = nomeController.text;
     String endereco = enderecoController.text;
     String numero = numeroController.text;
@@ -723,21 +723,25 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
       final data = jsonDecode(response.body);
       int value = data['value'];
-      String aviso = data['message'];
+      //String aviso = data['message'];
       if (value == 1) {
-        print(aviso);
         setState(() {
           widget.reload();
           Navigator.pop(context);
+          snackBar(context,
+              title: "Dados atualizados.", backgroundColor: Colors.green[600]);
         });
-      } else {}
+      } else {
+        snackBar(context,
+            title: "Erro ao atualizar dados.",
+            backgroundColor: Colors.red[600]);
+      }
     } catch (e) {
-      debugPrint("Erro $e");
-      print("AQUI");
+      debugPrint("Editar pessoa sem foto: $e");
     }
   }
 
-  editarPessoaComFoto() async {
+  Future<void> _editarPessoaComFoto() async {
     String nome = nomeController.text;
     String endereco = enderecoController.text;
     String numero = numeroController.text;
@@ -783,13 +787,16 @@ class _EditarPessoaState extends State<EditarPessoa> {
         setState(() {
           widget.reload();
           Navigator.pop(context);
+          snackBar(context,
+              title: "Dados atualizados.", backgroundColor: Colors.green[600]);
         });
       } else {
-        print("Falha ao carregar imagem");
+        snackBar(context,
+            title: "Erro ao atualizar dados.",
+            backgroundColor: Colors.red[600]);
       }
     } catch (e) {
-      debugPrint("Erro $e");
-      print("AQUI");
+      debugPrint("Editar pessoa com foto: $e");
     }
   }
 
@@ -812,29 +819,24 @@ class _EditarPessoaState extends State<EditarPessoa> {
     }
   }
 
-  String msgSnackConfirma = 'inicializada';
   check() {
     final form = _key.currentState;
     if (form.validate() && _imageFile != null) {
       form.save();
-      editarPessoaComFoto();
-      setState(() {
-        msgSnackConfirma = 'Registro Atualizado';
-      });
+      _editarPessoaComFoto();
+      setState(() {});
     }
     if (form.validate() && _imageFile == null) {
       form.save();
-      editarPessoaSemFoto();
-      setState(() {
-        msgSnackConfirma = 'Registro Atualizado';
-      });
+      _editarPessoaSemFoto();
+      setState(() {});
     } else {
       return "Erro!";
     }
   }
 
   String cepNaoEncontrado;
-  Future recuperaCep() async {
+  Future<void> _recuperaCep() async {
     final int ok = 200;
     final int badRequest = 400;
 
@@ -843,94 +845,104 @@ class _EditarPessoaState extends State<EditarPessoa> {
     String baseUrl = 'https://viacep.com.br/ws/';
     String cepDigitado = '$cep';
     String tiporetorno = '/json/';
-    print(cepDigitado);
-    if ((cepDigitado != null) &&
-        (cepDigitado.length == 9) &&
-        (cepDigitado.isNotEmpty)) {
-      final uri = Uri.parse('$baseUrl/$cepDigitado/$tiporetorno');
-      http.Response response;
-      response = await http.get(uri);
-      print(response.body);
-      if (response.statusCode == ok) {
-        Map<String, dynamic> retorno = json.decode(response.body);
-        String enderecoAPI = retorno["logradouro"];
-        String cidadeAPI = retorno["localidade"];
-        String bairroAPI = retorno["bairro"];
-        bool cepNaoEncontradoApi = retorno["erro"];
-        if (cepNaoEncontradoApi == null) {
-          setState(() {
-            enderecoController.text = enderecoAPI;
-            cidadeController.text = cidadeAPI;
-            bairroController.text = bairroAPI;
-            toast("Cep localizado");
-          });
-        } else {
-          snackBar(context, title: "Cep não encontrado");
+    try {
+      if ((cepDigitado != null) &&
+          (cepDigitado.length == 9) &&
+          (cepDigitado.isNotEmpty)) {
+        final uri = Uri.parse('$baseUrl/$cepDigitado/$tiporetorno');
+        http.Response response;
+        response = await http.get(uri);
+        if (response.statusCode == ok) {
+          Map<String, dynamic> retorno = json.decode(response.body);
+          String enderecoAPI = retorno["logradouro"];
+          String cidadeAPI = retorno["localidade"];
+          String bairroAPI = retorno["bairro"];
+          bool cepNaoEncontradoApi = retorno["erro"];
+          if (cepNaoEncontradoApi == null) {
+            setState(() {
+              enderecoController.text = enderecoAPI;
+              cidadeController.text = cidadeAPI;
+              bairroController.text = bairroAPI;
+              toast("Cep localizado");
+            });
+          } else {
+            snackBar(context,
+                title: "Cep não encontrado.", backgroundColor: Colors.red[600]);
+          }
+        } else if (response.statusCode == badRequest) {
+          print("Servidor badRequest CEP.");
         }
-      } else if (response.statusCode == badRequest) {
-        print("Servidor de cep offline");
+      } else {
+        snackBar(context, title: "Cep Inválido.");
       }
-    } else {
-      snackBar(context, title: "Cep Inválido");
-      print("Cep invalido");
+    } catch (e) {
+      debugPrint("CEP com erro: $e");
     }
   }
 
-  Future obterImagemCamera() async {
-    final image = await picker.getImage(
-        source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
-    File pickedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressQuality: 100,
-      maxWidth: 1920,
-      maxHeight: 1080,
-      compressFormat: ImageCompressFormat.jpg,
-      androidUiSettings: AndroidUiSettings(
-        toolbarColor: Color(0xFF212121),
-        toolbarTitle: "Redimensionar Imagem",
-        statusBarColor: Colors.black54,
-        backgroundColor: Colors.white,
-        toolbarWidgetColor: Colors.white,
-      ),
-    );
-    if (pickedFile != null) {
-      final File image = File(pickedFile.path);
-      setState(() {
-        _imageFile = image;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
+  Future _obterImagemCamera() async {
+    try {
+      final image = await picker.getImage(
+          source: ImageSource.camera, maxHeight: 1920.0, maxWidth: 1080.0);
+      File pickedFile = await ImageCropper.cropImage(
+        sourcePath: image.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        compressQuality: 100,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Color(0xFF212121),
+          toolbarTitle: "Redimensionar Imagem",
+          statusBarColor: Colors.black54,
+          backgroundColor: Colors.white,
+          toolbarWidgetColor: Colors.white,
+        ),
+      );
+      if (pickedFile != null) {
+        final File image = File(pickedFile.path);
+        setState(() {
+          _imageFile = image;
+          Navigator.pop(context);
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      return "Editar Pessoa->>> patch called null $e";
     }
   }
 
-  Future obterImagemGaleria() async {
-    final file = await picker.getImage(
-        source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
-    File pickedFile = await ImageCropper.cropImage(
-      sourcePath: file.path,
-      aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      compressQuality: 100,
-      maxWidth: 1920,
-      maxHeight: 1080,
-      compressFormat: ImageCompressFormat.jpg,
-      androidUiSettings: AndroidUiSettings(
-        toolbarColor: Color(0xFF212121),
-        toolbarTitle: "Redimensionar Imagem",
-        statusBarColor: Colors.black54,
-        backgroundColor: Colors.white,
-        toolbarWidgetColor: Colors.white,
-      ),
-    );
-    if (pickedFile != null) {
-      final File file = File(pickedFile.path);
-      setState(() {
-        _imageFile = file;
-        Navigator.pop(context);
-      });
-    } else {
-      return;
+  Future _obterImagemGaleria() async {
+    try {
+      final file = await picker.getImage(
+          source: ImageSource.gallery, maxHeight: 1920.0, maxWidth: 1080.0);
+      File pickedFile = await ImageCropper.cropImage(
+        sourcePath: file.path,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        compressQuality: 100,
+        maxWidth: 1920,
+        maxHeight: 1080,
+        compressFormat: ImageCompressFormat.jpg,
+        androidUiSettings: AndroidUiSettings(
+          toolbarColor: Color(0xFF212121),
+          toolbarTitle: "Redimensionar Imagem",
+          statusBarColor: Colors.black54,
+          backgroundColor: Colors.white,
+          toolbarWidgetColor: Colors.white,
+        ),
+      );
+      if (pickedFile != null) {
+        final File file = File(pickedFile.path);
+        setState(() {
+          _imageFile = file;
+          Navigator.pop(context);
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      return "Editar Pessoa->>> patch called null $e";
     }
   }
 
@@ -952,7 +964,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                 label: Text('Camera'),
                 icon: Icon(Icons.camera_alt),
                 onPressed: () {
-                  this.obterImagemCamera();
+                  this._obterImagemCamera();
                 },
                 //child: const Text('Câmera'),
               ),
@@ -965,7 +977,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                 label: Text('Galeria'),
                 icon: Icon(Icons.photo),
                 onPressed: () {
-                  this.obterImagemGaleria();
+                  this._obterImagemGaleria();
                 },
                 //child: const Text('Galeria'),
               ),
@@ -1025,7 +1037,6 @@ class _EditarPessoaState extends State<EditarPessoa> {
       dialogType: DialogType.UPDATE,
       onAccept: () {
         check();
-        snackBar(context, title: msgSnackConfirma);
       },
     );
   }

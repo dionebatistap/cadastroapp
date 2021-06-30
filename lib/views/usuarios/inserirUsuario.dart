@@ -262,7 +262,7 @@ class _InserirUsuario extends State<InserirUsuario> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0)),
                           elevation: 3.0,
-                          color: Colors.grey[300],
+                          color: Colors.grey[800],
                           clipBehavior: Clip.antiAlias,
                           child: MaterialButton(
                             splashColor: Colors.grey[400],
@@ -276,7 +276,7 @@ class _InserirUsuario extends State<InserirUsuario> {
                             },
                             child: Text("Salvar",
                                 style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[700])),
+                                    fontSize: 20, color: Colors.grey[200])),
                           ),
                         ),
                         const SizedBox(height: 15.0),
@@ -296,7 +296,7 @@ class _InserirUsuario extends State<InserirUsuario> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      save();
+      _save();
     } else {
       setState(() {
         validate = true;
@@ -310,36 +310,43 @@ class _InserirUsuario extends State<InserirUsuario> {
     });
   }
 
-  save() async {
+  Future<void> _save() async {
     String nome = nomeController.text;
     String usuario = usuarioController.text;
     String senha = senhaController.text;
+    try {
+      var url = Uri.parse(BaseUrl.registrarUsuario);
 
-    var url = Uri.parse(BaseUrl.registrarUsuario);
+      final response = await http.post(
+        url,
+        body: {
+          "nome": nome,
+          "usuario": usuario,
+          "senha": senha,
+          "levelUser": cllevel,
+          "statusUser": clstatusUsuario,
+        },
+      );
 
-    final response = await http.post(
-      url,
-      body: {
-        "nome": nome,
-        "usuario": usuario,
-        "senha": senha,
-        "levelUser": cllevel,
-        "statusUser": clstatusUsuario,
-      },
-    );
-
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    print(value);
-    String aviso = data['message'];
-    if (value == 1) {
-      setState(() {
-        widget.reload();
-        Navigator.pop(context);
-        print(aviso);
-      });
-    } else {
-      print(data);
+      final data = jsonDecode(response.body);
+      int value = data['value'];
+      print(value);
+      //String aviso = data['message'];
+      if (value == 1) {
+        setState(() {
+          widget.reload();
+          Navigator.pop(context);
+          snackBar(context,
+              title: "Usuário cadastrado com sucesso.",
+              backgroundColor: Colors.green[600]);
+        });
+      } else {
+        snackBar(context,
+            title: "Falha ao cadastrar usuário.",
+            backgroundColor: Colors.red[600]);
+      }
+    } catch (e) {
+      debugPrint("Erro ao inserir usuário: $e");
     }
   }
 
@@ -349,28 +356,28 @@ class _InserirUsuario extends State<InserirUsuario> {
     _listaLevels.add(
       DropdownMenuItem(
           child: Text("Admin - (Opções liberadas)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "1"),
     );
 
     _listaLevels.add(
       DropdownMenuItem(
           child: Text("Level 2 - (Cadastrar e editar)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "2"),
     );
 
     _listaLevels.add(
       DropdownMenuItem(
           child: Text("Level 3 - (Somente Cadastrar)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "3"),
     );
 
     _listaLevels.add(
       DropdownMenuItem(
           child: Text("Level 4 - (Somente Visualizar)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "4"),
     );
   }

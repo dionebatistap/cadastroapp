@@ -68,7 +68,7 @@ class _GrupoState extends State<Grupo> {
       bottomNavigationBar: new BottomAppBar(
         shape: CircularNotchedRectangle(),
         color: Colors.grey[50],
-        notchMargin: 2.0,
+        notchMargin: 4.0,
         clipBehavior: Clip.antiAlias,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -163,7 +163,8 @@ class _GrupoState extends State<Grupo> {
                                 : IconButton(
                                     color: Colors.red[600],
                                     onPressed: () {
-                                      dialogDeletarUsuario(x.id);
+                                      toast("Opção desabilitada");
+                                      //dialogDeletarUsuario(x.id);
                                     },
                                     icon: Icon(
                                       Icons.delete,
@@ -218,20 +219,24 @@ class _GrupoState extends State<Grupo> {
   }
 
 //OK
-  _delete(String id) async {
+  Future<void> _delete(String id) async {
     var url = Uri.parse(BaseUrl.deletarGrupo);
     final response = await http.post(url, body: {"idGrupo": id});
     final data = jsonDecode(response.body);
     int value = data['value'];
-    String aviso = data['message'];
+    //String aviso = data['message'];
     if (value == 1) {
       if (!mounted) return;
       setState(() {
         _listarGrupos();
-        print(aviso);
+        snackBar(context,
+            title: "Grupo deletado com sucesso.",
+            backgroundColor: Colors.green[600]);
       });
     } else {
-      print(aviso);
+      snackBar(context,
+          title: "Este grupo não pode ser deletado.",
+          backgroundColor: Colors.red[600]);
     }
   }
 
@@ -242,7 +247,6 @@ class _GrupoState extends State<Grupo> {
       dialogType: DialogType.DELETE,
       onAccept: () {
         _delete(id);
-        snackBar(context, title: 'Deletado');
       },
     );
   }

@@ -287,7 +287,7 @@ class _EditarUsuario extends State<EditarUsuario> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0)),
                           elevation: 3.0,
-                          color: Colors.grey[300],
+                          color: Colors.grey[800],
                           clipBehavior: Clip.antiAlias,
                           child: MaterialButton(
                             splashColor: Colors.grey[400],
@@ -301,7 +301,7 @@ class _EditarUsuario extends State<EditarUsuario> {
                             },
                             child: Text("Atualizar",
                                 style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[700])),
+                                    fontSize: 20, color: Colors.grey[200])),
                           ),
                         ),
                         const SizedBox(height: 15.0),
@@ -334,7 +334,7 @@ class _EditarUsuario extends State<EditarUsuario> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      save();
+      _save();
     } else {
       setState(() {
         validate = true;
@@ -348,37 +348,42 @@ class _EditarUsuario extends State<EditarUsuario> {
     });
   }
 
-  save() async {
+  Future<void> _save() async {
     String nome = nomeController.text;
     String usuario = usuarioController.text;
     String senha = senhaController.text;
+    try {
+      var url = Uri.parse(BaseUrl.editarUsuario);
+      final response = await http.post(
+        url,
+        body: {
+          "usuario": "$usuario",
+          "senha": "$senha",
+          "levelUser": "$cllevel",
+          "nome": "$nome",
+          "statusUser": "$clstatusUsuario",
+          "idUsuario": '$idUsuarioInt',
+        },
+      );
 
-    var url = Uri.parse(BaseUrl.editarUsuario);
-
-    final response = await http.post(
-      url,
-      body: {
-        "usuario": "$usuario",
-        "senha": "$senha",
-        "levelUser": "$cllevel",
-        "nome": "$nome",
-        "statusUser": "$clstatusUsuario",
-        "idUsuario": '$idUsuarioInt',
-      },
-    );
-
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    print(value);
-    String aviso = data['message'];
-    if (value == 1) {
-      setState(() {
-        widget.reload();
-        Navigator.pop(context);
-        print(aviso);
-      });
-    } else {
-      print(data);
+      final data = jsonDecode(response.body);
+      int value = data['value'];
+      print(value);
+      //String aviso = data['message'];
+      if (value == 1) {
+        setState(() {
+          widget.reload();
+          Navigator.pop(context);
+          snackBar(context,
+              title: "Dados atualizados.", backgroundColor: Colors.green[600]);
+        });
+      } else {
+        snackBar(context,
+            title: "Erro ao atualizar dados.",
+            backgroundColor: Colors.red[600]);
+      }
+    } catch (e) {
+      debugPrint("Editar usuário: $e");
     }
   }
 
@@ -409,7 +414,7 @@ class _EditarUsuario extends State<EditarUsuario> {
     _listaLevels.add(
       DropdownMenuItem(
           child: Text("Level 4 - (Somente Visualizar)",
-              style: TextStyle(fontSize: 18, color: Colors.black87)),
+              style: TextStyle(fontSize: 16, color: Colors.black87)),
           value: "4"),
     );
   }

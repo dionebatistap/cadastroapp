@@ -92,7 +92,7 @@ class _EditarGrupo extends State<EditarGrupo> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0)),
                           elevation: 3.0,
-                          color: Colors.grey[300],
+                          color: Colors.grey[800],
                           clipBehavior: Clip.antiAlias,
                           child: MaterialButton(
                             splashColor: Colors.grey[400],
@@ -106,7 +106,7 @@ class _EditarGrupo extends State<EditarGrupo> {
                             },
                             child: Text("Salvar",
                                 style: TextStyle(
-                                    fontSize: 18, color: Colors.grey[700])),
+                                    fontSize: 20, color: Colors.grey[200])),
                           ),
                         ),
                         const SizedBox(height: 15.0),
@@ -126,7 +126,7 @@ class _EditarGrupo extends State<EditarGrupo> {
     final form = _key.currentState;
     if (form.validate()) {
       form.save();
-      save();
+      _save();
     } else {
       setState(() {
         validate = true;
@@ -134,28 +134,36 @@ class _EditarGrupo extends State<EditarGrupo> {
     }
   }
 
-  save() async {
+  Future<void> _save() async {
     String nomeGrupo = nomeGrupoController.text;
-    var url = Uri.parse(BaseUrl.editarGrupo);
-    final response = await http.post(
-      url,
-      body: {
-        "nomeGrupo": "$nomeGrupo",
-        "idGrupo": "$idGrupoInt",
-      },
-    );
+    try {
+      var url = Uri.parse(BaseUrl.editarGrupo);
+      final response = await http.post(
+        url,
+        body: {
+          "nomeGrupo": "$nomeGrupo",
+          "idGrupo": "$idGrupoInt",
+        },
+      );
 
-    final data = jsonDecode(response.body);
-    int value = data['value'];
-    String aviso = data['message'];
-    if (value == 1) {
-      setState(() {
-        print(aviso);
-        widget.reload();
-        Navigator.pop(context);
-      });
-    } else {
-      print("Erro ao atualizar grupo");
+      final data = jsonDecode(response.body);
+      int value = data['value'];
+      String aviso = data['message'];
+      if (value == 1) {
+        setState(() {
+          print(aviso);
+          widget.reload();
+          Navigator.pop(context);
+          snackBar(context,
+              title: "Dados atualizados com sucesso.",
+              backgroundColor: Colors.green[600]);
+        });
+      } else {
+        snackBar(context,
+            title: "Erro ao atualizar dados", backgroundColor: Colors.red[600]);
+      }
+    } catch (e) {
+      debugPrint("Erro ao editar grupo: $e");
     }
   }
 } //CLASS
