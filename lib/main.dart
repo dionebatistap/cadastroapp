@@ -28,18 +28,25 @@ void main() async {
       brightness: Brightness.light,
       //fontFamily: 'ProductSans',
       fontFamily: GoogleFonts.poppins().fontFamily,
-      //inputDecorationTheme: InputDecorationTheme(focusColor: Colors.amber),
       accentColor: Colors.black87,
       indicatorColor: Colors.black87,
-      disabledColor: Colors.grey[300],
+      disabledColor: Colors.grey[400],
       iconTheme: IconThemeData(color: Colors.black87),
       dialogBackgroundColor: Colors.white,
       accentIconTheme: IconThemeData(color: Colors.grey[850]),
       primaryIconTheme: IconThemeData(color: Colors.grey[850]),
       hintColor: Colors.grey[400],
+      // inputDecorationTheme: InputDecorationTheme(
+      //   border: OutlineInputBorder(
+      //     borderSide: BorderSide(color: Colors.blue),
+      //     borderRadius: BorderRadius.all(
+      //       Radius.circular(15.0),
+      //     ),
+      //   ),
+      // ),
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: Colors.grey[500],
-        selectionColor: Colors.grey[450],
+        selectionColor: Colors.grey[600],
         selectionHandleColor: Colors.grey[600],
       ),
       dialogTheme: DialogTheme(backgroundColor: Colors.white),

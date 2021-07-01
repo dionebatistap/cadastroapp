@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cadastroapp/views/filtros/filtrar.dart';
 import 'package:cadastroapp/views/grupos/grupo.dart';
 import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:cadastroapp/views/pessoas/pessoa.dart';
@@ -189,8 +190,11 @@ class _HomePage extends State<HomePage> {
                             fontSize: 12)),
                     leading: Icon(FontAwesomeIcons.sortAmountDown),
                     onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Grupo()));
+                      // Navigator.of(context).push(MaterialPageRoute(
+                      //     builder: (context) => FiltroPage()));
+
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FiltroPage()));
                     },
                   ),
                 ],
