@@ -75,7 +75,7 @@ class _LoginState extends State<Login> {
                                 alignment: Alignment.center,
                                 child: Icon(
                                   Icons.add,
-                                  size: 50,
+                                  size: 25,
                                   color: Colors.grey[200],
                                 ),
                               ),
@@ -83,7 +83,7 @@ class _LoginState extends State<Login> {
                                 alignment: Alignment.center,
                                 child: Icon(
                                   Icons.groups,
-                                  size: 150,
+                                  size: 100,
                                   color: Colors.grey[200],
                                 ),
                               ),
@@ -101,7 +101,7 @@ class _LoginState extends State<Login> {
                                 'Cadastro de Membros',
                                 style: TextStyle(
                                     color: Colors.grey[200],
-                                    fontSize: 22,
+                                    fontSize: 20,
                                     fontWeight: FontWeight.w500),
                               ),
                             ),
@@ -177,28 +177,6 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           Spacer(),
-                          // Material(
-                          //   shape: RoundedRectangleBorder(
-                          //       borderRadius: BorderRadius.circular(18.0)),
-                          //   elevation: 4.0,
-                          //   color: Colors.grey[850],
-                          //   clipBehavior: Clip.antiAlias,
-                          //   child: MaterialButton(
-                          //     splashColor: Colors.grey[400],
-                          //     focusColor: Colors.grey[400],
-                          //     hoverColor: Colors.grey[400],
-                          //     minWidth: 300.0,
-                          //     height: 35,
-                          //     onPressed: () {
-                          //       check();
-                          //     },
-                          //     child: Text("Login",
-                          //         style: TextStyle(
-                          //             fontSize: 18,
-                          //             color: Colors.grey[100],
-                          //             fontWeight: FontWeight.w600)),
-                          //   ),
-                          // ),
                           InkWell(
                             onTap: () {
                               check();
@@ -276,7 +254,7 @@ class _LoginState extends State<Login> {
     final response =
         await http.post(url, body: {"usuario": usuario, "senha": senha2});
     final data = jsonDecode(response.body);
-    print(data);
+    //print(data);
     int value = data['value'];
     String aviso = data['message'];
     String usuarioAPI = data['usuario'];
@@ -304,7 +282,9 @@ class _LoginState extends State<Login> {
       }
       print(aviso);
     } else {
-      snackBar(context, title: "Usuário ou senha inválido.");
+      snackBar(context,
+          title: "Usuário e/ou senha inválido(s).",
+          backgroundColor: Colors.red[600]);
       print(aviso);
     }
   }
@@ -344,6 +324,7 @@ class _LoginState extends State<Login> {
       preferences.setString("levelUser", "0");
       preferences.setString("statusUser", "");
       preferences.setString("levelUser", "");
+      //preferences.setString("id", "0");
       preferences.setString("id", "");
       preferences.setString("usuario", "");
 

@@ -1,6 +1,6 @@
 <?php
 
-require "../config/connect.php";
+require "../../../config/connect.php";
 
     $caracteres_sem_acento = array(
     'Š'=>'S', 'š'=>'s', 'Ð'=>'Dj',''=>'Z', ''=>'z', 'À'=>'A', 'Á'=>'A', 'Â'=>'A', 'Ã'=>'A', 'Ä'=>'A',
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $nome_imagem = strtolower($nome_imagem);
     $imageNome = basename($_FILES['image']['name']);
     $image =  $nome_imagem.str_replace("image_cropper","", $imageNome);
-    $imagePath = "../upload/".$image;
+    $imagePath = "../../upload/".$image;
 
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 

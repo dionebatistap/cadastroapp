@@ -1,26 +1,26 @@
 class BaseUrl {
-  static String inserirPessoaComFoto = 'http://www.dionebatistap.com.br/login/api/inserirPessoaComFoto.php';
-  static String inserirPessoaSemFoto = 'http://www.dionebatistap.com.br/login/api/inserirPessoaSemFoto.php';
-  static String listarPessoa = 'http://www.dionebatistap.com.br/login/api/listarPessoa.php';
-  static String editarPessoaComFoto = 'http://www.dionebatistap.com.br/login/api/editarPessoaComFoto.php';
-  static String editarPessoaSemFoto = 'http://www.dionebatistap.com.br/login/api/editarPessoaSemFoto.php';
-  static String deletarPessoa = 'http://www.dionebatistap.com.br/login/api/deletarPessoa.php';
+  static String inserirPessoaComFoto = 'http://www.dionebatistap.com.br/api/apipessoas/inserirPessoaComFoto.php';
+  static String inserirPessoaSemFoto = 'http://www.dionebatistap.com.br/api/apipessoas/inserirPessoaSemFoto.php';
+  static String listarPessoa = 'http://www.dionebatistap.com.br/api/apipessoas/listarPessoa.php';
+  static String editarPessoaComFoto = 'http://www.dionebatistap.com.br/api/apipessoas/editarPessoaComFoto.php';
+  static String editarPessoaSemFoto = 'http://www.dionebatistap.com.br/api/apipessoas/editarPessoaSemFoto.php';
+  static String deletarPessoa = 'http://www.dionebatistap.com.br/api/apipessoas/deletarPessoa.php';
 
   //UPLOADS FOTOS
-  static String upload = 'http://www.dionebatistap.com.br/login/upload/';
+  static String upload = 'http://www.dionebatistap.com.br/upload/';
 
   //USUARIOS
-  static String login = 'http://www.dionebatistap.com.br/login/api/login.php';
-  static String registrarUsuario = 'http://www.dionebatistap.com.br/login/api/registrarUsuario.php';
-  static String listarUsuarios = 'http://www.dionebatistap.com.br/login/api/listarUsuarios.php';
-  static String deletarUsuario = 'http://www.dionebatistap.com.br/login/api/deletarUsuario.php';
-  static String editarUsuario = 'http://www.dionebatistap.com.br/login/api/editarUsuario.php';
+  static String login = 'http://www.dionebatistap.com.br/api/apilogin/login.php';
+  static String registrarUsuario = 'http://www.dionebatistap.com.br/api/apiusuarios/registrarUsuario.php';
+  static String listarUsuarios = 'http://www.dionebatistap.com.br/api/apiusuarios/listarUsuarios.php';
+  static String deletarUsuario = 'http://www.dionebatistap.com.br/api/apiusuarios/deletarUsuario.php';
+  static String editarUsuario = 'http://www.dionebatistap.com.br/api/apiusuarios/editarUsuario.php';
 
   //GRUPOS
-static String listarGrupos = 'http://www.dionebatistap.com.br/login/api/listarGrupos.php';
-static String inserirGrupo = 'http://www.dionebatistap.com.br/login/api/inserirGrupo.php';
-static String editarGrupo = 'http://www.dionebatistap.com.br/login/api/editarGrupo.php';
-static String deletarGrupo = 'http://www.dionebatistap.com.br/login/api/deletarGrupo.php';
+static String listarGrupos = 'http://www.dionebatistap.com.br/api/apigrupos/listarGrupos.php';
+static String inserirGrupo = 'http://www.dionebatistap.com.br/api/apigrupos/inserirGrupo.php';
+static String editarGrupo = 'http://www.dionebatistap.com.br/api/apigrupos/editarGrupo.php';
+static String deletarGrupo = 'http://www.dionebatistap.com.br/api/apigrupos/deletarGrupo.php';
 
 
 }

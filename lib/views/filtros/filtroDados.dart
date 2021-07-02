@@ -39,7 +39,7 @@ class _FiltroPage extends State<FiltroPage> {
     super.initState();
   }
 
-  Widget appBarTitle = Text("Tela de Filtros",
+  Widget appBarTitle = Text("Pesquisar cadastros",
       style: TextStyle(
           fontWeight: FontWeight.normal, color: Colors.black, fontSize: 18));
 
@@ -387,11 +387,9 @@ class _FiltroPage extends State<FiltroPage> {
   String textoInforma = '';
   Future<void> _filtrarMembros() async {
     if ((textoGrupo.isEmptyOrNull) && (textoCargo.isEmptyOrNull)) {
-      // print("Texto cargo $textoCargo");
       toast("Nada para pesquisar");
       return;
     } else if ((!textoGrupo.isEmptyOrNull) && (textoCargo.isEmptyOrNull)) {
-      print("Texto grupo $textoGrupo");
       contador = 0;
       _listafiltrarMembros.clear();
       list.forEach(

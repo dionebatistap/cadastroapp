@@ -33,7 +33,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS RADIO BUTTONS
   String clestadoCivil = "Solteiro";
   String clMembroObreiro = "Membro";
-  String isBatizada = "Não";
+  String isBatizada = "Sim";
 //CONTROLLERS TEXTFIELD
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController celularController = TextEditingController();
@@ -588,45 +588,55 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 ),
                                 const SizedBox(height: 8.0),
 //FORMULARIO DE DATA DO BATISMO
-                                Container(
-                                  padding: EdgeInsets.fromLTRB(10, 5, 30, 0),
-                                  height: tamanho.size.height * 0.09,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1, color: Colors.grey[700]),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15)),
-                                    color: Colors.grey[100],
-                                    //border: Border.fromBorderSide(),
-                                  ),
-                                  child: DateDropDown(
-                                    labelText: labelText,
-                                    valueText: new DateFormat.yMd('pt_Br')
-                                        .format(variavelData),
-                                    valueStyle: valueStyle,
-                                    onPressed: () {
-                                      _selectedDate(context);
-                                    },
-                                  ),
-                                ),
+                                isBatizada == 'Sim'
+                                    ? Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(10, 5, 30, 0),
+                                        height: tamanho.size.height * 0.09,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              width: 1,
+                                              color: Colors.grey[700]),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15)),
+                                          color: Colors.grey[100],
+                                          //border: Border.fromBorderSide(),
+                                        ),
+                                        child: DateDropDown(
+                                          labelText: labelText,
+                                          valueText: new DateFormat.yMd('pt_Br')
+                                              .format(variavelData),
+                                          valueStyle: valueStyle,
+                                          onPressed: () {
+                                            _selectedDate(context);
+                                          },
+                                        ),
+                                      )
+                                    : Container(),
                                 const SizedBox(height: 8.0),
 
 //FORMUALARIO DE TEXTO PASTOR QUE BATIZOU
-                                TextFormField(
-                                  textCapitalization: TextCapitalization.words,
-                                  decoration: const InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: const BorderRadius.all(
-                                        const Radius.circular(15.0),
-                                      ),
-                                    ),
-                                    filled: true,
-                                    //icon: Icon(Icons.person),
-                                    hintText: 'Nome do pastor que batizou.',
-                                    labelText: 'Pastor que batizou*',
-                                  ),
-                                  controller: prBatizouController,
-                                ),
+                                isBatizada == 'Sim'
+                                    ? TextFormField(
+                                        textCapitalization:
+                                            TextCapitalization.words,
+                                        decoration: const InputDecoration(
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                              const Radius.circular(15.0),
+                                            ),
+                                          ),
+                                          filled: true,
+                                          //icon: Icon(Icons.person),
+                                          hintText:
+                                              'Nome do pastor que batizou.',
+                                          labelText: 'Pastor que batizou*',
+                                        ),
+                                        controller: prBatizouController,
+                                      )
+                                    : Container(),
+
                                 const SizedBox(height: 5.0),
 
 // SELECIONAR GRUPO QUE PERTENCE

@@ -1,6 +1,6 @@
 <?php
 
-require "../config/connect.php";
+require "../../../config/connect.php";
 
 if ($_SERVER['REQUEST_METHOD']=="POST"){
     # code ...

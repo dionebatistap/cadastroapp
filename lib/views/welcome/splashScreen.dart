@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cadastroapp/views/login/login.dart';
+import 'package:cadastroapp/views/welcome/passoapasso.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -24,6 +25,7 @@ class TelaAberturaState extends State<TelaAbertura>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.black,
         statusBarIconBrightness: Brightness.dark));
+    getPref();
     super.initState();
     init();
   }
@@ -43,7 +45,12 @@ class TelaAberturaState extends State<TelaAbertura>
     await Future.delayed(Duration(seconds: 3));
 
     finish(context);
-    Login().launch(context);
+
+    if (controleTela.isEmptyOrNull) {
+      PassoAPasso().launch(context);
+    } else {
+      Login().launch(context);
+    }
   }
 
   @override
@@ -79,5 +86,14 @@ class TelaAberturaState extends State<TelaAbertura>
         ).center(),
       ),
     );
+  }
+
+  String controleTela;
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      controleTela = preferences.getString("id");
+      print(controleTela);
+    });
   }
 } //CLASS

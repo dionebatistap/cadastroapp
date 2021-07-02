@@ -1,6 +1,8 @@
 <?php
 
-require "../config/connect.php";
+require "../../../config/connect.php";
+//require "../public/config/connect.php";
+
 
 
 

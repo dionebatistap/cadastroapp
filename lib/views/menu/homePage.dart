@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cadastroapp/views/filtros/filtrar.dart';
+import 'package:cadastroapp/views/filtros/filtroDados.dart';
 import 'package:cadastroapp/views/grupos/grupo.dart';
 import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
 import 'package:cadastroapp/views/pessoas/pessoa.dart';
@@ -38,7 +38,7 @@ class _HomePage extends State<HomePage> {
       usuario = preferences.getString("usuario");
       nome = preferences.getString("nome");
       statusUser = preferences.getString("statusUser");
-      print(statusUser);
+      //print(statusUser);
     });
   }
 

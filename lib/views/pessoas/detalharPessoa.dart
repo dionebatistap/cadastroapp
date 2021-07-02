@@ -42,7 +42,7 @@ class _DetalharPessoaState extends State<DetalharPessoa> {
               child: Column(
                 children: <Widget>[
                   Text("Dados Pessoais",
-                      style: TextStyle(fontSize: 35, color: Colors.grey[900])),
+                      style: TextStyle(fontSize: 25, color: Colors.grey[700])),
                   Text("Nome: " + widget.model.nomePessoa),
                   Text("Endereço: " + widget.model.enderecoPessoa),
                   Text("Nº: " + widget.model.numeroPessoa),
@@ -52,7 +52,7 @@ class _DetalharPessoaState extends State<DetalharPessoa> {
                   Text("Celular: " + widget.model.celularPessoa),
                   Text("Estado Civil: " + widget.model.estadoCivil),
                   Text("Dados Espirituais",
-                      style: TextStyle(fontSize: 35, color: Colors.grey[900])),
+                      style: TextStyle(fontSize: 25, color: Colors.grey[700])),
                   Text("Cargo: " + widget.model.membroObreiro),
                   Text("Data batismo: " + widget.model.dataSelecionada),
                   Text("Pr Que batizou: " + widget.model.prBatizou),
@@ -69,13 +69,13 @@ class _DetalharPessoaState extends State<DetalharPessoa> {
                 child: Material(
                   color: Colors.orange[400],
                   borderRadius: BorderRadius.circular(10.0),
-                  child: MaterialButton(
-                    onPressed: () {},
-                    child: Text(
-                      "AddCart",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  // child: MaterialButton(
+                  //   onPressed: () {},
+                  //   child: Text(
+                  //     "AddCart",
+                  //     style: TextStyle(color: Colors.white),
+                  //   ),
+                  // ),
                 ),
               ),
             ),
