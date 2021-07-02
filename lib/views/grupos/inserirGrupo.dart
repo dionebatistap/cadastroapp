@@ -125,7 +125,7 @@ class _InserirGrupo extends State<InserirGrupo> {
   }
 
   Future<void> _save() async {
-    String nomeGrupo = nomeGrupoController.text;
+    String nomeGrupo = (nomeGrupoController.text).toUpperCase();
 
     try {
       var url = Uri.parse(BaseUrl.inserirGrupo);

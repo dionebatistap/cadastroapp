@@ -183,7 +183,7 @@ class _HomePage extends State<HomePage> {
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                             fontSize: 15)),
-                    subtitle: Text("Gerenciar",
+                    subtitle: Text("Pesquisar",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             color: Colors.grey[400],
