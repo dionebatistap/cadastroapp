@@ -45,24 +45,25 @@ class _GrupoState extends State<Grupo> {
       ),
 
 //FLOATING
-      floatingActionButton: (permissaoUsuario != '1')
-          ? FloatingActionButton(
-              child: Icon(Icons.add),
-              mini: true,
-              onPressed: () {
-                toast('Sem permissão para inserir usuário');
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => InserirUsuario(_listarUsuarios)));
-              },
-            )
-          : FloatingActionButton(
-              child: Icon(Icons.add),
-              mini: true,
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => InserirGrupo(_listarGrupos)));
-              },
-            ),
+      floatingActionButton:
+          ((permissaoUsuario == '1') || (permissaoUsuario == '2'))
+              ? FloatingActionButton(
+                  child: Icon(Icons.add),
+                  mini: true,
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InserirGrupo(_listarGrupos)));
+                  },
+                )
+              : FloatingActionButton(
+                  child: Icon(Icons.add),
+                  mini: true,
+                  onPressed: () {
+                    toast('Sem permissão para inserir grupos');
+                    // Navigator.of(context).push(MaterialPageRoute(
+                    //     builder: (context) => InserirUsuario(_listarUsuarios)));
+                  },
+                ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       // bottomNavigationBar: build(context),
       bottomNavigationBar: new BottomAppBar(

@@ -704,7 +704,12 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     minWidth: 200.0,
                                     height: 35,
                                     onPressed: () {
-                                      check();
+                                      print(prefControle);
+                                      if (prefControle == 'inativo') {
+                                        toast("Sem permissão para cadastrar");
+                                      } else {
+                                        check();
+                                      }
                                     },
                                     child: Text("Salvar",
                                         style: TextStyle(

@@ -11,7 +11,7 @@ class BaseUrl {
 
   //USUARIOS
   static String login = 'http://www.dionebatistap.com.br/api/apilogin/login.php';
-  static String registrarUsuario = 'http://www.dionebatistap.com.br/api/apiusuarios/registrarUsuario.php';
+  static String inserirUsuario = 'http://www.dionebatistap.com.br/api/apiusuarios/inserirUsuario.php';
   static String listarUsuarios = 'http://www.dionebatistap.com.br/api/apiusuarios/listarUsuarios.php';
   static String deletarUsuario = 'http://www.dionebatistap.com.br/api/apiusuarios/deletarUsuario.php';
   static String editarUsuario = 'http://www.dionebatistap.com.br/api/apiusuarios/editarUsuario.php';

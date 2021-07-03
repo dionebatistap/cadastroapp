@@ -25,8 +25,8 @@ class TelaAberturaState extends State<TelaAbertura>
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.black,
         statusBarIconBrightness: Brightness.dark));
-    getPref();
     super.initState();
+    getPref();
     init();
   }
 
@@ -89,11 +89,15 @@ class TelaAberturaState extends State<TelaAbertura>
   }
 
   String controleTela;
+  String statusUser;
   getPref() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       controleTela = preferences.getString("id");
+      statusUser = preferences.getString("statusUser");
+      print("Antes Função");
       print(controleTela);
+      print(statusUser);
     });
   }
 } //CLASS

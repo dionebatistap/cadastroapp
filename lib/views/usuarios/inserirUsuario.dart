@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -315,7 +316,7 @@ class _InserirUsuario extends State<InserirUsuario> {
     String usuario = usuarioController.text;
     String senha = senhaController.text;
     try {
-      var url = Uri.parse(BaseUrl.registrarUsuario);
+      var url = Uri.parse(BaseUrl.inserirUsuario);
 
       final response = await http.post(
         url,
@@ -330,7 +331,6 @@ class _InserirUsuario extends State<InserirUsuario> {
 
       final data = jsonDecode(response.body);
       int value = data['value'];
-      print(value);
       //String aviso = data['message'];
       if (value == 1) {
         setState(() {

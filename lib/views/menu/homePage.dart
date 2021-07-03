@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cadastroapp/model/usuarioModel.dart';
 import 'package:cadastroapp/views/filtros/filtroDados.dart';
 import 'package:cadastroapp/views/grupos/grupo.dart';
 import 'package:cadastroapp/views/pessoas/inserirPessoa.dart';
@@ -31,19 +32,6 @@ class _HomePage extends State<HomePage> {
     });
   }
 
-  String usuario = "", nome = "", statusUser = "";
-  getPref() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      usuario = preferences.getString("usuario");
-      nome = preferences.getString("nome");
-      statusUser = preferences.getString("statusUser");
-      //print(statusUser);
-    });
-  }
-
-  //LOGOUT
-
   var loading = false;
   final list = <PessoaModel>[];
 
@@ -51,11 +39,14 @@ class _HomePage extends State<HomePage> {
       GlobalKey<RefreshIndicatorState>();
 
   FocusNode focusNode = FocusNode();
+
   @override
   void initState() {
-    getPref();
-    _listarPessoas();
     super.initState();
+    getPref();
+    _listarUsuarios();
+    _listarPessoas();
+    // _desativarInativo();
   }
 
   Widget appBarTitle = Text("Cadastro de Membros",
@@ -257,8 +248,15 @@ class _HomePage extends State<HomePage> {
             child: Icon(Icons.add),
             mini: true,
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => InserirPessoa(_listarPessoas)));
+              //_listarUsuarios();
+              _desativarInativo();
+
+              if (statusUser == 'inativo') {
+                toast("Sem permissão");
+              } else {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => InserirPessoa(_listarPessoas)));
+              }
             },
           ),
           floatingActionButtonLocation:
@@ -438,5 +436,66 @@ class _HomePage extends State<HomePage> {
         widget.signOut();
       },
     );
+  }
+
+  //CONTROLE PARA IDENTIFICAR QUANDO UM USUARIO FOI DESATIVADO DO SISTEMA
+  // E NÃO TEM MAIS PERMISSÃO PARA INCLUIR NO CADASTRO
+
+  String usuario = "", nome = "", statusUser = "", idUser = "";
+  getPref() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      usuario = preferences.getString("usuario");
+      nome = preferences.getString("nome");
+      statusUser = preferences.getString("statusUser");
+      idUser = preferences.getString("id");
+      //print(statusUser);
+    });
+  }
+
+  String controle = 'ativo';
+  Future<void> _desativarInativo() async {
+    if (listUsers[0].statusUser == 'inativo') {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      setState(() {
+        controle = 'inativo';
+        preferences.setString("statusUser", "inativo");
+      });
+    } else {
+      return;
+    }
+  }
+
+  final listUsers = <UsuarioModel>[];
+  Future<void> _listarUsuarios() async {
+    listUsers.clear();
+    if (!mounted) return;
+    setState(() {
+      loading = true;
+    });
+    var url = Uri.parse(BaseUrl.listarUsuarios);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new UsuarioModel(
+          api['id'],
+          api['usuario'],
+          api['senha'],
+          api['levelUser'],
+          api['nome'],
+          api['statusUser'],
+          api['createdDate'],
+        );
+        if (api['id'] == idUser) {
+          listUsers.add(ab);
+        } else {}
+      });
+      if (!mounted) return;
+      setState(() {
+        loading = false;
+      });
+    }
   }
 } //CLASS

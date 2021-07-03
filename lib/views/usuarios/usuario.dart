@@ -233,7 +233,6 @@ class _UsuarioState extends State<Usuario> {
     setState(() {
       loading = true;
     });
-
     var url = Uri.parse(BaseUrl.listarUsuarios);
     final response = await http.get(url);
     if (response.contentLength == 2) {

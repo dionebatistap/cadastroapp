@@ -43,10 +43,10 @@ class _EditarUsuario extends State<EditarUsuario> {
 
   @override
   void initState() {
+    super.initState();
     getPref();
     setup();
     _carregaItensDropdown();
-    super.initState();
   }
 
   @override
@@ -418,4 +418,14 @@ class _EditarUsuario extends State<EditarUsuario> {
           value: "4"),
     );
   }
+
+
+
+
+
+
+
+
+
+  
 } //CLASS

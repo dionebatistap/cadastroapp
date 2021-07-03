@@ -32,11 +32,11 @@ class _FiltroPage extends State<FiltroPage> {
   FocusNode focusNode = FocusNode();
   @override
   void initState() {
+    super.initState();
     _listarGrupos();
     _listaAddDropGrupos();
     _listarPessoas();
     _carregaItensDropdownMembro();
-    super.initState();
   }
 
   Widget appBarTitle = Text("Pesquisar cadastros",

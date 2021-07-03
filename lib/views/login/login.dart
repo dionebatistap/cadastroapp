@@ -172,7 +172,7 @@ class _LoginState extends State<Login> {
                                   Icons.vpn_key,
                                   color: Colors.grey,
                                 ),
-                                hintText: 'Password',
+                                hintText: 'Senha',
                               ),
                             ),
                           ),
