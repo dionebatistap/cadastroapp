@@ -22,7 +22,7 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   runApp(MaterialApp(
-    debugShowCheckedModeBanner: true,
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       primaryColor: Colors.white,
       brightness: Brightness.light,

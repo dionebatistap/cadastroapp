@@ -95,9 +95,6 @@ class TelaAberturaState extends State<TelaAbertura>
     setState(() {
       controleTela = preferences.getString("id");
       statusUser = preferences.getString("statusUser");
-      print("Antes Função");
-      print(controleTela);
-      print(statusUser);
     });
   }
 } //CLASS

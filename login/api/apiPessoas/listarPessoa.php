@@ -27,6 +27,7 @@ require "../../../config/connect.php";
         $b['isBatizada'] = $a['isBatizada'];
         $b['createdDate'] = $a['createdDate'];
         $b['idUsuario'] = $a['idUsuario'];
+        $b['idGrupo'] = $a['idGrupo'];
         $b['image'] = $a['image'];
         $b['DataSelecionada'] = $a['DataSelecionada'];
         $b['nome'] = $a['nome'];

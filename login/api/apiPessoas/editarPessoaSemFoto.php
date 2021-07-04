@@ -19,9 +19,10 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $grupo = $_POST['grupo'];
     $isBatizada = $_POST['isBatizada'];
     $idPessoa = $_POST['idPessoa'];
+    $idGrupo = $_POST['idGrupo'];
     $dataSelecionada = $_POST['dataSelecionada'];
 
-    $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', enderecoPessoa='$enderecoPessoa', numeroPessoa='$numeroPessoa', bairroPessoa='$bairroPessoa', cepPessoa='$cepPessoa', cidadePessoa='$cidadePessoa', celularPessoa='$celularPessoa',membroObreiro='$membroObreiro',prBatizou='$prBatizou', estadoCivil='$estadoCivil', grupo='$grupo', isBatizada='$isBatizada', DataSelecionada='$dataSelecionada' WHERE id='$idPessoa'";
+    $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', enderecoPessoa='$enderecoPessoa', numeroPessoa='$numeroPessoa', bairroPessoa='$bairroPessoa', cepPessoa='$cepPessoa', cidadePessoa='$cidadePessoa', celularPessoa='$celularPessoa',membroObreiro='$membroObreiro',prBatizou='$prBatizou', estadoCivil='$estadoCivil', grupo='$grupo', isBatizada='$isBatizada', idGrupo='$idGrupo', DataSelecionada='$dataSelecionada' WHERE id='$idPessoa'";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

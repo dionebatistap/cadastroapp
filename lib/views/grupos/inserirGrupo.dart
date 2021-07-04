@@ -126,7 +126,6 @@ class _InserirGrupo extends State<InserirGrupo> {
 
   Future<void> _save() async {
     String nomeGrupo = (nomeGrupoController.text).toUpperCase();
-
     try {
       var url = Uri.parse(BaseUrl.inserirGrupo);
 
@@ -138,7 +137,6 @@ class _InserirGrupo extends State<InserirGrupo> {
       );
       final data = jsonDecode(response.body);
       int value = data['value'];
-      print(value);
       //String aviso = data['message'];
       if (value == 1) {
         setState(() {

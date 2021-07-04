@@ -314,6 +314,7 @@ class _PessoaState extends State<Pessoa> {
           api['isBatizada'],
           api['createdDate'],
           api['idUsuario'],
+          api['idGrupo'],
           api['nome'],
           api['image'],
           api['DataSelecionada'],
@@ -352,7 +353,7 @@ class _PessoaState extends State<Pessoa> {
   dialogDeletarPessoa(String id) async {
     showConfirmDialogCustom(
       context,
-      title: "Deletar este registro permanentemente?",
+      title: "Deseja deletar este registro permanentemente?",
       dialogType: DialogType.DELETE,
       onAccept: () {
         _delete(id);

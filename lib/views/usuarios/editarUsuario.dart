@@ -297,7 +297,7 @@ class _EditarUsuario extends State<EditarUsuario> {
                             minWidth: 200.0,
                             height: 35,
                             onPressed: () {
-                              check();
+                              dialogEditarPessoa();
                             },
                             child: Text("Atualizar",
                                 style: TextStyle(
@@ -419,13 +419,14 @@ class _EditarUsuario extends State<EditarUsuario> {
     );
   }
 
-
-
-
-
-
-
-
-
-  
+  dialogEditarPessoa() {
+    showConfirmDialogCustom(
+      context,
+      title: "Salvar dados atualizados?",
+      dialogType: DialogType.UPDATE,
+      onAccept: () {
+        check();
+      },
+    );
+  }
 } //CLASS

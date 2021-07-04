@@ -14,6 +14,7 @@ class PessoaModel {
   final String isBatizada;
   final String createdDate;
   final String idUsuario;
+  final String idGrupo;
   final String nome;
   final String image;
   final String dataSelecionada;
@@ -34,6 +35,7 @@ class PessoaModel {
       this.isBatizada,
       this.createdDate,
       this.idUsuario,
+      this.idGrupo,
       this.nome,
       this.image,
       this.dataSelecionada);

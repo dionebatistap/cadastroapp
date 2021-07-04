@@ -51,6 +51,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
   //VARIAVEIS DROPDOWN
   String itemGrupoSelecionado;
   String clgrupo;
+  String idGrupo;
   //VARIAVEIS DATAPICKER
   String vardata, dataFormatada;
   String selecionaData, labelText;
@@ -80,7 +81,8 @@ class _EditarPessoaState extends State<EditarPessoa> {
     clestadoCivil = widget.model.estadoCivil;
     clMembroObreiro = widget.model.membroObreiro;
     clgrupo = widget.model.grupo;
-    itemGrupoSelecionado = widget.model.grupo;
+    idGrupo = widget.model.idGrupo;
+    itemGrupoSelecionado = widget.model.idGrupo;
     isBatizada = widget.model.isBatizada;
     setState(() {
       dataFormatada = convertidaBr;
@@ -643,7 +645,10 @@ class _EditarPessoaState extends State<EditarPessoa> {
                                     onChanged: (itemGrupo) {
                                       setState(
                                         () {
-                                          clgrupo = itemGrupo;
+                                          idGrupo = itemGrupo;
+                                          textoPesquisaGrupo = idGrupo;
+                                          print(textoPesquisaGrupo);
+                                          _filtrarGrupo(textoPesquisaGrupo);
                                         },
                                       );
                                     },
@@ -723,6 +728,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
         "grupo": "$clgrupo",
         "isBatizada": "$isBatizada",
         "idUsuario": idUsuario,
+        "idGrupo": idGrupo,
         "idPessoa": widget.model.id,
         "dataSelecionada": "$variavelData",
       });
@@ -783,6 +789,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
       request.fields['grupo'] = "$clgrupo";
       request.fields['isBatizada'] = "$isBatizada";
       request.fields['idUsuario'] = idUsuario;
+      request.fields['idGrupo'] = idGrupo;
       request.fields['idPessoa'] = widget.model.id;
       request.fields['dataSelecionada'] = "$variavelData";
       request.files.add(http.MultipartFile("image", stream, length,
@@ -1030,7 +1037,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
           DropdownMenuItem(
               child: Text(list[i].nomeGrupo,
                   style: TextStyle(fontSize: 18, color: Colors.black87)),
-              value: list[i].nomeGrupo),
+              value: list[i].id),
         );
       }
     });
@@ -1045,5 +1052,18 @@ class _EditarPessoaState extends State<EditarPessoa> {
         check();
       },
     );
+  }
+
+  String textoPesquisaGrupo = '';
+  Future<void> _filtrarGrupo(String texto) async {
+//code...
+
+    list.forEach((ab) {
+      if ((ab.id.toLowerCase()).contains(textoPesquisaGrupo)) {
+        setState(() {
+          clgrupo = (ab.nomeGrupo).toString();
+        });
+      }
+    });
   }
 } //CLASS

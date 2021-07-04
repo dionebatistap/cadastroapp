@@ -164,8 +164,8 @@ class _GrupoState extends State<Grupo> {
                                 : IconButton(
                                     color: Colors.red[600],
                                     onPressed: () {
-                                      toast("Opção desabilitada");
-                                      //dialogDeletarUsuario(x.id);
+                                      //toast("Opção desabilitada");
+                                      dialogDeletarUsuario(x.id);
                                     },
                                     icon: Icon(
                                       Icons.delete,

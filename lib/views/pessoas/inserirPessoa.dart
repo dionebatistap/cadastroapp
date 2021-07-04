@@ -25,7 +25,7 @@ class InserirPessoa extends StatefulWidget {
 
 class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS
-  String estadoCivil, idUsuario, clgrupo, prefControle;
+  String estadoCivil, idUsuario, idGrupo, prefControle, clGrupo;
   final _key = new GlobalKey<FormState>();
   var validate = true;
   File _imageFile;
@@ -33,15 +33,22 @@ class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS RADIO BUTTONS
   String clestadoCivil = "Solteiro";
   String clMembroObreiro = "Membro";
-  String isBatizada = "Sim";
+  String isBatizada = "Não";
 //CONTROLLERS TEXTFIELD
-  final TextEditingController nomeController = TextEditingController();
-  final TextEditingController celularController = TextEditingController();
-  final TextEditingController enderecoController = TextEditingController();
-  final TextEditingController numeroController = TextEditingController();
-  final TextEditingController bairroController = TextEditingController();
-  final TextEditingController cepController = TextEditingController();
-  final TextEditingController cidadeController = TextEditingController();
+  final TextEditingController nomeController =
+      TextEditingController(text: "Romeu e Julieta");
+  final TextEditingController celularController =
+      TextEditingController(text: "19983975315");
+  final TextEditingController enderecoController =
+      TextEditingController(text: "Rua Teste");
+  final TextEditingController numeroController =
+      TextEditingController(text: "123456");
+  final TextEditingController bairroController =
+      TextEditingController(text: "Jd Teste");
+  final TextEditingController cepController =
+      TextEditingController(text: "13276-280");
+  final TextEditingController cidadeController =
+      TextEditingController(text: "Valinhos");
   final TextEditingController prBatizouController = TextEditingController();
 
   //VARIAVEIS DATAPICKER
@@ -676,7 +683,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                           items: _listaItensDropGrupo,
                                           onChanged: (itemGrupo) {
                                             setState(() {
-                                              clgrupo = itemGrupo;
+                                              idGrupo = itemGrupo;
+                                              textoPesquisaGrupo = idGrupo;
+                                              _filtrarGrupo(textoPesquisaGrupo);
                                             });
                                           },
                                           style: TextStyle(
@@ -752,8 +761,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
       _submterComFoto();
     }
     if (form.validate() && _imageFile == null) {
-      if (clgrupo == null) {
-        clgrupo = "Não possui grupo";
+      if (idGrupo == null) {
+        idGrupo = "Não possui grupo";
       }
       form.save();
       _submterSemFoto();
@@ -793,9 +802,10 @@ class _InserirPessoaState extends State<InserirPessoa> {
         "membroObreiro": "$clMembroObreiro",
         "prBatizou": "$pastorBatizou",
         "estadoCivil": "$clestadoCivil",
-        "grupo": "$clgrupo",
+        "grupo": "$clGrupo",
         "isBatizada": "$isBatizada",
         "idUsuario": idUsuario,
+        "idGrupo": idGrupo,
         "dataSelecionada": "$variavelData",
       });
       final data = jsonDecode(response.body);
@@ -820,6 +830,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
   }
 
   Future<void> _submterComFoto() async {
+    print("COM FOTO: " + clGrupo);
     String nome = nomeController.text;
     String endereco = enderecoController.text;
     String numero = numeroController.text;
@@ -852,9 +863,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
       request.fields['membroObreiro'] = "$clMembroObreiro";
       request.fields['prBatizou'] = "$pastorBatizou";
       request.fields['estadoCivil'] = "$clestadoCivil";
-      request.fields['grupo'] = "$clgrupo";
+      request.fields['grupo'] = "$clGrupo";
       request.fields['isBatizada'] = "$isBatizada";
       request.fields['idUsuario'] = idUsuario;
+      request.fields['idGrupo'] = idGrupo;
+
       request.fields['dataSelecionada'] = "$variavelData";
 
       request.files.add(http.MultipartFile("image", stream, length,
@@ -1080,8 +1093,21 @@ class _InserirPessoaState extends State<InserirPessoa> {
           DropdownMenuItem(
               child: Text(list[i].nomeGrupo,
                   style: TextStyle(fontSize: 16, color: Colors.black87)),
-              value: list[i].nomeGrupo),
+              value: list[i].id),
         );
+      }
+    });
+  }
+
+  String textoPesquisaGrupo = '';
+  Future<void> _filtrarGrupo(String texto) async {
+//code...
+
+    list.forEach((ab) {
+      if ((ab.id.toLowerCase()).contains(textoPesquisaGrupo)) {
+        setState(() {
+          clGrupo = (ab.nomeGrupo).toString();
+        });
       }
     });
   }

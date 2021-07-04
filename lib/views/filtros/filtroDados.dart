@@ -92,7 +92,8 @@ class _FiltroPage extends State<FiltroPage> {
                           items: _listaItensDropGrupo,
                           onChanged: (itemGrupo) {
                             setState(() {
-                              textoGrupo = itemGrupo.toString().toLowerCase();
+                              textoGrupo = itemGrupo;
+                              _listarNomeGrupo();
                             });
                           },
                           style:
@@ -364,6 +365,7 @@ class _FiltroPage extends State<FiltroPage> {
           api['isBatizada'],
           api['createdDate'],
           api['idUsuario'],
+          api['idGrupo'],
           api['nome'],
           api['image'],
           api['DataSelecionada'],
@@ -385,6 +387,7 @@ class _FiltroPage extends State<FiltroPage> {
 
   int contador = 0;
   String textoInforma = '';
+  String textoImpressao = '';
   Future<void> _filtrarMembros() async {
     if ((textoGrupo.isEmptyOrNull) && (textoCargo.isEmptyOrNull)) {
       toast("Nada para pesquisar");
@@ -394,7 +397,7 @@ class _FiltroPage extends State<FiltroPage> {
       _listafiltrarMembros.clear();
       list.forEach(
         (ab) {
-          if ((ab.grupo.toLowerCase()).contains(textoGrupo)) {
+          if ((ab.idGrupo.toLowerCase()).contains(textoGrupo)) {
             _listafiltrarMembros.add(ab);
             setState(() {
               contador++;
@@ -404,14 +407,12 @@ class _FiltroPage extends State<FiltroPage> {
           }
         },
       ); //fimListaLogica
-
       setState(() {
-        if (textoGrupo != 'sem grupo') {
-          textoInforma = 'Total geral grupo $textoGrupo:';
+        if (textoImpressao.toLowerCase() != 'sem grupo') {
+          textoInforma = 'Total geral grupo $textoImpressao :';
         } else {
-          textoInforma = 'Total geral $textoGrupo:';
+          textoInforma = 'Total geral $textoImpressao :';
         }
-        print(textoGrupo);
       });
     } else if ((textoGrupo.isEmptyOrNull) && (!textoCargo.isEmptyOrNull)) {
       contador = 0;
@@ -429,14 +430,14 @@ class _FiltroPage extends State<FiltroPage> {
         },
       );
       setState(() {
-        textoInforma = 'Total $textoCargo(s):';
+        textoInforma = 'Total $textoCargo(s) :';
       }); //fimListaLogica
     } else if ((!textoGrupo.isEmptyOrNull) && (!textoCargo.isEmptyOrNull)) {
       contador = 0;
       _listafiltrarMembros.clear();
       list.forEach(
         (ab) {
-          if ((ab.grupo.toLowerCase()).contains(textoGrupo) &&
+          if ((ab.idGrupo.toLowerCase()).contains(textoGrupo) &&
               (ab.membroObreiro.toLowerCase()).contains(textoCargo)) {
             _listafiltrarMembros.add(ab);
             setState(() {
@@ -449,7 +450,7 @@ class _FiltroPage extends State<FiltroPage> {
       );
       setState(() {
         if (textoGrupo != 'sem grupo') {
-          textoInforma = 'TOTAL DE $textoCargo(S) GRUPO $textoGrupo:';
+          textoInforma = 'TOTAL DE $textoCargo(S) GRUPO $textoImpressao:';
         } else {
           textoInforma = 'TOTAL DE $textoCargo(S) $textoGrupo:';
         }
@@ -480,7 +481,6 @@ class _FiltroPage extends State<FiltroPage> {
       });
       if (!mounted) return;
       setState(() {
-        //loading = false;
         _listaAddDropGrupos();
       });
     }
@@ -494,7 +494,7 @@ class _FiltroPage extends State<FiltroPage> {
           DropdownMenuItem(
               child: Text(listGrupos[i].nomeGrupo,
                   style: TextStyle(fontSize: 16, color: Colors.black87)),
-              value: listGrupos[i].nomeGrupo),
+              value: listGrupos[i].id),
         );
       }
     });
@@ -517,6 +517,26 @@ class _FiltroPage extends State<FiltroPage> {
     );
   }
 
-//limpa
-
+  final listNomeGrupos = <GrupoModel>[];
+  Future<void> _listarNomeGrupo() async {
+    listNomeGrupos.clear();
+    var url = Uri.parse(BaseUrl.listarGrupos);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new GrupoModel(
+          api['id'],
+          api['nomeGrupo'],
+        );
+        if (api['id'] == (textoGrupo)) {
+          setState(() {
+            listNomeGrupos.add(ab);
+            textoImpressao = listNomeGrupos[0].nomeGrupo;
+          });
+        }
+      });
+    }
+  }
 } //CLASS

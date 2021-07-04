@@ -28,8 +28,9 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $estadoCivil = $_POST['estadoCivil'];
     $grupo = $_POST['grupo'];
     $isBatizada = $_POST['isBatizada'];
-    $idUsuario = $_POST['idUsuario'];
     $dataSelecionada = $_POST['dataSelecionada'];
+    $idUsuario = $_POST['idUsuario'];
+    $idGrupo = $_POST['idGrupo'];
 
     //REMOVER ACENTOS E RENOMEAR A IMAGEM DE ACORDO COM O NOME DO MEMBRO
     $nome_imagem = preg_replace("/[^a-zA-Z0-9]/", "", strtr($_POST['nomePessoa'], $caracteres_sem_acento));
@@ -40,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
 
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$isBatizada','$image','$dataSelecionada',NOW(),'$idUsuario')";
+        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$isBatizada','$image','$dataSelecionada',NOW(),'$idUsuario','$idGrupo')";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

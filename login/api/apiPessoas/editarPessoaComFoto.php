@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $estadoCivil = $_POST['estadoCivil'];
     $grupo = $_POST['grupo'];
     $isBatizada = $_POST['isBatizada'];
+    $idGrupo = $_POST['idGrupo'];
     $idPessoa = $_POST['idPessoa'];
     $dataSelecionada = $_POST['dataSelecionada'];
     
@@ -41,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
 
    move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', enderecoPessoa='$enderecoPessoa', numeroPessoa='$numeroPessoa', bairroPessoa='$bairroPessoa', cepPessoa='$cepPessoa', cidadePessoa='$cidadePessoa',celularPessoa='$celularPessoa',membroObreiro='$membroObreiro',prBatizou='$prBatizou', estadoCivil='$estadoCivil', grupo='$grupo', isBatizada='$isBatizada', DataSelecionada='$dataSelecionada', image='$image' WHERE id='$idPessoa'";
+        $insert = "UPDATE tbl_pessoas SET nomePessoa='$nomePessoa', enderecoPessoa='$enderecoPessoa', numeroPessoa='$numeroPessoa', bairroPessoa='$bairroPessoa', cepPessoa='$cepPessoa', cidadePessoa='$cidadePessoa',celularPessoa='$celularPessoa',membroObreiro='$membroObreiro',prBatizou='$prBatizou', estadoCivil='$estadoCivil', grupo='$grupo', isBatizada='$isBatizada', idGrupo='$idGrupo', DataSelecionada='$dataSelecionada', image='$image' WHERE id='$idPessoa'";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

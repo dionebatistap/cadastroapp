@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:async';
+
+import 'package:cadastroapp/model/grupoModel.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
@@ -6,6 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 class PessoaDetalhes extends StatefulWidget {
   final PessoaModel model;
@@ -37,6 +42,7 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
   void initState() {
     super.initState();
     setupFormato();
+    _listarNomeGrupo();
   }
 
   @override
@@ -179,13 +185,10 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                                 onSelected: (value) {
                                   if (value == 'whatsapp') {
                                     whatsappAction(widget.model.celularPessoa);
-                                    print("Mensagem");
                                   } else if (value == 'call') {
                                     callAction(widget.model.celularPessoa);
-                                    print("Ligar");
                                   } else {
                                     smsAction(widget.model.celularPessoa);
-                                    print("Whatsapp");
                                   }
                                 },
                                 itemBuilder: (context) => [
@@ -336,7 +339,8 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                                 ),
                               ),
                               subtitle: Text(
-                                widget.model.grupo,
+                                textoGrupo,
+                                // widget.model.idGrupo,
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 18,
@@ -415,4 +419,28 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
       throw 'Não foi possível abrir $mapa';
     }
   }
-}
+
+  String textoGrupo = '';
+  final listGrupos = <GrupoModel>[];
+  Future<void> _listarNomeGrupo() async {
+    listGrupos.clear();
+    var url = Uri.parse(BaseUrl.listarGrupos);
+    final response = await http.get(url);
+    if (response.contentLength == 2) {
+    } else {
+      final data = jsonDecode(response.body);
+      data.forEach((api) {
+        final ab = new GrupoModel(
+          api['id'],
+          api['nomeGrupo'],
+        );
+        if (api['id'] == (widget.model.idGrupo)) {
+          setState(() {
+            listGrupos.add(ab);
+            textoGrupo = listGrupos[0].nomeGrupo;
+          });
+        }
+      });
+    }
+  }
+}//CLASS

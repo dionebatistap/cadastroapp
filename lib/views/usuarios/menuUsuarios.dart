@@ -122,6 +122,7 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
           api['isBatizada'],
           api['createdDate'],
           api['idUsuario'],
+          api['idGrupo'],
           api['nome'],
           api['image'],
           api['DataSelecionada'],

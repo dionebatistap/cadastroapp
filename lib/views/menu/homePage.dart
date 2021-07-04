@@ -390,6 +390,7 @@ class _HomePage extends State<HomePage> {
           api['isBatizada'],
           api['createdDate'],
           api['idUsuario'],
+          api['idGrupo'],
           api['nome'],
           api['image'],
           api['DataSelecionada'],
@@ -490,7 +491,7 @@ class _HomePage extends State<HomePage> {
         );
         if (api['id'] == idUser) {
           listUsers.add(ab);
-        } else {}
+        }
       });
       if (!mounted) return;
       setState(() {

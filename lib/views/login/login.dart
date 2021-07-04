@@ -254,9 +254,8 @@ class _LoginState extends State<Login> {
     final response =
         await http.post(url, body: {"usuario": usuario, "senha": senha2});
     final data = jsonDecode(response.body);
-    //print(data);
     int value = data['value'];
-    String aviso = data['message'];
+    //String aviso = data['message'];
     String usuarioAPI = data['usuario'];
     String nomeAPI = data['nome'];
     String id = data['id'];
@@ -280,12 +279,10 @@ class _LoginState extends State<Login> {
           senhaController.text = '';
         });
       }
-      print(aviso);
     } else {
       snackBar(context,
           title: "Usuário e/ou senha inválido(s).",
           backgroundColor: Colors.red[600]);
-      print(aviso);
     }
   }
 

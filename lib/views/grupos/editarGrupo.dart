@@ -102,7 +102,7 @@ class _EditarGrupo extends State<EditarGrupo> {
                             minWidth: 200.0,
                             height: 35,
                             onPressed: () {
-                              check();
+                              dialogEditarPessoa();
                             },
                             child: Text("Salvar",
                                 style: TextStyle(
@@ -135,7 +135,7 @@ class _EditarGrupo extends State<EditarGrupo> {
   }
 
   Future<void> _save() async {
-    String nomeGrupo = nomeGrupoController.text;
+    String nomeGrupo = (nomeGrupoController.text).toUpperCase();
     try {
       var url = Uri.parse(BaseUrl.editarGrupo);
       final response = await http.post(
@@ -148,10 +148,9 @@ class _EditarGrupo extends State<EditarGrupo> {
 
       final data = jsonDecode(response.body);
       int value = data['value'];
-      String aviso = data['message'];
+      //String aviso = data['message'];
       if (value == 1) {
         setState(() {
-          print(aviso);
           widget.reload();
           Navigator.pop(context);
           snackBar(context,
@@ -165,5 +164,16 @@ class _EditarGrupo extends State<EditarGrupo> {
     } catch (e) {
       debugPrint("Erro ao editar grupo: $e");
     }
+  }
+
+  dialogEditarPessoa() {
+    showConfirmDialogCustom(
+      context,
+      title: "Salvar dados atualizados?",
+      dialogType: DialogType.UPDATE,
+      onAccept: () {
+        check();
+      },
+    );
   }
 } //CLASS

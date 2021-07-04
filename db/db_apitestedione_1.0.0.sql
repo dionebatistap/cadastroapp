@@ -44,15 +44,7 @@ CREATE TABLE IF NOT EXISTS `tbl_pessoas` (
 -- Estrutura da tabela `tbl_usuarios`
 --
 
-CREATE TABLE IF NOT EXISTS `tbl_usuarios` (
-  `id` int(11) NOT NULL,
-  `usuario` text,
-  `senha` text,
-  `level` int(11) DEFAULT NULL,
-  `nome` text,
-  `status` int(11) DEFAULT NULL,
-  `createdDate` datetime DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
+ ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Extraindo dados da tabela `tbl_usuarios`
