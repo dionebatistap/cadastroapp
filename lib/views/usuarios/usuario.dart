@@ -36,7 +36,7 @@ class _UsuarioState extends State<Usuario> {
         statusBarIconBrightness: Brightness.dark));
     return Scaffold(
       appBar: AppBar(
-        title: Text("Gerenciar Usuários"),
+        title: Text("Gerenciar Usuário"),
         toolbarHeight: 70,
         elevation: 10.0,
         shape: RoundedRectangleBorder(
@@ -248,7 +248,14 @@ class _UsuarioState extends State<Usuario> {
           api['statusUser'],
           api['createdDate'],
         );
-        list.add(ab);
+
+        if (permissaoUsuario == '1') {
+          list.add(ab);
+        } else {
+          if ((api['id'] == idUsuario)) {
+            list.add(ab);
+          }
+        }
       });
       if (!mounted) return;
       setState(() {
