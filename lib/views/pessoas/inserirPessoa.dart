@@ -710,7 +710,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                       if (prefControle == 'inativo') {
                                         toast("Sem permissão para cadastrar");
                                       } else {
-                                        check();
+                                        if (_imageFile == null) {
+                                          snackBar(context,
+                                              title: "Foto é obrigatório",
+                                              backgroundColor: Colors.red[600]);
+                                        } else {
+                                          check();
+                                        }
                                       }
                                     },
                                     child: Text("Salvar",
