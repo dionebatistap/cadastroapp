@@ -33,22 +33,15 @@ class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS RADIO BUTTONS
   String clestadoCivil = "Solteiro";
   String clMembroObreiro = "Membro";
-  String isBatizada = "Não";
+  String isBatizada = "Sim";
 //CONTROLLERS TEXTFIELD
-  final TextEditingController nomeController =
-      TextEditingController(text: "Romeu e Julieta");
-  final TextEditingController celularController =
-      TextEditingController(text: "19983975315");
-  final TextEditingController enderecoController =
-      TextEditingController(text: "Rua Teste");
-  final TextEditingController numeroController =
-      TextEditingController(text: "123456");
-  final TextEditingController bairroController =
-      TextEditingController(text: "Jd Teste");
-  final TextEditingController cepController =
-      TextEditingController(text: "13276-280");
-  final TextEditingController cidadeController =
-      TextEditingController(text: "Valinhos");
+  final TextEditingController nomeController = TextEditingController();
+  final TextEditingController celularController = TextEditingController();
+  final TextEditingController enderecoController = TextEditingController();
+  final TextEditingController numeroController = TextEditingController();
+  final TextEditingController bairroController = TextEditingController();
+  final TextEditingController cepController = TextEditingController();
+  final TextEditingController cidadeController = TextEditingController();
   final TextEditingController prBatizouController = TextEditingController();
 
   //VARIAVEIS DATAPICKER
