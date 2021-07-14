@@ -306,6 +306,7 @@ class _HomePage extends State<HomePage> {
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold)),
+                                // subtitle: Text(''),
                                 subtitle: Text(x.celularPessoa),
                                 onTap: () {
                                   Navigator.push(

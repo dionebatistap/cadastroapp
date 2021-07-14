@@ -66,6 +66,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
     });
 //CONVERTER DATA
     vardata = widget.model.dataSelecionada;
+    variavelData = DateTime.parse(widget.model.dataSelecionada);
     String convertidaBr =
         new DateFormat.yMd('pt_Br').format(DateTime.parse(vardata));
 //FIM CONVERTER DATA
@@ -712,6 +713,10 @@ class _EditarPessoaState extends State<EditarPessoa> {
     if (pastorBatizou.isEmptyOrNull) {
       pastorBatizou = 'Não informado';
     }
+
+    print("Variavel variavelData: " + variavelData.toString());
+    print("Variavel dataFormatada: " + dataFormatada);
+
     try {
       var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
       final response = await http.post(url, body: {
@@ -768,6 +773,10 @@ class _EditarPessoaState extends State<EditarPessoa> {
     if (pastorBatizou.isEmptyOrNull) {
       pastorBatizou = 'Não informado';
     }
+
+    print("Variavel variavelData: " + variavelData.toString());
+    print("Variavel dataFormatada: " + dataFormatada);
+
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();

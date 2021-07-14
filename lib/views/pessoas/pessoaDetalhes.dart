@@ -79,8 +79,8 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                       tag: widget.model.id,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(25),
-                            topLeft: Radius.circular(25)),
+                            topRight: Radius.circular(5),
+                            topLeft: Radius.circular(5)),
                         child: Image.network(
                           BaseUrl.upload + widget.model.image,
                           fit: BoxFit.cover,

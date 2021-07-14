@@ -46,6 +46,7 @@ class _UsuarioState extends State<Usuario> {
 
 //FLOATING
       floatingActionButton: (permissaoUsuario != '1')
+          // ? Container()
           ? FloatingActionButton(
               child: Icon(Icons.add),
               mini: true,
@@ -82,7 +83,9 @@ class _UsuarioState extends State<Usuario> {
           ],
         ),
       ),
-      //FLOATINR
+
+      //FLOATING
+
       body: RefreshIndicator(
         onRefresh: _listarUsuarios,
         key: _refresh,
