@@ -15,6 +15,7 @@ require "../../../config/connect.php";
         $b['levelUser'] = $a['levelUser'];
         $b['nome'] = $a['nome'];
         $b['statusUser'] = $a['statusUser'];
+        $b['bandeira'] = $a['bandeira'];
         $b['createdDate'] = $a['createdDate'];
 
         array_push($response, $b);

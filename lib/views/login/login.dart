@@ -254,12 +254,14 @@ class _LoginState extends State<Login> {
     final response =
         await http.post(url, body: {"usuario": usuario, "senha": senha2});
     final data = jsonDecode(response.body);
+    print(data);
     int value = data['value'];
     //String aviso = data['message'];
     String usuarioAPI = data['usuario'];
     String nomeAPI = data['nome'];
     String id = data['id'];
     String levelUser = data['levelUser'];
+    String bandeiraUser = data['bandeira'];
     String statusUser = data['statusUser'];
     if (value == 1) {
       if (((levelUser == "1") ||
@@ -269,13 +271,15 @@ class _LoginState extends State<Login> {
           (statusUser == "ativo")) {
         setState(() {
           _loginStatus = LoginStatus.signIn;
-          savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
+          savePref(value, usuarioAPI, nomeAPI, id, levelUser, bandeiraUser,
+              statusUser);
           senhaController.text = '';
         });
       } else {
         setState(() {
           _loginStatus = LoginStatus.signInUsuarios;
-          savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
+          savePref(value, usuarioAPI, nomeAPI, id, levelUser, bandeiraUser,
+              statusUser);
           senhaController.text = '';
         });
       }
@@ -287,7 +291,7 @@ class _LoginState extends State<Login> {
   }
 
   savePref(int value, String usuario, String nome, String id, String levelUser,
-      String statusUser) async {
+      String statusUser, String bandeira) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("value", value);
@@ -296,6 +300,7 @@ class _LoginState extends State<Login> {
       preferences.setString("id", id);
       preferences.setString("levelUser", levelUser);
       preferences.setString("statusUser", statusUser);
+      preferences.setString("bandeira", bandeira);
     });
   }
 
@@ -324,6 +329,7 @@ class _LoginState extends State<Login> {
       //preferences.setString("id", "0");
       preferences.setString("id", "");
       preferences.setString("usuario", "");
+      preferences.setString("bandeira", "");
 
       _loginStatus = LoginStatus.notSignIn;
     });
@@ -352,6 +358,7 @@ class _LoginState extends State<Login> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
+          api['bandeira'],
           api['createdDate'],
         );
         list.add(ab);

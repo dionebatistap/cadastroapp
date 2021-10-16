@@ -25,33 +25,51 @@ class InserirPessoa extends StatefulWidget {
 
 class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS
-  String estadoCivil, idUsuario, idGrupo, prefControle, clGrupo;
+  String estadoCivil,
+      idUsuario,
+      idGrupo,
+      prefControle,
+      bandeiraControle,
+      clGrupo;
   final _key = new GlobalKey<FormState>();
   var validate = true;
   File _imageFile;
   final picker = ImagePicker();
   //VARIAVEIS RADIO BUTTONS
   String clestadoCivil = "Solteiro";
+  String clsexo = "Masculino";
   String clMembroObreiro = "Membro";
   String isBatizada = "Sim";
 //CONTROLLERS TEXTFIELD
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController celularController = TextEditingController();
+  final TextEditingController telefoneController = TextEditingController();
   final TextEditingController enderecoController = TextEditingController();
   final TextEditingController numeroController = TextEditingController();
   final TextEditingController bairroController = TextEditingController();
   final TextEditingController cepController = TextEditingController();
   final TextEditingController cidadeController = TextEditingController();
   final TextEditingController prBatizouController = TextEditingController();
+  final TextEditingController pessoaprofissaoController =
+      TextEditingController();
+  final TextEditingController pessoaemailController = TextEditingController();
+  final TextEditingController pessoauniversalController =
+      TextEditingController();
+  final TextEditingController estadocidadeController = TextEditingController();
 
   //VARIAVEIS DATAPICKER
-  String selecionaData, labelText;
+  String selecionaData, selecionaDataNasc, labelText;
   DateTime variavelData = new DateTime.now();
+  DateTime nascimentoData = new DateTime.now();
   final TextStyle valueStyle = TextStyle(fontSize: 14.0);
 
 //FORMATADORES
   var formataCelular = new MaskTextInputFormatter(
       mask: '(##)#####-####', filter: {"#": RegExp(r'[0-9]')});
+
+  var formataTelefone = new MaskTextInputFormatter(
+      mask: '(##)####-####', filter: {"#": RegExp(r'[0-9]')});
+
   var formataCep = new MaskTextInputFormatter(
       mask: '#####-###', filter: {"#": RegExp(r'[0-9]')});
 
@@ -204,9 +222,237 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   ),
                                   controller: nomeController,
                                 ),
+                                const SizedBox(height: 10.0),
+
+//FORMULARIO DATA DE NASCIMENTO
+
+                                Container(
+                                  padding: EdgeInsets.fromLTRB(10, 5, 30, 0),
+                                  height: tamanho.size.height * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
+                                    //border: Border.fromBorderSide(),
+                                  ),
+                                  child: new DateDropDown(
+                                    labelText: labelText = "Nascimento",
+                                    valueText: new DateFormat.yMd('pt_Br')
+                                        .format(nascimentoData),
+                                    valueStyle: valueStyle,
+                                    onPressed: () {
+                                      _selectedDateNasc(context);
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: 10.0),
+//FORMULARIO RADIO BUTTON *SEXO*
+                                Row(children: <Widget>[
+                                  Text("Sexo:",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey[700])),
+                                ]),
+                                Container(
+                                  height: tamanho.size.height * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
+                                    //border: Border.fromBorderSide(),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    55,
+                                    0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Spacer(
+                                        flex: 5,
+                                      ),
+                                      Text("Feminino",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Feminino",
+                                        groupValue: clsexo,
+                                        onChanged: (String selecionaSexo) {
+                                          setState(() {
+                                            clsexo = selecionaSexo;
+                                          });
+                                        },
+                                      ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                      Text("Masculino",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Masculino",
+                                        groupValue: clsexo,
+                                        onChanged: (String selecionaSexo) {
+                                          setState(() {
+                                            clsexo = selecionaSexo;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 const SizedBox(height: 5.0),
 
+//FORMULARIO ESTADO CIVIL BUTTON
+                                Row(children: <Widget>[
+                                  Text("Estado civil:",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey[700])),
+                                ]),
+                                Container(
+                                  height: tamanho.size.height * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
+                                    //border: Border.fromBorderSide(),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    55,
+                                    0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Spacer(
+                                        flex: 5,
+                                      ),
+                                      Text("Solteiro",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Solteiro",
+                                        groupValue: clestadoCivil,
+                                        onChanged:
+                                            (String selecionaEstadoCivil) {
+                                          setState(() {
+                                            clestadoCivil =
+                                                selecionaEstadoCivil;
+                                          });
+                                        },
+                                      ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                      Text("Casado",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Casado",
+                                        groupValue: clestadoCivil,
+                                        onChanged:
+                                            (String selecionaEstadoCivil) {
+                                          setState(() {
+                                            clestadoCivil =
+                                                selecionaEstadoCivil;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 12.0),
+
+//FORMUALARIO DE TEXTO PROFISSÃO
+                                TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*campo obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: 'Por favor, iserir profissão.',
+                                    labelText: 'Profissão*',
+                                  ),
+                                  controller: pessoaprofissaoController,
+                                ),
+                                const SizedBox(height: 5.0),
+
+//INFORMAÇÕES ENDEREÇO
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text("Endereço",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey[700])),
+                                    ]),
+
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                const SizedBox(height: 5.0),
 //FORMUALARIO DE TEXTO ENDEREÇO
+                                TextFormField(
+                                  // validator: (e) {
+                                  //   if (e.isEmpty) {
+                                  //     return "*campo obrigatório";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
+                                  inputFormatters: [formataCep],
+                                  maxLength: 9,
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: '00000-000',
+                                    labelText: 'CEP*',
+                                    suffixIcon: IconButton(
+                                      onPressed: _recuperaCep,
+                                      icon: Icon(Icons.search),
+                                      //onPressed: _recuperaCep,
+                                    ),
+                                    counterText: '',
+                                    counterStyle: TextStyle(fontSize: 0),
+                                  ),
+                                  controller: cepController,
+                                ),
+                                const SizedBox(height: 5.0),
                                 TextFormField(
                                   validator: (e) {
                                     if (e.isEmpty) {
@@ -321,39 +567,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 const SizedBox(height: 5.0),
 
                                 TextFormField(
-                                  // validator: (e) {
-                                  //   if (e.isEmpty) {
-                                  //     return "*campo obrigatório";
-                                  //   } else {
-                                  //     return null;
-                                  //   }
-                                  // },
-                                  inputFormatters: [formataCep],
-                                  maxLength: 9,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: const BorderRadius.all(
-                                        const Radius.circular(15.0),
-                                      ),
-                                    ),
-                                    filled: true,
-                                    //icon: Icon(Icons.person),
-                                    hintText: '00000-000',
-                                    labelText: 'CEP*',
-                                    suffixIcon: IconButton(
-                                      onPressed: _recuperaCep,
-                                      icon: Icon(Icons.search),
-                                      //onPressed: _recuperaCep,
-                                    ),
-                                    counterText: '',
-                                    counterStyle: TextStyle(fontSize: 0),
-                                  ),
-                                  controller: cepController,
-                                ),
-                                const SizedBox(height: 5.0),
-//FORMUALARIO DE TEXTO
-                                TextFormField(
                                   validator: (e) {
                                     if (e.isEmpty) {
                                       return "*campo obrigatório";
@@ -361,6 +574,50 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                       return null;
                                     }
                                   },
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: 'Estado',
+                                    labelText: 'Estado*',
+                                  ),
+                                  controller: estadocidadeController,
+                                ),
+
+                                const SizedBox(height: 5.0),
+
+//INFORMAÇÕES CONTATO
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text("Contato",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey[700])),
+                                    ]),
+
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                const SizedBox(height: 5.0),
+
+//FOMULARIO CELULAR
+                                TextFormField(
+                                  // validator: (e) {
+                                  //   if (e.isEmpty) {
+                                  //     return "*campo obrigatório";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
                                   inputFormatters: [formataCelular],
                                   keyboardType: TextInputType.number,
                                   textCapitalization: TextCapitalization.words,
@@ -379,72 +636,59 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 ),
                                 const SizedBox(height: 5.0),
 
-//FORMULARIO RADIO BUTTON
-                                Row(children: <Widget>[
-                                  Text("Estado civil:",
-                                      style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.grey[700])),
-                                ]),
-                                Container(
-                                  height: tamanho.size.height * 0.09,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1, color: Colors.grey[700]),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(15)),
-                                    color: Colors.grey[100],
-                                    //border: Border.fromBorderSide(),
+//FORMULARIO DE TELEFONE
+                                TextFormField(
+                                  // validator: (e) {
+                                  //   if (e.isEmpty) {
+                                  //     return "*campo obrigatório";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
+                                  inputFormatters: [formataTelefone],
+                                  keyboardType: TextInputType.number,
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText: 'nº Tel.',
+                                    labelText: 'Telefone*',
                                   ),
-                                  padding: EdgeInsets.fromLTRB(
-                                    0,
-                                    0,
-                                    55,
-                                    0,
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: <Widget>[
-                                      Spacer(
-                                        flex: 5,
-                                      ),
-                                      Text("Solteiro",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[700])),
-                                      Radio(
-                                        value: "Solteiro",
-                                        groupValue: clestadoCivil,
-                                        onChanged:
-                                            (String selecionaEstadoCivil) {
-                                          setState(() {
-                                            clestadoCivil =
-                                                selecionaEstadoCivil;
-                                          });
-                                        },
-                                      ),
-                                      Spacer(
-                                        flex: 3,
-                                      ),
-                                      Text("Casado",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.grey[700])),
-                                      Radio(
-                                        value: "Casado",
-                                        groupValue: clestadoCivil,
-                                        onChanged:
-                                            (String selecionaEstadoCivil) {
-                                          setState(() {
-                                            clestadoCivil =
-                                                selecionaEstadoCivil;
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                                  controller: telefoneController,
                                 ),
                                 const SizedBox(height: 5.0),
+
+//FORMUALARIO DE TEXTO EMAIL
+                                TextFormField(
+                                  // validator: (e) {
+                                  //   if (e.isEmpty) {
+                                  //     return "*campo obrigatório";
+                                  //   } else {
+                                  //     return null;
+                                  //   }
+                                  // },
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText:
+                                        'Por favor, iserir nome completo.',
+                                    labelText: 'E-mail*',
+                                  ),
+                                  controller: pessoaemailController,
+                                ),
+                                const SizedBox(height: 5.0),
+
 //INFORMAÇÕES ESPIRITUAL
                                 Column(
                                   children: [Divider()],
@@ -462,6 +706,32 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   children: [Divider()],
                                 ),
                                 const SizedBox(height: 5.0),
+
+//FORMUALARIO DE TEXTO UNIVERSAL
+                                TextFormField(
+                                  validator: (e) {
+                                    if (e.isEmpty) {
+                                      return "*campo obrigatório";
+                                    } else {
+                                      return null;
+                                    }
+                                  },
+                                  textCapitalization: TextCapitalization.words,
+                                  decoration: const InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: const BorderRadius.all(
+                                        const Radius.circular(15.0),
+                                      ),
+                                    ),
+                                    filled: true,
+                                    //icon: Icon(Icons.person),
+                                    hintText:
+                                        'Por favor, iserir universal atual',
+                                    labelText: 'Universal Atual*',
+                                  ),
+                                  controller: pessoauniversalController,
+                                ),
+                                const SizedBox(height: 12.0),
 
 //MEMBRO OU OBREIRO
                                 Container(
@@ -602,8 +872,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                           color: Colors.grey[100],
                                           //border: Border.fromBorderSide(),
                                         ),
-                                        child: DateDropDown(
-                                          labelText: labelText,
+                                        child: new DateDropDown(
+                                          labelText: labelText =
+                                              "Batismo nas águas",
                                           valueText: new DateFormat.yMd('pt_Br')
                                               .format(variavelData),
                                           valueStyle: valueStyle,
@@ -691,6 +962,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 ),
                                 const SizedBox(height: 10.0),
                                 const SizedBox(height: 15.0),
+
+//BOTÃO SALVAR
                                 Material(
                                   shape: RoundedRectangleBorder(
                                       borderRadius:
@@ -716,6 +989,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                               backgroundColor: Colors.red[600]);
                                         } else {
                                           check();
+                                          //imprimir();
                                         }
                                       }
                                     },
@@ -750,6 +1024,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
     setState(() {
       idUsuario = preferences.getString("id");
       prefControle = preferences.getString("statusUser");
+      bandeiraControle = preferences.getString("bandeira");
     });
   }
 
@@ -780,8 +1055,19 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String bairro = bairroController.text;
     String cep = cepController.text;
     String cidade = cidadeController.text;
+    String estado = estadocidadeController.text;
     String celular = celularController.text;
+    String telefone = telefoneController.text;
+    String profissao = pessoaprofissaoController.text;
+    String email = pessoaemailController.text;
+    String universal = pessoauniversalController.text;
     String pastorBatizou = prBatizouController.text;
+    if (telefone.isEmptyOrNull) {
+      telefone = 'Não informado';
+    }
+    if (email.isEmptyOrNull) {
+      email = 'Não informado';
+    }
     if (cep.isEmptyOrNull) {
       cep = '00000-000';
     }
@@ -797,10 +1083,17 @@ class _InserirPessoaState extends State<InserirPessoa> {
         "bairroPessoa": "$bairro",
         "cepPessoa": "$cep",
         "cidadePessoa": "$cidade",
+        "estadocidade": "$estado",
         "celularPessoa": "$celular",
+        "telefonePessoa": "$telefone",
+        "pessoaprofissao": "$profissao",
+        "pessoaemail": "$email",
+        "pessoauniversal": "$universal",
+        "pessoanascimento": "$nascimentoData",
         "membroObreiro": "$clMembroObreiro",
         "prBatizou": "$pastorBatizou",
         "estadoCivil": "$clestadoCivil",
+        "pessoasexo": "$clsexo",
         "grupo": "$clGrupo",
         "isBatizada": "$isBatizada",
         "idUsuario": idUsuario,
@@ -837,7 +1130,18 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String cep = cepController.text;
     String cidade = cidadeController.text;
     String celular = celularController.text;
+    String telefone = telefoneController.text;
+    String estado = estadocidadeController.text;
+    String profissao = pessoaprofissaoController.text;
+    String email = pessoaemailController.text;
+    String universal = pessoauniversalController.text;
     String pastorBatizou = prBatizouController.text;
+    if (telefone.isEmptyOrNull) {
+      telefone = 'Não informado';
+    }
+    if (email.isEmptyOrNull) {
+      email = 'não informado';
+    }
     if (cep.isEmptyOrNull) {
       cep = '00000-000';
     }
@@ -858,7 +1162,13 @@ class _InserirPessoaState extends State<InserirPessoa> {
       request.fields['bairroPessoa'] = "$bairro";
       request.fields['cepPessoa'] = "$cep";
       request.fields['cidadePessoa'] = "$cidade";
+      request.fields['pessoasexo'] = "$clsexo";
+      request.fields['estadocidade'] = "$estado";
+      request.fields['pessoaemail'] = "$email";
+      request.fields['pessoaprofissao'] = "$profissao";
+      request.fields['pessoauniversal'] = "$universal";
       request.fields['celularPessoa'] = "$celular";
+      request.fields['telefonePessoa'] = "$telefone";
       request.fields['membroObreiro'] = "$clMembroObreiro";
       request.fields['prBatizou'] = "$pastorBatizou";
       request.fields['estadoCivil'] = "$clestadoCivil";
@@ -867,6 +1177,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
       request.fields['idUsuario'] = idUsuario;
       request.fields['idGrupo'] = idGrupo;
 
+      request.fields['pessoanascimento'] = "$nascimentoData";
       request.fields['dataSelecionada'] = "$variavelData";
 
       request.files.add(http.MultipartFile("image", stream, length,
@@ -904,6 +1215,20 @@ class _InserirPessoaState extends State<InserirPessoa> {
     } else {}
   }
 
+  Future<Null> _selectedDateNasc(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: nascimentoData,
+        firstDate: DateTime(1900),
+        lastDate: DateTime(2099));
+    if (picked != null && picked != nascimentoData) {
+      setState(() {
+        nascimentoData = picked;
+        selecionaDataNasc = new DateFormat.yMd().format(nascimentoData);
+      });
+    } else {}
+  }
+
   String cepNaoEncontrado;
   Future<void> _recuperaCep() async {
     final int ok = 200;
@@ -926,12 +1251,14 @@ class _InserirPessoaState extends State<InserirPessoa> {
         String enderecoAPI = retorno["logradouro"];
         String cidadeAPI = retorno["localidade"];
         String bairroAPI = retorno["bairro"];
+        String estadoAPI = retorno["uf"];
         bool cepNaoEncontradoApi = retorno["erro"];
         if (cepNaoEncontradoApi == null) {
           setState(() {
             enderecoController.text = enderecoAPI;
             cidadeController.text = cidadeAPI;
             bairroController.text = bairroAPI;
+            estadocidadeController.text = estadoAPI;
             toast("Cep localizado.");
           });
         } else {
@@ -1109,5 +1436,25 @@ class _InserirPessoaState extends State<InserirPessoa> {
         });
       }
     });
+  }
+
+  void imprimir() {
+    print("Nome: " + nomeController.text);
+    print("Celular: " + celularController.text);
+    print("Cep: " + cepController.text);
+    print("Endereço: " + enderecoController.text);
+    print("Numero: " + numeroController.text);
+    print("Bairro: " + bairroController.text);
+    print("Cidade: " + cidadeController.text);
+    print("Estado: " + estadocidadeController.text);
+    print("PR batizado: " + prBatizouController.text);
+    print("Profissao: " + pessoaprofissaoController.text);
+    print("Email: " + pessoaemailController.text);
+    print("Universal: " + pessoauniversalController.text);
+    print("Sexo: " + clsexo);
+    print("Grupo: " + clGrupo);
+    print("Cargo: " + clMembroObreiro);
+    print("Estado civil: " + clestadoCivil);
+    print("Grupo: " + pessoauniversalController.text);
   }
 } //CLASS

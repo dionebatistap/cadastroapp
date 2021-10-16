@@ -249,6 +249,7 @@ class _UsuarioState extends State<Usuario> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
+          api['bandeira'],
           api['createdDate'],
         );
 

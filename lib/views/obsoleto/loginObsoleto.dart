@@ -16,7 +16,6 @@ class Login extends StatefulWidget {
 enum LoginStatus { notSignIn, signIn, signInUsuarios }
 
 class _LoginState extends State<Login> {
-  
   LoginStatus _loginStatus = LoginStatus.notSignIn;
   String usuario, senha;
   final _key = new GlobalKey<FormState>();
@@ -143,6 +142,7 @@ class _LoginState extends State<Login> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
+          api['bandeira'],
           api['createdDate'],
         );
         list.add(ab);

@@ -20,6 +20,14 @@ require "../../../config/connect.php";
         $b['cepPessoa'] = $a['cepPessoa'];
         $b['cidadePessoa'] = $a['cidadePessoa'];
         $b['celularPessoa'] = $a['celularPessoa'];
+        //atualização 25-09
+        $b['pessoanascimento'] = $a['pessoanascimento'];
+        $b['pessoasexo'] = $a['pessoasexo'];
+        $b['estadocidade'] = $a['estadocidade'];
+        $b['pessoaemail'] = $a['pessoaemail'];
+        $b['pessoaprofissao'] = $a['pessoaprofissao'];
+        $b['pessoauniversal'] = $a['pessoauniversal'];
+        //fim
         $b['membroObreiro'] = $a['membroObreiro'];
         $b['prBatizou'] = $a['prBatizou'];
         $b['estadoCivil'] = $a['estadoCivil'];

@@ -143,6 +143,8 @@ class _PessoaDetalhes extends State<PessoaDetalhes> {
                                     widget.model.bairroPessoa +
                                     '\nCidade: ' +
                                     widget.model.cidadePessoa +
+                                    '\nEstado: ' +
+                                    widget.model.estadocidade +
                                     '\nCep: ' +
                                     widget.model.cepPessoa,
                                 style: TextStyle(

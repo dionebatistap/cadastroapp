@@ -307,6 +307,15 @@ class _PessoaState extends State<Pessoa> {
           api['cepPessoa'],
           api['cidadePessoa'],
           api['celularPessoa'],
+          api['telefonePessoa'],
+          //atualização 25-09
+          api['pessoanascimento'],
+          api['pessoasexo'],
+          api['estadocidade'],
+          api['pessoaemail'],
+          api['pessoaprofissao'],
+          api['pessoauniversal'],
+          //fim
           api['membroObreiro'],
           api['prBatizou'],
           api['estadoCivil'],

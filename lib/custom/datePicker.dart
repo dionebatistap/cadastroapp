@@ -23,15 +23,15 @@ class DateDropDown extends StatelessWidget {
       onTap: onPressed,
       child: InputDecorator(
         decoration:
-            InputDecoration(labelText: labelText, border: InputBorder.none),
+            InputDecoration(labelText: "Data", border: InputBorder.none),
         baseStyle: valueStyle,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text("Data batismo nas águas:",
-                style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+            Text(labelText,
+                style: TextStyle(fontSize: 15, color: Colors.grey[700])),
             Spacer(
               flex: 3,
             ),

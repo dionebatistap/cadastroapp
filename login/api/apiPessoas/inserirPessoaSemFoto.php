@@ -12,6 +12,15 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $cepPessoa = $_POST['cepPessoa'];
     $cidadePessoa = $_POST['cidadePessoa'];
     $celularPessoa = $_POST['celularPessoa'];
+    $telefonePessoa = $_POST['telefonePessoa'];
+     //atualização 25-09
+     $pessoanascimento = $_POST['pessoanascimento'];
+     $pessoasexo = $_POST['pessoasexo'];
+     $estadocidade = $_POST['estadocidade'];
+     $pessoaemail = $_POST['pessoaemail'];
+     $pessoaprofissao = $_POST['pessoaprofissao'];
+     $pessoauniversal = $_POST['pessoauniversal'];
+     //fim
     $membroObreiro = $_POST['membroObreiro'];
     $prBatizou = $_POST['prBatizou'];
     $estadoCivil = $_POST['estadoCivil'];
@@ -22,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $idGrupo = $_POST['idGrupo'];
     $image = "placeholder.jpeg";
 
-        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$isBatizada','$image','$dataSelecionada',NOW(),'$idUsuario','$idGrupo')";
+        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$telefonePessoa','$pessoanascimento','$pessoasexo','$estadocidade','$pessoaemail','$pessoaprofissao','$pessoauniversal','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$isBatizada','$image','$dataSelecionada',NOW(),'$idUsuario','$idGrupo')";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

@@ -188,6 +188,13 @@ class _HomePage extends State<HomePage> {
                           builder: (context) => FiltroPage()));
                     },
                   ),
+                  ListTile(
+                    subtitle: Text("versão: 1.0.1",
+                        style: TextStyle(
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey[300],
+                            fontSize: 12)),
+                  ),
                 ],
               ),
             ),
@@ -384,6 +391,15 @@ class _HomePage extends State<HomePage> {
           api['cepPessoa'],
           api['cidadePessoa'],
           api['celularPessoa'],
+          api['telefonePessoa'],
+          //atualização 25-09
+          api['pessoanascimento'],
+          api['pessoasexo'],
+          api['estadocidade'],
+          api['pessoaemail'],
+          api['pessoaprofissao'],
+          api['pessoauniversal'],
+          //fim
           api['membroObreiro'],
           api['prBatizou'],
           api['estadoCivil'],
@@ -488,6 +504,7 @@ class _HomePage extends State<HomePage> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
+          api['bandeira'],
           api['createdDate'],
         );
         if (api['id'] == idUser) {

@@ -7,6 +7,15 @@ class PessoaModel {
   final String cepPessoa;
   final String cidadePessoa;
   final String celularPessoa;
+  final String telefonePessoa;
+  //atualização Ficha 25/09/2021
+  final String pessoanascimento;
+  final String pessoasexo;
+  final String estadocidade;
+  final String pessoaemail;
+  final String pessoaprofissao;
+  final String pessoauniversal;
+  //fim
   final String membroObreiro;
   final String prBatizou;
   final String estadoCivil;
@@ -20,23 +29,33 @@ class PessoaModel {
   final String dataSelecionada;
 
   PessoaModel(
-      this.id,
-      this.nomePessoa,
-      this.enderecoPessoa,
-      this.numeroPessoa,
-      this.bairroPessoa,
-      this.cepPessoa,
-      this.cidadePessoa,
-      this.celularPessoa,
-      this.membroObreiro,
-      this.prBatizou,
-      this.estadoCivil,
-      this.grupo,
-      this.isBatizada,
-      this.createdDate,
-      this.idUsuario,
-      this.idGrupo,
-      this.nome,
-      this.image,
-      this.dataSelecionada);
+    this.id,
+    this.nomePessoa,
+    this.enderecoPessoa,
+    this.numeroPessoa,
+    this.bairroPessoa,
+    this.cepPessoa,
+    this.cidadePessoa,
+    this.celularPessoa,
+    this.telefonePessoa,
+    //atualização 25-09
+    this.pessoanascimento,
+    this.pessoasexo,
+    this.estadocidade,
+    this.pessoaemail,
+    this.pessoaprofissao,
+    this.pessoauniversal,
+    //fim
+    this.membroObreiro,
+    this.prBatizou,
+    this.estadoCivil,
+    this.grupo,
+    this.isBatizada,
+    this.createdDate,
+    this.idUsuario,
+    this.idGrupo,
+    this.nome,
+    this.image,
+    this.dataSelecionada,
+  );
 }
