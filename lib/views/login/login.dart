@@ -136,7 +136,7 @@ class _LoginState extends State<Login> {
                                   Icons.email,
                                   color: Colors.grey,
                                 ),
-                                hintText: 'E-mail',
+                                hintText: 'Usuário',
                               ),
                             ),
                           ),
@@ -261,9 +261,16 @@ class _LoginState extends State<Login> {
     String nomeAPI = data['nome'];
     String id = data['id'];
     String levelUser = data['levelUser'];
-    String bandeiraUser = data['bandeira'];
     String statusUser = data['statusUser'];
+
     if (value == 1) {
+      if (statusUser == "inativo") {
+        snackBar(context,
+            title: "Você não pode acessar", backgroundColor: Colors.red[600]);
+        setState(() {
+          _loginStatus = LoginStatus.notSignIn;
+        });
+      }
       if (((levelUser == "1") ||
               (levelUser == "2") ||
               (levelUser == "3") ||
@@ -271,18 +278,18 @@ class _LoginState extends State<Login> {
           (statusUser == "ativo")) {
         setState(() {
           _loginStatus = LoginStatus.signIn;
-          savePref(value, usuarioAPI, nomeAPI, id, levelUser, bandeiraUser,
-              statusUser);
-          senhaController.text = '';
-        });
-      } else {
-        setState(() {
-          _loginStatus = LoginStatus.signInUsuarios;
-          savePref(value, usuarioAPI, nomeAPI, id, levelUser, bandeiraUser,
-              statusUser);
+          savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
           senhaController.text = '';
         });
       }
+      //DESABILITA REDIRECIONAMENTO PARA USUARIOS
+      // else {
+      //   setState(() {
+      //     _loginStatus = LoginStatus.signInUsuarios;
+      //     savePref(value, usuarioAPI, nomeAPI, id, levelUser, statusUser);
+      //     senhaController.text = '';
+      //   });
+      // }
     } else {
       snackBar(context,
           title: "Usuário e/ou senha inválido(s).",
@@ -291,7 +298,7 @@ class _LoginState extends State<Login> {
   }
 
   savePref(int value, String usuario, String nome, String id, String levelUser,
-      String statusUser, String bandeira) async {
+      String statusUser) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     setState(() {
       preferences.setInt("value", value);
@@ -300,7 +307,6 @@ class _LoginState extends State<Login> {
       preferences.setString("id", id);
       preferences.setString("levelUser", levelUser);
       preferences.setString("statusUser", statusUser);
-      preferences.setString("bandeira", bandeira);
     });
   }
 
@@ -329,8 +335,6 @@ class _LoginState extends State<Login> {
       //preferences.setString("id", "0");
       preferences.setString("id", "");
       preferences.setString("usuario", "");
-      preferences.setString("bandeira", "");
-
       _loginStatus = LoginStatus.notSignIn;
     });
   }
@@ -358,16 +362,30 @@ class _LoginState extends State<Login> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
-          api['bandeira'],
           api['createdDate'],
         );
         list.add(ab);
+        _listafiltrarUsuarios.add(ab);
       });
       if (!mounted) return;
       setState(() {
         loading = false;
       });
     }
+  }
+
+  List _listafiltrarUsuarios = [];
+  Future<void> _filtrarUsuarios() async {
+    _listafiltrarUsuarios.clear();
+    list.forEach(
+      (ab) {
+        if ((ab.statusUser.toLowerCase()) == "ativo") {
+          _listafiltrarUsuarios.add(ab);
+        } else {
+          return;
+        }
+      },
+    );
   }
 
   @override

@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/services.dart';
+import 'package:email_validator/email_validator.dart';
 
 class InserirPessoa extends StatefulWidget {
   final VoidCallback reload;
@@ -25,12 +26,7 @@ class InserirPessoa extends StatefulWidget {
 
 class _InserirPessoaState extends State<InserirPessoa> {
   //VARIAVEIS
-  String estadoCivil,
-      idUsuario,
-      idGrupo,
-      prefControle,
-      bandeiraControle,
-      clGrupo;
+  String estadoCivil, idUsuario, idGrupo, prefControle, clGrupo;
   final _key = new GlobalKey<FormState>();
   var validate = true;
   File _imageFile;
@@ -39,7 +35,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
   String clestadoCivil = "Solteiro";
   String clsexo = "Masculino";
   String clMembroObreiro = "Membro";
-  String isBatizada = "Sim";
+  String isBatizada = "Não";
 //CONTROLLERS TEXTFIELD
   final TextEditingController nomeController = TextEditingController();
   final TextEditingController celularController = TextEditingController();
@@ -56,6 +52,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
   final TextEditingController pessoauniversalController =
       TextEditingController();
   final TextEditingController estadocidadeController = TextEditingController();
+  final TextEditingController pesquisaArimateiaController =
+      TextEditingController();
 
   //VARIAVEIS DATAPICKER
   String selecionaData, selecionaDataNasc, labelText;
@@ -198,10 +196,27 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 ]),
                             child: Column(
                               children: <Widget>[
+//CADASTRO DE MEMBROS
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text("Cadastro de Membros",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey[700])),
+                                    ]),
+
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                const SizedBox(height: 5.0),
 //FORMUALARIO DE TEXTO NOME
                                 TextFormField(
                                   validator: (e) {
-                                    if (e.isEmpty) {
+                                    if (e.trim().isEmpty) {
                                       return "*campo obrigatório";
                                     } else {
                                       return null;
@@ -328,12 +343,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                     color: Colors.grey[100],
                                     //border: Border.fromBorderSide(),
                                   ),
-                                  padding: EdgeInsets.fromLTRB(
-                                    0,
-                                    0,
-                                    55,
-                                    0,
-                                  ),
+                                  padding: EdgeInsets.fromLTRB(0, 0, 55, 0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: <Widget>[
@@ -672,7 +682,23 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   //     return null;
                                   //   }
                                   // },
-                                  textCapitalization: TextCapitalization.words,
+                                  validator: (e) {
+                                    if (e.isEmptyOrNull) {
+                                      return null;
+                                    }
+                                    if (e == "Não informado") {
+                                      return null;
+                                    }
+                                    if (EmailValidator.validate(e)) {
+                                      return null;
+                                    } else {
+                                      snackBar(context,
+                                          title: "E-mail inválido",
+                                          backgroundColor: Colors.red[600]);
+                                      return "exemplo@email.com";
+                                    }
+                                  },
+                                  //textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: const BorderRadius.all(
@@ -827,6 +853,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                               fontSize: 16,
                                               color: Colors.grey[700])),
                                       Radio(
+                                        //  activeColor: Colors.green[600],
                                         value: "Sim",
                                         groupValue: isBatizada,
                                         onChanged:
@@ -844,6 +871,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                               fontSize: 16,
                                               color: Colors.grey[700])),
                                       Radio(
+                                        //  activeColor: Colors.red[600],
                                         value: "Não",
                                         groupValue: isBatizada,
                                         onChanged:
@@ -884,9 +912,9 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                         ),
                                       )
                                     : Container(),
-                                const SizedBox(height: 8.0),
+                                const SizedBox(height: 5.0),
 
-//FORMUALARIO DE TEXTO PASTOR QUE BATIZOU
+//FORMULARIO DE TEXTO PASTOR QUE BATIZOU
                                 isBatizada == 'Sim'
                                     ? TextFormField(
                                         textCapitalization:
@@ -919,7 +947,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                 ]),
                                 const SizedBox(height: 2.0),
                                 Container(
-                                  height: tamanho.size.height * 0.1,
+                                  height: tamanho.size.height * 0.08,
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 1, color: Colors.grey[700]),
@@ -942,7 +970,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                           //decoration:,
                                           hint: Text("Selecione o grupo...",
                                               style: TextStyle(
-                                                  fontSize: 18,
+                                                  fontSize: 15,
                                                   color: Colors.grey[700])),
                                           items: _listaItensDropGrupo,
                                           onChanged: (itemGrupo) {
@@ -961,8 +989,244 @@ class _InserirPessoaState extends State<InserirPessoa> {
                                   ),
                                 ),
                                 const SizedBox(height: 10.0),
-                                const SizedBox(height: 15.0),
+                                const SizedBox(height: 5.0),
 
+//INFORMAÇÕES ARIMATEIA
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Text("Arimatéia",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.grey[700])),
+                                    ]),
+
+                                Column(
+                                  children: [Divider()],
+                                ),
+                                const SizedBox(height: 5.0),
+
+//RG REGULARIZADO
+                                Row(children: <Widget>[
+                                  Text("RG regularizado ?",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey[700])),
+                                ]),
+                                Container(
+                                  height: tamanho.size.height * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
+                                    //border: Border.fromBorderSide(),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    55,
+                                    0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Spacer(
+                                        flex: 5,
+                                      ),
+                                      Text("Sim",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        //  activeColor: Colors.green[600],
+                                        value: "Sim",
+                                        groupValue: isRgRegularizado,
+                                        onChanged:
+                                            (String selecionaisRgRegularizado) {
+                                          setState(() {
+                                            isRgRegularizado =
+                                                selecionaisRgRegularizado;
+                                          });
+                                        },
+                                      ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                      Text("Não",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        //  activeColor: Colors.red[600],
+                                        value: "Não",
+                                        groupValue: isRgRegularizado,
+                                        onChanged:
+                                            (String selecionaisRgRegularizado) {
+                                          setState(() {
+                                            isRgRegularizado =
+                                                selecionaisRgRegularizado;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10.0),
+
+//CHECKBOX VACINA
+                                Row(children: <Widget>[
+                                  Text("Vacina COVID19",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey[700])),
+                                ]),
+                                Container(
+                                  height: tamanho.size.height * 0.08,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
+                                    //border: Border.fromBorderSide(),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                  child: Row(
+                                    children: [
+                                      Checkbox(
+                                          activeColor: Colors.green[600],
+                                          value: primeiraDose,
+                                          onChanged: (bool valor) {
+                                            setState(() {
+                                              primeiraDose = valor;
+                                            });
+                                          }),
+                                      Text("1ª dose"),
+                                      Spacer(
+                                        flex: 1,
+                                      ),
+                                      Checkbox(
+                                          activeColor: Colors.green[600],
+                                          value: segundaDose,
+                                          onChanged: (bool valor) {
+                                            setState(() {
+                                              segundaDose = valor;
+                                            });
+                                          }),
+                                      Text("2ª dose"),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10.0),
+
+//TITULO
+                                Row(children: <Widget>[
+                                  Text("Título de eleitor regularizado ?",
+                                      style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.grey[700])),
+                                ]),
+                                Container(
+                                  height: tamanho.size.height * 0.09,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.grey[700]),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15)),
+                                    color: Colors.grey[100],
+                                    //border: Border.fromBorderSide(),
+                                  ),
+                                  padding: EdgeInsets.fromLTRB(
+                                    0,
+                                    0,
+                                    55,
+                                    0,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Spacer(
+                                        flex: 5,
+                                      ),
+                                      Text("Sim",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        value: "Sim",
+                                        // activeColor: Colors.green[600],
+                                        groupValue: isTituloRegularizado,
+                                        onChanged: (String
+                                            selecionaisTituloRegularizado) {
+                                          setState(() {
+                                            isTituloRegularizado =
+                                                selecionaisTituloRegularizado;
+                                          });
+                                        },
+                                      ),
+                                      Spacer(
+                                        flex: 3,
+                                      ),
+                                      Text("Não",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey[700])),
+                                      Radio(
+                                        //  activeColor: Colors.red[600],
+                                        value: "Não",
+                                        groupValue: isTituloRegularizado,
+                                        onChanged: (String
+                                            selecionaisTituloRegularizado) {
+                                          setState(() {
+                                            isTituloRegularizado =
+                                                selecionaisTituloRegularizado;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10.0),
+
+//PESQUISA DE AJUDA
+                                TextFormField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  controller: pesquisaArimateiaController,
+                                  //focusNode: addressFocus,
+                                  style: primaryTextStyle(),
+                                  decoration: InputDecoration(
+                                    // prefixIcon: Icon(Icons.message,
+                                    //     color: Colors.grey[500]),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        borderSide: BorderSide(
+                                            color: Colors.grey[700])),
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        borderSide: BorderSide(
+                                            width: 1, color: Colors.grey[700])),
+                                    labelText: 'Pesquisa Arimatéia*',
+                                    //labelStyle: primaryTextStyle(),
+                                    alignLabelWithHint: true,
+                                  ),
+                                  maxLines: 3,
+                                  keyboardType: TextInputType.multiline,
+                                  // validator: (s) {
+                                  //   if (s.trim().isEmpty)
+                                  //     return 'Address is required';
+                                  //   return null;
+                                  // },
+                                  maxLength: 200,
+                                ),
+                                const SizedBox(height: 10.0),
 //BOTÃO SALVAR
                                 Material(
                                   shape: RoundedRectangleBorder(
@@ -1017,6 +1281,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
     );
   }
 
+  String isRgRegularizado;
+  String isTituloRegularizado;
+  bool primeiraDose = false;
+  bool segundaDose = false;
+
 /* METODOS */
 
   getPref() async {
@@ -1024,7 +1293,6 @@ class _InserirPessoaState extends State<InserirPessoa> {
     setState(() {
       idUsuario = preferences.getString("id");
       prefControle = preferences.getString("statusUser");
-      bandeiraControle = preferences.getString("bandeira");
     });
   }
 
@@ -1062,6 +1330,8 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String email = pessoaemailController.text;
     String universal = pessoauniversalController.text;
     String pastorBatizou = prBatizouController.text;
+    String pesquisaArimateia = pesquisaArimateiaController.text;
+
     if (telefone.isEmptyOrNull) {
       telefone = 'Não informado';
     }
@@ -1096,6 +1366,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
         "pessoasexo": "$clsexo",
         "grupo": "$clGrupo",
         "isBatizada": "$isBatizada",
+        "isRgRegularizado": "$isRgRegularizado",
+        "isTituloRegularizado": "$isTituloRegularizado",
+        "primeiraDose": "$primeiraDose",
+        "segundaDose": "$segundaDose",
+        "pesquisaArimateia": "$pesquisaArimateia",
         "idUsuario": idUsuario,
         "idGrupo": idGrupo,
         "dataSelecionada": "$variavelData",
@@ -1135,6 +1410,7 @@ class _InserirPessoaState extends State<InserirPessoa> {
     String profissao = pessoaprofissaoController.text;
     String email = pessoaemailController.text;
     String universal = pessoauniversalController.text;
+    String pesquisaArimateia = pesquisaArimateiaController.text;
     String pastorBatizou = prBatizouController.text;
     if (telefone.isEmptyOrNull) {
       telefone = 'Não informado';
@@ -1176,6 +1452,11 @@ class _InserirPessoaState extends State<InserirPessoa> {
       request.fields['isBatizada'] = "$isBatizada";
       request.fields['idUsuario'] = idUsuario;
       request.fields['idGrupo'] = idGrupo;
+      request.fields['isRgRegularizado'] = "$isRgRegularizado";
+      request.fields['isTituloRegularizado'] = "$isTituloRegularizado";
+      request.fields['primeiraDose'] = "$primeiraDose";
+      request.fields['segundaDose'] = "$segundaDose";
+      request.fields['pesquisaArimateia'] = "$pesquisaArimateia";
 
       request.fields['pessoanascimento'] = "$nascimentoData";
       request.fields['dataSelecionada'] = "$variavelData";

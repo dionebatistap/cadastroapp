@@ -124,7 +124,7 @@ class _UsuarioState extends State<Usuario> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    x.usuario,
+                                    x.usuario + " " + x.statusUser,
                                     style: TextStyle(
                                         fontSize: 9,
                                         fontWeight: FontWeight.w100),
@@ -249,7 +249,6 @@ class _UsuarioState extends State<Usuario> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
-          api['bandeira'],
           api['createdDate'],
         );
 

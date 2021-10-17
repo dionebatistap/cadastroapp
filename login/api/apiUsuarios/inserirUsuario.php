@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
     $senha = md5($_POST['senha']);
     $levelUser = $_POST['levelUser'];
     $nome = $_POST['nome'];
-    $bandeira = $_POST['0'];
     $statusUser = $_POST['statusUser'];
 
     

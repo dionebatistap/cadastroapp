@@ -35,7 +35,7 @@ void main() async {
       dialogBackgroundColor: Colors.white,
       accentIconTheme: IconThemeData(color: Colors.grey[850]),
       primaryIconTheme: IconThemeData(color: Colors.grey[850]),
-      hintColor: Colors.grey[400],
+      hintColor: Colors.grey[600],
       // inputDecorationTheme: InputDecorationTheme(
       //   border: OutlineInputBorder(
       //     borderSide: BorderSide(color: Colors.blue),

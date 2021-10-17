@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cadastroapp/views/pessoas/pessoaDetalhes.dart';
+import 'package:cadastroapp/model/usuarioModel.dart';
 import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
@@ -96,8 +97,13 @@ class _PessoaState extends State<Pessoa> {
         child: Icon(Icons.add),
         mini: true,
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => InserirPessoa(_listarPessoas)));
+          //_listarUsuarios();
+          if (verDados == 'inativo') {
+            toast("Sem permissão");
+          } else {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => InserirPessoa(_listarPessoas)));
+          }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -130,7 +136,7 @@ class _PessoaState extends State<Pessoa> {
               )
             : Padding(
                 padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: listafiltrarMembros.isNotEmpty
+                child: listafiltrarMembros.isNotEmpty && verDados != 'inativo'
                     ? ListView.builder(
                         itemCount: listafiltrarMembros.length,
                         itemBuilder: (context, i) {
@@ -274,15 +280,7 @@ class _PessoaState extends State<Pessoa> {
 
 /*METODOS*/
   String permissaoUsuario;
-
-  getPref() async {
-    String levelUserPref;
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      levelUserPref = preferences.getString("levelUser");
-      permissaoUsuario = levelUserPref;
-    });
-  }
+  String verDados;
 
   Future<void> _listarPessoas() async {
     list.clear();
@@ -315,6 +313,13 @@ class _PessoaState extends State<Pessoa> {
           api['pessoaemail'],
           api['pessoaprofissao'],
           api['pessoauniversal'],
+          //fim
+          //atualização 25-09
+          api['isRgRegularizado'],
+          api['isTituloRegularizado'],
+          api['primeiraDose'],
+          api['segundaDose'],
+          api['pesquisaArimateia'],
           //fim
           api['membroObreiro'],
           api['prBatizou'],
@@ -386,4 +391,16 @@ class _PessoaState extends State<Pessoa> {
     });
     setState(() {});
   }
-}
+
+  getPref() async {
+    String levelUserPref;
+    String statusUserPref;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      levelUserPref = preferences.getString("levelUser");
+      statusUserPref = preferences.getString("statusUser");
+      permissaoUsuario = levelUserPref;
+      verDados = statusUserPref;
+    });
+  }
+}//class

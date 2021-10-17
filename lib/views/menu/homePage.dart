@@ -118,78 +118,82 @@ class _HomePage extends State<HomePage> {
                     height: 2,
                   ),
                   ListTile(
-                    title: Text("Membros",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 15)),
-                    subtitle: Text("Editar/Remover",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey[400],
-                            fontSize: 12)),
-                    leading: Icon(FontAwesomeIcons.usersCog),
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Pessoa()));
-                    },
-                  ),
+                      title: Text("Membros",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 15)),
+                      subtitle: Text("Editar/Remover",
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[400],
+                              fontSize: 12)),
+                      leading: Icon(FontAwesomeIcons.usersCog),
+                      onTap: () {
+                        if (statusUser != 'inativo') {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Pessoa()));
+                        }
+                      }),
                   ListTile(
-                    title: Text("Usuários",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 15)),
-                    subtitle: Text("Gerenciar",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey[400],
-                            fontSize: 12)),
-                    leading: Icon(FontAwesomeIcons.userAstronaut),
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Usuario()));
-                    },
-                  ),
+                      title: Text("Usuários",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 15)),
+                      subtitle: Text("Gerenciar",
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[400],
+                              fontSize: 12)),
+                      leading: Icon(FontAwesomeIcons.userAstronaut),
+                      onTap: () {
+                        if (statusUser != 'inativo') {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => Usuario()));
+                        }
+                      }),
                   ListTile(
-                    title: Text("Grupos",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 15)),
-                    subtitle: Text("Gerenciar",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey[400],
-                            fontSize: 12)),
-                    leading: Icon(Icons.groups_rounded),
-                    onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Grupo()));
-                    },
-                  ),
+                      title: Text("Grupos",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 15)),
+                      subtitle: Text("Gerenciar",
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[400],
+                              fontSize: 12)),
+                      leading: Icon(Icons.groups_rounded),
+                      onTap: () {
+                        if (statusUser != 'inativo') {
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => Grupo()));
+                        }
+                      }),
                   ListTile(
-                    title: Text("Filtros",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 15)),
-                    subtitle: Text("Pesquisar",
-                        style: TextStyle(
-                            fontWeight: FontWeight.normal,
-                            color: Colors.grey[400],
-                            fontSize: 12)),
-                    leading: Icon(FontAwesomeIcons.sortAmountDown),
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) => FiltroPage()));
+                      title: Text("Filtros",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 15)),
+                      subtitle: Text("Pesquisar",
+                          style: TextStyle(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[400],
+                              fontSize: 12)),
+                      leading: Icon(FontAwesomeIcons.sortAmountDown),
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) => FiltroPage()));
 
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => FiltroPage()));
-                    },
-                  ),
+                        if (statusUser != 'inativo') {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => FiltroPage()));
+                        }
+                      }),
                   ListTile(
-                    subtitle: Text("versão: 1.0.1",
+                    subtitle: Text("versão: 1.0.2",
                         style: TextStyle(
                             fontWeight: FontWeight.normal,
                             color: Colors.grey[300],
@@ -257,7 +261,6 @@ class _HomePage extends State<HomePage> {
             onPressed: () {
               //_listarUsuarios();
               _desativarInativo();
-
               if (statusUser == 'inativo') {
                 toast("Sem permissão");
               } else {
@@ -296,7 +299,8 @@ class _HomePage extends State<HomePage> {
                   )
                 : Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                    child: listafiltrarMembros.isNotEmpty
+                    child: listafiltrarMembros.isNotEmpty &&
+                            statusUser != 'inativo'
                         ? ListView.builder(
                             itemCount: listafiltrarMembros.length,
                             itemBuilder: (context, i) {
@@ -399,6 +403,13 @@ class _HomePage extends State<HomePage> {
           api['pessoaemail'],
           api['pessoaprofissao'],
           api['pessoauniversal'],
+          //fim
+          //atualização 25-09
+          api['isRgRegularizado'],
+          api['isTituloRegularizado'],
+          api['primeiraDose'],
+          api['segundaDose'],
+          api['pesquisaArimateia'],
           //fim
           api['membroObreiro'],
           api['prBatizou'],
@@ -504,7 +515,6 @@ class _HomePage extends State<HomePage> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
-          api['bandeira'],
           api['createdDate'],
         );
         if (api['id'] == idUser) {

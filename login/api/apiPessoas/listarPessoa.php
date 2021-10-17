@@ -3,9 +3,6 @@
 require "../../../config/connect.php";
 //require "../public/config/connect.php";
 
-
-
-
     $response = array();
 
     $sql = mysqli_query($con, "SELECT a.*, b.nome FROM tbl_pessoas a
@@ -20,6 +17,7 @@ require "../../../config/connect.php";
         $b['cepPessoa'] = $a['cepPessoa'];
         $b['cidadePessoa'] = $a['cidadePessoa'];
         $b['celularPessoa'] = $a['celularPessoa'];
+        $b['telefonePessoa'] = $a['telefonePessoa'];
         //atualização 25-09
         $b['pessoanascimento'] = $a['pessoanascimento'];
         $b['pessoasexo'] = $a['pessoasexo'];
@@ -27,6 +25,13 @@ require "../../../config/connect.php";
         $b['pessoaemail'] = $a['pessoaemail'];
         $b['pessoaprofissao'] = $a['pessoaprofissao'];
         $b['pessoauniversal'] = $a['pessoauniversal'];
+        //fim
+        //atualização 16-10
+        $b['isRgRegularizado'] = $a['isRgRegularizado'];
+        $b['isTituloRegularizado'] = $a['isTituloRegularizado'];
+        $b['primeiraDose'] = $a['primeiraDose'];
+        $b['segundaDose'] = $a['segundaDose'];
+        $b['pesquisaArimateia'] = $a['pesquisaArimateia'];
         //fim
         $b['membroObreiro'] = $a['membroObreiro'];
         $b['prBatizou'] = $a['prBatizou'];
@@ -39,12 +44,7 @@ require "../../../config/connect.php";
         $b['image'] = $a['image'];
         $b['DataSelecionada'] = $a['DataSelecionada'];
         $b['nome'] = $a['nome'];
-
         array_push($response, $b);
-
     }
-
     echo json_encode($response);
-
-
 ?>

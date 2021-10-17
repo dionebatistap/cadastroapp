@@ -5,9 +5,15 @@ class UsuarioModel {
   final String levelUser;
   final String nome;
   final String statusUser;
-  final String bandeira;
   final String createdDate;
 
-  UsuarioModel(this.id, this.usuario, this.senha, this.levelUser, this.nome,
-      this.bandeira, this.statusUser, this.createdDate);
+  UsuarioModel(
+    this.id,
+    this.usuario,
+    this.senha,
+    this.levelUser,
+    this.nome,
+    this.statusUser,
+    this.createdDate,
+  );
 }

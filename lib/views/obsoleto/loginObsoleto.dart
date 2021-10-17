@@ -142,7 +142,6 @@ class _LoginState extends State<Login> {
           api['levelUser'],
           api['nome'],
           api['statusUser'],
-          api['bandeira'],
           api['createdDate'],
         );
         list.add(ab);

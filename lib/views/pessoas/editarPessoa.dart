@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cadastroapp/model/grupoModel.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -48,6 +49,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
 //DADOS ESPIRITUAIS
   TextEditingController prBatizouController = TextEditingController();
   TextEditingController pessoauniversalController = TextEditingController();
+  TextEditingController pesquisaArimateiaController = TextEditingController();
 
 //VARIAVEIS RADIO BUTTONS
   String clestadoCivil;
@@ -71,7 +73,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
     setState(() {
       idUsuario = preferences.getString("id");
     });
-//CONVERTAR DATA NASCIMENTO
+//CONVERTER DATA NASCIMENTO
     vardatanasc = widget.model.pessoanascimento;
     nascimentoData = DateTime.parse(widget.model.pessoanascimento);
     String convertidaBrNasc =
@@ -88,6 +90,10 @@ class _EditarPessoaState extends State<EditarPessoa> {
     bairroController = TextEditingController(text: widget.model.bairroPessoa);
     cepController = TextEditingController(text: widget.model.cepPessoa);
     cidadeController = TextEditingController(text: widget.model.cidadePessoa);
+    pesquisaArimateiaController =
+        TextEditingController(text: widget.model.pesquisaArimateia);
+    telefoneController =
+        TextEditingController(text: widget.model.telefonePessoa);
     pessoaemailController =
         TextEditingController(text: widget.model.pessoaemail);
     pessoaprofissaoController =
@@ -111,6 +117,20 @@ class _EditarPessoaState extends State<EditarPessoa> {
       dataFormatada = convertidaBr;
       dataFormatadaNasc = convertidaBrNasc;
     });
+
+//ATUALIZAÇÃO 16/10
+    isRgRegularizado = widget.model.isRgRegularizado;
+    isTituloRegularizado = widget.model.isTituloRegularizado;
+    bool setupPrimeiraDose = false;
+    bool setupSegundaDose = false;
+    if (widget.model.primeiraDose == 'true') {
+      setupPrimeiraDose = true;
+    }
+    if (widget.model.segundaDose == 'true') {
+      setupSegundaDose = true;
+    }
+    primeiraDose = setupPrimeiraDose;
+    segundaDose = setupSegundaDose;
   }
 
   //FORMATADORES
@@ -129,6 +149,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
     _listarGrupos();
     _listaAddDropGrupos();
     setup();
+    // ignore: unused_local_variable
     DateTime nascimentoData = new DateTime.now();
   }
 
@@ -219,10 +240,26 @@ class _EditarPessoaState extends State<EditarPessoa> {
                           ]),
                       child: Column(
                         children: <Widget>[
+//CADASTRO DE MEMBROS
+                          Column(
+                            children: [Divider()],
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text("Cadastro de Membros",
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.grey[700])),
+                              ]),
+
+                          Column(
+                            children: [Divider()],
+                          ),
+                          const SizedBox(height: 5.0),
 //NOME
                           TextFormField(
                             validator: (e) {
-                              if (e.isEmpty) {
+                              if (e.trim().isEmpty) {
                                 return "*obrigatório";
                               } else {
                                 return null;
@@ -356,7 +393,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                                 Spacer(
                                   flex: 5,
                                 ),
-                                Text("Solteiro",
+                                Text("Solteiro (a)",
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.grey[700])),
                                 Radio(
@@ -371,7 +408,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                                 Spacer(
                                   flex: 3,
                                 ),
-                                Text("Casado",
+                                Text("Casado (a)",
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.grey[700])),
                                 Radio(
@@ -672,7 +709,27 @@ class _EditarPessoaState extends State<EditarPessoa> {
                             //     return null;
                             //   }
                             // },
-                            textCapitalization: TextCapitalization.words,
+
+                            validator: (e) {
+                              if (e.isEmptyOrNull) {
+                                return null;
+                              }
+                              if (e == "Não informado") {
+                                return null;
+                              }
+                              if (EmailValidator.validate(e)) {
+                                return null;
+                              } else {
+                                snackBar(context,
+                                    title: "E-mail inválido",
+                                    backgroundColor: Colors.red[600]);
+                                return "exemplo@email.com";
+                              }
+                            },
+                            // validator: (e) => EmailValidator.validate(e)
+                            //     ? null
+                            //     : "Please enter a valid email",
+                            //textCapitalization: TextCapitalization.words,
                             decoration: const InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: const BorderRadius.all(
@@ -743,7 +800,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
                                 Spacer(
                                   flex: 5,
                                 ),
-                                Text("Obreiro",
+                                Text("Obreiro (a)",
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.grey[700])),
                                 Radio(
@@ -932,6 +989,234 @@ class _EditarPessoaState extends State<EditarPessoa> {
                             ),
                           ),
                           const SizedBox(height: 15.0),
+
+//INFORMAÇÕES ARIMATEIA
+                          Column(
+                            children: [Divider()],
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text("Arimatéia",
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.grey[700])),
+                              ]),
+
+                          Column(
+                            children: [Divider()],
+                          ),
+                          const SizedBox(height: 5.0),
+
+//RG REGULARIZADO
+                          Row(children: <Widget>[
+                            Text("RG regularizado ?",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.grey[700])),
+                          ]),
+                          Container(
+                            height: tamanho.size.height * 0.09,
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.grey[100],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              0,
+                              0,
+                              55,
+                              0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Spacer(
+                                  flex: 5,
+                                ),
+                                Text("Sim",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  //  activeColor: Colors.green[600],
+                                  value: "Sim",
+                                  groupValue: isRgRegularizado,
+                                  onChanged:
+                                      (String selecionaisRgRegularizado) {
+                                    setState(() {
+                                      isRgRegularizado =
+                                          selecionaisRgRegularizado;
+                                    });
+                                  },
+                                ),
+                                Spacer(
+                                  flex: 3,
+                                ),
+                                Text("Não",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  //  activeColor: Colors.red[600],
+                                  value: "Não",
+                                  groupValue: isRgRegularizado,
+                                  onChanged:
+                                      (String selecionaisRgRegularizado) {
+                                    setState(() {
+                                      isRgRegularizado =
+                                          selecionaisRgRegularizado;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+
+//CHECKBOX VACINA
+                          Row(children: <Widget>[
+                            Text("Vacina COVID19",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.grey[700])),
+                          ]),
+                          Container(
+                            height: tamanho.size.height * 0.08,
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.grey[100],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                            child: Row(
+                              children: [
+                                Checkbox(
+                                    activeColor: Colors.green[600],
+                                    value: primeiraDose,
+                                    onChanged: (bool valor) {
+                                      setState(() {
+                                        primeiraDose = valor;
+                                      });
+                                    }),
+                                Text("1ª dose"),
+                                Spacer(
+                                  flex: 1,
+                                ),
+                                Checkbox(
+                                    activeColor: Colors.green[600],
+                                    value: segundaDose,
+                                    onChanged: (bool valor) {
+                                      setState(() {
+                                        segundaDose = valor;
+                                      });
+                                    }),
+                                Text("2ª dose"),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+
+//TITULO
+                          Row(children: <Widget>[
+                            Text("Título de eleitor regularizado ?",
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.grey[700])),
+                          ]),
+                          Container(
+                            height: tamanho.size.height * 0.09,
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[700]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              color: Colors.grey[100],
+                              //border: Border.fromBorderSide(),
+                            ),
+                            padding: EdgeInsets.fromLTRB(
+                              0,
+                              0,
+                              55,
+                              0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Spacer(
+                                  flex: 5,
+                                ),
+                                Text("Sim",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  value: "Sim",
+                                  // activeColor: Colors.green[600],
+                                  groupValue: isTituloRegularizado,
+                                  onChanged:
+                                      (String selecionaisTituloRegularizado) {
+                                    setState(() {
+                                      isTituloRegularizado =
+                                          selecionaisTituloRegularizado;
+                                    });
+                                  },
+                                ),
+                                Spacer(
+                                  flex: 3,
+                                ),
+                                Text("Não",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey[700])),
+                                Radio(
+                                  //  activeColor: Colors.red[600],
+                                  value: "Não",
+                                  groupValue: isTituloRegularizado,
+                                  onChanged:
+                                      (String selecionaisTituloRegularizado) {
+                                    setState(() {
+                                      isTituloRegularizado =
+                                          selecionaisTituloRegularizado;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+
+//PESQUISA DE AJUDA
+                          TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
+                            controller: pesquisaArimateiaController,
+                            //focusNode: addressFocus,
+                            style: primaryTextStyle(),
+                            decoration: InputDecoration(
+                              // prefixIcon: Icon(Icons.message,
+                              //     color: Colors.grey[500]),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey[700])),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(
+                                      width: 1, color: Colors.grey[700])),
+                              labelText: 'Pesquisa Arimatéia',
+                              // labelStyle: primaryTextStyle(),
+                              alignLabelWithHint: true,
+                            ),
+                            maxLines: 3,
+                            keyboardType: TextInputType.multiline,
+                            // validator: (s) {
+                            //   if (s.trim().isEmpty)
+                            //     return 'Address is required';
+                            //   return null;
+                            // },
+                            maxLength: 200,
+                          ),
+                          const SizedBox(height: 10.0),
+
+//SALVAR
                           Material(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0)),
@@ -969,6 +1254,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
 
 /* METODOS */
 
+  String isRgRegularizado;
+  String isTituloRegularizado;
+  bool primeiraDose = false;
+  bool segundaDose = false;
+
   Future<void> _editarPessoaSemFoto() async {
     String nome = nomeController.text;
     String endereco = enderecoController.text;
@@ -983,11 +1273,12 @@ class _EditarPessoaState extends State<EditarPessoa> {
     String email = pessoaemailController.text;
     String universal = pessoauniversalController.text;
     String pastorBatizou = prBatizouController.text;
+    String pesquisaArimateia = pesquisaArimateiaController.text;
     if (telefone.isEmptyOrNull) {
       telefone = 'Não informado';
     }
     if (email.isEmptyOrNull) {
-      email = 'não informado';
+      email = 'Não informado';
     }
     if (cep.isEmptyOrNull) {
       cep = '00000-000';
@@ -995,10 +1286,6 @@ class _EditarPessoaState extends State<EditarPessoa> {
     if (pastorBatizou.isEmptyOrNull) {
       pastorBatizou = 'Não informado';
     }
-
-    print("Variavel variavelData: " + variavelData.toString());
-    print("Variavel dataFormatada: " + dataFormatada);
-
     try {
       var url = Uri.parse(BaseUrl.editarPessoaSemFoto);
       final response = await http.post(url, body: {
@@ -1025,6 +1312,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
         "idPessoa": widget.model.id,
         "dataSelecionada": "$variavelData",
         "pessoanascimento": "$nascimentoData",
+        "isRgRegularizado": "$isRgRegularizado",
+        "isTituloRegularizado": "$isTituloRegularizado",
+        "primeiraDose": "$primeiraDose",
+        "segundaDose": "$segundaDose",
+        "pesquisaArimateia": "$pesquisaArimateia",
       });
 
       final data = jsonDecode(response.body);
@@ -1062,6 +1354,7 @@ class _EditarPessoaState extends State<EditarPessoa> {
     String profissao = pessoaprofissaoController.text;
     String email = pessoaemailController.text;
     String universal = pessoauniversalController.text;
+    String pesquisaArimateia = pesquisaArimateiaController.text;
     if (telefone.isEmptyOrNull) {
       telefone = 'Não informado';
     }
@@ -1075,10 +1368,6 @@ class _EditarPessoaState extends State<EditarPessoa> {
     if (pastorBatizou.isEmptyOrNull) {
       pastorBatizou = 'Não informado';
     }
-
-    print("Variavel variavelData: " + variavelData.toString());
-    print("Variavel dataFormatada: " + dataFormatada);
-
     try {
       var stream = http.ByteStream(_imageFile.openRead());
       stream.cast();
@@ -1109,6 +1398,11 @@ class _EditarPessoaState extends State<EditarPessoa> {
       request.fields['idGrupo'] = idGrupo;
       request.fields['idPessoa'] = widget.model.id;
       request.fields['pessoanascimento'] = "$nascimentoData";
+      request.fields['isRgRegularizado'] = "$isRgRegularizado";
+      request.fields['isTituloRegularizado'] = "$isTituloRegularizado";
+      request.fields['primeiraDose'] = "$primeiraDose";
+      request.fields['segundaDose'] = "$segundaDose";
+      request.fields['pesquisaArimateia'] = "$pesquisaArimateia";
       request.fields['dataSelecionada'] = "$variavelData";
       request.files.add(http.MultipartFile("image", stream, length,
           filename: path.basename(_imageFile.path)));

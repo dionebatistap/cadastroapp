@@ -32,6 +32,13 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
      $pessoaprofissao = $_POST['pessoaprofissao'];
      $pessoauniversal = $_POST['pessoauniversal'];
      //fim
+     //atualização 16-10
+     $isRgRegularizado = $_POST['isRgRegularizado'];
+     $isTituloRegularizado = $_POST['isTituloRegularizado'];
+     $primeiraDose = $_POST['primeiraDose'];
+     $segundaDose = $_POST['segundaDose'];
+     $pesquisaArimateia = $_POST['pesquisaArimateia'];
+     //fim
     $membroObreiro = $_POST['membroObreiro'];
     $prBatizou = $_POST['prBatizou'];
     $estadoCivil = $_POST['estadoCivil'];
@@ -50,7 +57,13 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
 
     move_uploaded_file($_FILES['image']['tmp_name'],$imagePath);
 
-        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$telefonePessoa','$pessoanascimento','$pessoasexo','$estadocidade','$pessoaemail','$pessoaprofissao','$pessoauniversal','$membroObreiro','$prBatizou','$estadoCivil','$grupo','$isBatizada','$image','$dataSelecionada',NOW(),'$idUsuario','$idGrupo')";
+        $insert = "INSERT INTO tbl_pessoas VALUE(NULL,'$nomePessoa','$enderecoPessoa','$numeroPessoa','$bairroPessoa','$cepPessoa','$cidadePessoa','$celularPessoa','$telefonePessoa','$pessoanascimento','$pessoasexo','$estadocidade','$pessoaemail','$pessoaprofissao','$pessoauniversal',
+        '$isRgRegularizado',
+        '$isTituloRegularizado',
+        '$primeiraDose',
+        '$segundaDose',
+        '$pesquisaArimateia',
+        '$membroObreiro','$prBatizou','$estadoCivil','$grupo','$isBatizada','$image','$dataSelecionada',NOW(),'$idUsuario','$idGrupo')";
         if (mysqli_query($con, $insert)){
             #code
             $response['value']=1;

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cadastroapp/model/api.dart';
 import 'package:cadastroapp/model/pessoaModel.dart';
 import 'package:http/http.dart' as http;
-import 'package:cadastroapp/views/pessoas/detalharPessoa.dart';
+//import 'package:cadastroapp/views/pessoas/detalharPessoa.dart';
 import 'package:nb_utils/nb_utils.dart';
 
 class MenuUsuarios extends StatefulWidget {
@@ -52,42 +52,43 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
         builder: (context, orientation) {
           return Padding(
             padding: const EdgeInsets.fromLTRB(8, 20, 8, 8),
-            child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
-                ),
-                itemCount: list.length,
-                itemBuilder: (context, i) {
-                  final x = list[i];
-                  return InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DetalharPessoa(x)));
-                    },
-                    child: Card(
-                      child: Column(
-                        children: <Widget>[
-                          Expanded(
-                            child: Hero(
-                              tag: x.id,
-                              child: Image.network(
-                                BaseUrl.upload + x.image,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            x.nomePessoa,
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
+            child: Text("Nada para ver aqui"),
+            // child: GridView.builder(
+            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //       crossAxisCount: orientation == Orientation.portrait ? 2 : 3,
+            //     ),
+            //     itemCount: list.length,
+            //     itemBuilder: (context, i) {
+            //       final x = list[i];
+            //       return InkWell(
+            //         onTap: () {
+            //           // Navigator.of(context).push(MaterialPageRoute(
+            //           //     builder: (context) => DetalharPessoa(x)));
+            //         },
+            //         // child: Card(
+            //         //   child: Column(
+            //         //     children: <Widget>[
+            //         //       Expanded(
+            //         //         child: Hero(
+            //         //           tag: x.id,
+            //         //           child: Image.network(
+            //         //             BaseUrl.upload + x.image,
+            //         //             fit: BoxFit.cover,
+            //         //           ),
+            //         //         ),
+            //         //       ),
+            //         //       Text(
+            //         //         x.nomePessoa,
+            //         //         textAlign: TextAlign.center,
+            //         //       ),
+            //         //       SizedBox(
+            //         //         height: 10.0,
+            //         //       ),
+            //         //     ],
+            //         //   ),
+            //         // ),
+            //       );
+            //     }),
           );
         },
       )),
@@ -123,6 +124,13 @@ class _MenuUsuariosState extends State<MenuUsuarios> {
           api['pessoaemail'],
           api['pessoaprofissao'],
           api['pessoauniversal'],
+          //fim
+          //atualização 25-09
+          api['isRgRegularizado'],
+          api['isTituloRegularizado'],
+          api['primeiraDose'],
+          api['segundaDose'],
+          api['pesquisaArimateia'],
           //fim
           api['membroObreiro'],
           api['prBatizou'],

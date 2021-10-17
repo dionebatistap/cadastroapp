@@ -33,6 +33,12 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
      $pessoaprofissao = $_POST['pessoaprofissao'];
      $pessoauniversal = $_POST['pessoauniversal'];
      //fim
+     //atualização 16-10
+     $isRgRegularizado = $_POST['isRgRegularizado'];
+     $isTituloRegularizado = $_POST['isTituloRegularizado'];
+     $primeiraDose = $_POST['primeiraDose'];
+     $segundaDose = $_POST['segundaDose'];
+     //fim
     $membroObreiro = $_POST['membroObreiro'];
     $prBatizou = $_POST['prBatizou'];
     $estadoCivil = $_POST['estadoCivil'];
@@ -60,6 +66,11 @@ if ($_SERVER['REQUEST_METHOD']=="POST"){
         pessoaemail='$pessoaemail',
         pessoaprofissao='$pessoaprofissao',
         pessoauniversal='$pessoauniversal',
+        isRgRegularizado='$isRgRegularizado',
+        isTituloRegularizado='$isTituloRegularizado',
+        primeiraDose='$primeiraDose',
+        segundaDose='$segundaDose',
+        pesquisaArimateia='$pesquisaArimateia',
         membroObreiro='$membroObreiro',prBatizou='$prBatizou', estadoCivil='$estadoCivil', grupo='$grupo', isBatizada='$isBatizada', idGrupo='$idGrupo', DataSelecionada='$dataSelecionada', image='$image' WHERE id='$idPessoa'";
         if (mysqli_query($con, $insert)){
             #code

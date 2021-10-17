@@ -214,7 +214,8 @@ class _FiltroPage extends State<FiltroPage> {
                               ]),
                           child: Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            child: _listafiltrarMembros.isNotEmpty
+                            child: _listafiltrarMembros.isNotEmpty &&
+                                    verDados != 'inativo'
                                 ? ListView.builder(
                                     itemCount: _listafiltrarMembros.length,
                                     itemBuilder: (context, i) {
@@ -335,6 +336,16 @@ class _FiltroPage extends State<FiltroPage> {
 
 /*METODOS*/
 
+  String verDados;
+  getPref() async {
+    String statusUserPref;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      statusUserPref = preferences.getString("statusUser");
+      verDados = statusUserPref;
+    });
+  }
+
   Future<void> _listarPessoas() async {
     contador = 0;
     list.clear();
@@ -366,6 +377,13 @@ class _FiltroPage extends State<FiltroPage> {
           api['pessoaemail'],
           api['pessoaprofissao'],
           api['pessoauniversal'],
+          //fim
+          //atualização 25-09
+          api['isRgRegularizado'],
+          api['isTituloRegularizado'],
+          api['primeiraDose'],
+          api['segundaDose'],
+          api['pesquisaArimateia'],
           //fim
           api['membroObreiro'],
           api['prBatizou'],

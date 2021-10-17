@@ -16,6 +16,13 @@ class PessoaModel {
   final String pessoaprofissao;
   final String pessoauniversal;
   //fim
+  //atualização arimateia 16/10/2021
+  final String isRgRegularizado;
+  final String isTituloRegularizado;
+  final String primeiraDose;
+  final String segundaDose;
+  final String pesquisaArimateia;
+  //fim
   final String membroObreiro;
   final String prBatizou;
   final String estadoCivil;
@@ -38,14 +45,17 @@ class PessoaModel {
     this.cidadePessoa,
     this.celularPessoa,
     this.telefonePessoa,
-    //atualização 25-09
     this.pessoanascimento,
     this.pessoasexo,
     this.estadocidade,
     this.pessoaemail,
     this.pessoaprofissao,
     this.pessoauniversal,
-    //fim
+    this.isRgRegularizado,
+    this.isTituloRegularizado,
+    this.primeiraDose,
+    this.segundaDose,
+    this.pesquisaArimateia,
     this.membroObreiro,
     this.prBatizou,
     this.estadoCivil,
